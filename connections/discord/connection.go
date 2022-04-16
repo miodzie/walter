@@ -55,15 +55,8 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 	con.stream <- msg
 }
 
-type Messenger struct {
-	session *discordgo.Session
-}
 
-func NewMessenger(con *Connection) *Messenger {
-	return &Messenger{con.session}
-}
-
-func (messenger *Messenger) Send(msg seras.Message) error {
-	_, err := messenger.session.ChannelMessageSend(msg.Channel, msg.Content)
+func (con *Connection) Send(msg seras.Message) error {
+	_, err := con.session.ChannelMessageSend(msg.Channel, msg.Content)
 	return err
 }

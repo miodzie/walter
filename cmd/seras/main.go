@@ -25,9 +25,8 @@ func main() {
 func run(args []string) error {
 	interupt(func() {})
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
-	// messenger := fake.NewMessenger(connection)
+  messenger := connection
 	// messenger := &seras.NullMessenger{}
-	messenger := discord.NewMessenger(connection)
 	stream, _ := connection.Connect()
 
 	modules := []seras.Module{mods.NewBestBot()}

@@ -32,15 +32,7 @@ func (con *Connection) Close() error {
 	return nil
 }
 
-type Messenger struct {
-	stream chan<- seras.Message
-}
-
-func NewMessenger(con *Connection) *Messenger {
-	return &Messenger{stream: con.stream}
-}
-
-func (messenger *Messenger) Send(msg seras.Message) error {
-	messenger.stream <- msg
+func (con *Connection) Send(msg seras.Message) error {
+	con.stream <- msg
 	return nil
 }

@@ -39,7 +39,6 @@ func run(args []string) error {
 	cli(messenger)
 
 	for msg := range stream {
-		fmt.Printf("Sending to modules: %s\n", msg.Content)
 		for _, ch := range modStreams {
 			ch <- msg
 		}

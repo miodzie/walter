@@ -46,13 +46,16 @@ func (con *Connection) Close() error {
 }
 
 func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.MessageCreate) {
+	if e.Author.Bot {
+		return
+	}
 	msg := seras.Message{
 		Content:   e.Content,
 		Channel:   e.ChannelID,
 		Arguments: strings.Split(e.Content, " "),
-		Author: e.Author.Username,
+		Author:    e.Author.Username,
 	}
-  fmt.Printf("Discord: [%s]: %s\n", msg.Author, msg.Content)
+	fmt.Printf("Discord:  [%s]: %s\n", msg.Author, msg.Content)
 	con.stream <- msg
 }
 

@@ -7,7 +7,6 @@ import (
 type Connection struct {
 	messages []seras.Message
 	stream   chan seras.Message
-	Sender   *Messenger
 }
 
 func NewConnection() *Connection {

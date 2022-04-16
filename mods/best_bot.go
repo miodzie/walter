@@ -2,6 +2,7 @@ package mods
 
 import (
 	"fmt"
+	"regexp"
 	"sync"
 
 	"github.com/miodzie/seras"
@@ -43,6 +44,10 @@ func (mod *BestBot) loop() {
 	for mod.running {
 		msg := <-mod.stream
 		// fmt.Println("BestBot: MSG RECEIVED=" + msg.Content)
+		r, _ := regexp.Compile(`cs(?:go)?\?`)
+		if r.MatchString(msg.Content) {
+			mod.sender.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
+		}
 		if msg.Content == "gentlemen" || msg.Content == "lenny" {
 			mod.sender.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
 		}

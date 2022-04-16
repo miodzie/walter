@@ -50,11 +50,11 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		Content:   e.Content,
 		Channel:   e.ChannelID,
 		Arguments: strings.Split(e.Content, " "),
+		Author: e.Author.Username,
 	}
-	fmt.Println("Discord: " + msg.Content)
+  fmt.Printf("Discord: [%s]: %s\n", msg.Author, msg.Content)
 	con.stream <- msg
 }
-
 
 func (con *Connection) Send(msg seras.Message) error {
 	_, err := con.session.ChannelMessageSend(msg.Channel, msg.Content)

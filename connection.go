@@ -19,7 +19,8 @@ type Connection interface {
 type Message struct {
 	Content   string
 	Arguments []string
-	Channel string
+	Channel   string
+	Author    string
 }
 
 type ModuleManager struct {

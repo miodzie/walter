@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/connections/discord"
 	"github.com/miodzie/seras/connections/fake"
@@ -23,6 +24,10 @@ func main() {
 }
 
 func run(args []string) error {
+  err := godotenv.Load()
+  if err != nil {
+    return err
+  }
 	interupt(func() {})
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
   messenger := connection

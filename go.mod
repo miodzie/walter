@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/bwmarrin/discordgo v0.24.0
+	github.com/joho/godotenv v1.4.0
 	github.com/thoj/go-ircevent v0.0.0-20210723090443-73e444401d64
 )
 

@@ -31,12 +31,12 @@ func run(args []string) error {
 	}
 	interupt(func() {})
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
-	messenger := connection
-	cli(messenger)
+	actions := connection
+	cli(actions)
 
 	stream, _ := connection.Connect()
 	modules := []seras.Module{mods.NewBestBotMod(), policing.NewPolicingMod()}
-  manager := seras.NewModManager(modules, messenger)
+  manager := seras.NewModManager(modules, actions)
 
   manager.Run(stream)
 

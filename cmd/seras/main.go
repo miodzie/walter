@@ -14,7 +14,6 @@ import (
 	"github.com/miodzie/seras/connections/fake"
 	"github.com/miodzie/seras/connections/irc"
 	"github.com/miodzie/seras/mods"
-	"github.com/miodzie/seras/mods/policing"
 )
 
 func main() {
@@ -30,17 +29,15 @@ func run(args []string) error {
 		return err
 	}
 	interupt(func() {})
+
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
-	actions := connection
-	cli(actions)
+
+	startCli(connection)
 
 	stream, _ := connection.Connect()
-	modules := []seras.Module{mods.NewBestBotMod(), policing.NewPolicingMod()}
-  manager := seras.NewModManager(modules, actions)
+	manager := seras.NewModManager(mods.Default(), connection)
 
-  manager.Run(stream)
-
-	return nil
+	return manager.Run(stream)
 }
 
 func interupt(callable func()) {
@@ -53,7 +50,7 @@ func interupt(callable func()) {
 	}()
 }
 
-func cli(messenger seras.Messenger) {
+func startCli(messenger seras.Messenger) {
 	reader := bufio.NewReader(os.Stdin)
 	go func() {
 		for {

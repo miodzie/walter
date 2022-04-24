@@ -1,4 +1,4 @@
-package mods
+package bestbot
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ func (mod *BestBotMod) Name() string {
   return "best_bot"
 }
 
-func NewBestBotMod() *BestBotMod {
+func New() *BestBotMod {
 	mod := &BestBotMod{}
 	mod.LoopCheck = func() {
 		fmt.Println("BEE, BOO BOO, BOP")

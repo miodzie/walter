@@ -15,7 +15,7 @@ func (mod *PolicingMod) Name() string {
   return "police"
 }
 
-func NewPolicingMod() *PolicingMod {
+func New() *PolicingMod {
 	mod := &PolicingMod{}
 	mod.LoopCheck = func() {
 		for mod.Running {

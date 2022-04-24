@@ -39,7 +39,7 @@ func NewModManager(mods []Module, actions Actions) *ModuleManager {
 	return manager
 }
 
-func (manager *ModuleManager) Run(stream Stream) {
+func (manager *ModuleManager) Run(stream Stream) error {
 	// Init mod streams, start them up.
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
@@ -53,6 +53,8 @@ func (manager *ModuleManager) Run(stream Stream) {
 			ch <- msg
 		}
 	}
+
+	return nil
 }
 
 func (manager *ModuleManager) Stop() {

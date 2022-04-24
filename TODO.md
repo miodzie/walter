@@ -11,6 +11,6 @@
 
 * RSS feed, notify users of new animu. (SPY X FAMILY for me and Gustav)
 
-* Timeout users for spamming all caps. (Bryce)
+* Timeout users for spamming all caps.
 
 * ModuleManager, clean up main.go

@@ -37,19 +37,11 @@ func run(args []string) error {
 
   // TODO: Abstract to ModuleManager? 
 	modules := []seras.Module{mods.NewBestBotMod(), policing.NewPolicingMod()}
-	modStreams := []chan seras.Message{}
-	for _, mod := range modules {
-		modStream := make(chan seras.Message)
-		modStreams = append(modStreams, modStream)
-		mod.Loop(modStream, messenger)
-	}
+  manager := seras.NewModManager(modules, messenger)
+
 	cli(messenger)
 
-	for msg := range stream {
-		for _, ch := range modStreams {
-			ch <- msg
-		}
-	}
+  manager.Run(stream)
 
 	return nil
 }

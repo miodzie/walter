@@ -5,7 +5,7 @@ import (
 )
 
 type PolicingMod struct {
-  seras.BaseModule
+	seras.BaseModule
 }
 
 func NewPolicingMod() *PolicingMod {

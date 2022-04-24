@@ -9,6 +9,46 @@ type Module interface {
 	Stop()
 }
 
+type ModuleManager struct {
+  modules []Module
+  streams []chan Message
+  messenger Messenger
+}
+
+func NewModManager(mods []Module, messenger Messenger) *ModuleManager {
+  manager := &ModuleManager{
+    modules: mods,
+    messenger: messenger,
+  }
+
+  return manager
+}
+
+func (manager *ModuleManager) Run(stream Stream) {
+	// Init mod streams, start them up.
+	for _, mod := range manager.modules {
+		modStream := make(chan Message)
+		manager.streams = append(manager.streams, modStream)
+		mod.Loop(modStream, manager.messenger)
+	}
+
+	// Collect messages from stream, broadcast to mods.
+	for msg := range stream {
+		for _, ch := range manager.streams {
+			ch <- msg
+		}
+	}
+}
+
+func (manager * ModuleManager) Stop() {
+  for _, mod := range manager.modules {
+    mod.Stop()
+  }
+  for _, stream := range manager.streams {
+    close(stream)
+  }
+}
+
 type BaseModule struct {
 	Sender    Messenger
 	Stream    Stream

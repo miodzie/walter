@@ -14,6 +14,7 @@ import (
 	"github.com/miodzie/seras/connections/fake"
 	"github.com/miodzie/seras/connections/irc"
 	"github.com/miodzie/seras/mods"
+	"github.com/miodzie/seras/mods/policing"
 )
 
 func main() {
@@ -24,17 +25,18 @@ func main() {
 }
 
 func run(args []string) error {
-  err := godotenv.Load()
-  if err != nil {
-    return err
-  }
+	err := godotenv.Load()
+	if err != nil {
+		return err
+	}
 	interupt(func() {})
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
-  messenger := connection
+	messenger := connection
 	// messenger := &seras.NullMessenger{}
 	stream, _ := connection.Connect()
 
-	modules := []seras.Module{mods.NewBestBot()}
+  // TODO: Abstract to ModuleManager? 
+	modules := []seras.Module{mods.NewBestBotMod(), policing.NewPolicingMod()}
 	modStreams := []chan seras.Message{}
 	for _, mod := range modules {
 		modStream := make(chan seras.Message)
@@ -68,10 +70,10 @@ func cli(messenger seras.Messenger) {
 		for {
 			text, _ := reader.ReadString('\n')
 			text = strings.TrimSpace(text)
-      err := messenger.Send(seras.Message{Content: text})
-      if err != nil {
-        fmt.Println(err)
-      }
+			err := messenger.Send(seras.Message{Content: text})
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}()
 

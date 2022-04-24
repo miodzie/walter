@@ -10,5 +10,5 @@ type Connection interface {
 }
 
 type Admin interface {
-	TimeoutUser(channel string, user string, until time.Time)
+	TimeoutUser(channel string, user string, until time.Time) error
 }

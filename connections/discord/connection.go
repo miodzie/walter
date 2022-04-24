@@ -66,6 +66,6 @@ func (con *Connection) Send(msg seras.Message) error {
 	return err
 }
 
-func (con *Connection) TimeoutUser(channel string, user string, until time.Time) {
-	con.session.GuildMemberTimeout(channel, user, &until)
+func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
+	return con.session.GuildMemberTimeout(channel, user, &until)
 }

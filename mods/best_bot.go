@@ -11,6 +11,10 @@ type BestBotMod struct {
   seras.BaseModule
 }
 
+func (mod *BestBotMod) Name() string {
+  return "best_bot"
+}
+
 func NewBestBotMod() *BestBotMod {
 	mod := &BestBotMod{}
 	mod.LoopCheck = func() {

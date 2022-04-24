@@ -1,57 +1,20 @@
 package seras
 
 import (
+	"database/sql"
 	"sync"
 )
 
 type Module interface {
+	Name() string
 	Loop(Stream, Actions) error
 	Stop()
+	HasDatabase
 }
 
 type Actions interface {
 	Messenger
 	Admin
-}
-
-type ModuleManager struct {
-	modules []Module
-	streams []chan Message
-	actions Actions
-}
-
-func NewModManager(mods []Module, actions Actions) *ModuleManager {
-	manager := &ModuleManager{
-		modules: mods,
-		actions: actions,
-	}
-
-	return manager
-}
-
-func (manager *ModuleManager) Run(stream Stream) {
-	// Init mod streams, start them up.
-	for _, mod := range manager.modules {
-		modStream := make(chan Message)
-		manager.streams = append(manager.streams, modStream)
-		mod.Loop(modStream, manager.actions)
-	}
-
-	// Collect messages from stream, broadcast to mods.
-	for msg := range stream {
-		for _, ch := range manager.streams {
-			ch <- msg
-		}
-	}
-}
-
-func (manager *ModuleManager) Stop() {
-	for _, mod := range manager.modules {
-		mod.Stop()
-	}
-	for _, stream := range manager.streams {
-		close(stream)
-	}
 }
 
 type BaseModule struct {
@@ -60,19 +23,8 @@ type BaseModule struct {
 	Running bool
 	// See loopCheckExample()
 	LoopCheck func()
+	db      *sql.DB
 	sync.Mutex
-}
-
-func loopCheckExample() {
-	mod := &BaseModule{}
-	mod.LoopCheck = func() {
-		for mod.Running {
-			msg := <-mod.Stream
-			if msg.Content == "hello" {
-				mod.Actions.Send(Message{Content: "Hi", Channel: msg.Channel})
-			}
-		}
-	}
 }
 
 func (mod *BaseModule) Loop(stream Stream, actions Actions) error {
@@ -92,4 +44,24 @@ func (mod *BaseModule) Stop() {
 	defer mod.Unlock()
 
 	mod.Running = false
+}
+
+func (mod *BaseModule) DB() *sql.DB {
+	return mod.db
+}
+
+func (mod *BaseModule) setDB(db *sql.DB) {
+	mod.db = db
+}
+
+func loopCheckExample() {
+	mod := &BaseModule{}
+	mod.LoopCheck = func() {
+		for mod.Running {
+			msg := <-mod.Stream
+			if msg.Content == "hello" {
+				mod.Actions.Send(Message{Content: "Hi", Channel: msg.Channel})
+			}
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package policing
 
 import (
+	"time"
 	"github.com/miodzie/seras"
 )
 
@@ -14,7 +15,8 @@ func NewPolicingMod() *PolicingMod {
 		for mod.Running {
 			msg := <-mod.Stream
 			if IsSpam(msg) {
-				mod.Sender.Send(seras.Message{Content: "bruh, shut up", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "bruh, shut up", Channel: msg.Channel})
+				mod.Actions.TimeoutUser(msg.Channel, msg.Author, time.Now().Add(time.Minute * 1))
 			}
 		}
 	}

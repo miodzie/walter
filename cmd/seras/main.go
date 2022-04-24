@@ -80,7 +80,3 @@ func makeDiscord(token string) *discord.Connection {
 	disc := discord.New(token)
 	return disc
 }
-
-func makeDiscordMessenger() {
-
-}

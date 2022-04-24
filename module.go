@@ -5,23 +5,28 @@ import (
 )
 
 type Module interface {
-	Loop(Stream, Messenger) error
+	Loop(Stream, Actions) error
 	Stop()
 }
 
-type ModuleManager struct {
-  modules []Module
-  streams []chan Message
-  messenger Messenger
+type Actions interface {
+	Messenger
+	Admin
 }
 
-func NewModManager(mods []Module, messenger Messenger) *ModuleManager {
-  manager := &ModuleManager{
-    modules: mods,
-    messenger: messenger,
-  }
+type ModuleManager struct {
+	modules []Module
+	streams []chan Message
+	actions Actions
+}
 
-  return manager
+func NewModManager(mods []Module, actions Actions) *ModuleManager {
+	manager := &ModuleManager{
+		modules: mods,
+		actions: actions,
+	}
+
+	return manager
 }
 
 func (manager *ModuleManager) Run(stream Stream) {
@@ -29,7 +34,7 @@ func (manager *ModuleManager) Run(stream Stream) {
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
 		manager.streams = append(manager.streams, modStream)
-		mod.Loop(modStream, manager.messenger)
+		mod.Loop(modStream, manager.actions)
 	}
 
 	// Collect messages from stream, broadcast to mods.
@@ -40,19 +45,19 @@ func (manager *ModuleManager) Run(stream Stream) {
 	}
 }
 
-func (manager * ModuleManager) Stop() {
-  for _, mod := range manager.modules {
-    mod.Stop()
-  }
-  for _, stream := range manager.streams {
-    close(stream)
-  }
+func (manager *ModuleManager) Stop() {
+	for _, mod := range manager.modules {
+		mod.Stop()
+	}
+	for _, stream := range manager.streams {
+		close(stream)
+	}
 }
 
 type BaseModule struct {
-	Sender    Messenger
-	Stream    Stream
-	Running   bool
+	Actions Actions
+	Stream  Stream
+	Running bool
 	// See loopCheckExample()
 	LoopCheck func()
 	sync.Mutex
@@ -64,17 +69,17 @@ func loopCheckExample() {
 		for mod.Running {
 			msg := <-mod.Stream
 			if msg.Content == "hello" {
-				mod.Sender.Send(Message{Content: "Hi", Channel: msg.Channel})
+				mod.Actions.Send(Message{Content: "Hi", Channel: msg.Channel})
 			}
 		}
 	}
 }
 
-func (mod *BaseModule) Loop(stream Stream, sender Messenger) error {
+func (mod *BaseModule) Loop(stream Stream, actions Actions) error {
 	mod.Lock()
 	defer mod.Unlock()
 
-	mod.Sender = sender
+	mod.Actions = actions
 	mod.Stream = stream
 	mod.Running = true
 	go mod.LoopCheck()

@@ -10,6 +10,5 @@ type Connection interface {
 }
 
 type Admin interface {
-	MuteUser(string, time.Duration)
+	TimeoutUser(channel string, user string, until time.Time)
 }
-

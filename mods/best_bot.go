@@ -20,15 +20,15 @@ func NewBestBotMod() *BestBotMod {
 			// fmt.Println("BestBot: MSG RECEIVED=" + msg.Content)
 			r, _ := regexp.Compile(`[Cc]s(?:go)?\?`)
 			if r.MatchString(msg.Content) {
-				mod.Sender.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
 			}
 			if msg.Content == "gentlemen" || msg.Content == "lenny" {
-				mod.Sender.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
 			}
 			if msg.Content == "ladies" {
-				mod.Sender.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
-				mod.Sender.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
-				mod.Sender.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
+				mod.Actions.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})
 			}
 		}
 	}

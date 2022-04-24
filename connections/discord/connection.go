@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/miodzie/seras"
@@ -54,6 +55,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		Channel:   e.ChannelID,
 		Arguments: strings.Split(e.Content, " "),
 		Author:    e.Author.Username,
+		AuthorId:  e.Author.ID,
 	}
 	fmt.Printf("Discord:  [%s]: %s\n", msg.Author, msg.Content)
 	con.stream <- msg
@@ -62,4 +64,8 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 func (con *Connection) Send(msg seras.Message) error {
 	_, err := con.session.ChannelMessageSend(msg.Channel, msg.Content)
 	return err
+}
+
+func (con *Connection) TimeoutUser(channel string, user string, until time.Time) {
+	con.session.GuildMemberTimeout(channel, user, &until)
 }

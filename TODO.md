@@ -10,3 +10,4 @@
   - Audit Log of Actions
 
 * RSS feed, notify users of new animu. (SPY X FAMILY for me and Gustav)
+* Module's get their own Database

@@ -1,42 +1,43 @@
 package seras
 
 import (
-	"database/sql"
+	"errors"
 	"fmt"
 
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-// TODO: implement management of dbs
 type ModuleManager struct {
 	modules []Module
 	streams []chan Message
 	actions Actions
-	dbs     map[string]*sql.DB
+	dbs     map[string]*gorm.DB
 }
 
-func NewModManager(mods []Module, actions Actions) *ModuleManager {
+func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 	manager := &ModuleManager{
 		modules: mods,
 		actions: actions,
-		dbs:     make(map[string]*sql.DB),
+		dbs:     make(map[string]*gorm.DB),
 	}
 	// Init mod databases.
 	for _, mod := range mods {
-		fmt.Println(mod.Name())
 		// Defaulting to sqlite3 is fine for now.
-		path := fmt.Sprintf("storage/%s.sqlite", mod.Name())
-		db, err := sql.Open("sqlite3", path)
+		path := fmt.Sprintf("storage/%s.db", mod.Name())
+		db, err := gorm.Open(sqlite.Open(path))
 		if err != nil {
-			// TODO: Return err
-			panic(err)
+			return &ModuleManager{}, err
 		}
-		// TODO: Check for duplicate names.
+		if _, ok := manager.dbs[mod.Name()]; ok {
+			return &ModuleManager{}, errors.New("duplicate module name")
+		}
 		manager.dbs[mod.Name()] = db
 		mod.setDB(db)
+    fmt.Printf("Module loaded: %s\n", mod.Name())
 	}
 
-	return manager
+	return manager, nil
 }
 
 func (manager *ModuleManager) Run(stream Stream) error {

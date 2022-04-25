@@ -1,8 +1,6 @@
 package seras
 
-import (
-	"database/sql"
-)
+import "gorm.io/gorm"
 
 // Modules need some type of interface for storing data.
 // Pass them a separated database? E.g. each module gets their own
@@ -15,6 +13,6 @@ import (
 // I could have a simple key-store setup...
 
 type HasDatabase interface {
-  setDB(*sql.DB)
-  DB() *sql.DB
+	setDB(*gorm.DB)
+	DB() *gorm.DB
 }

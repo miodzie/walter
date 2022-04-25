@@ -1,8 +1,9 @@
 package seras
 
 import (
-	"database/sql"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 type Module interface {
@@ -23,7 +24,7 @@ type BaseModule struct {
 	Running bool
 	// See loopCheckExample()
 	LoopCheck func()
-	db      *sql.DB
+	db      *gorm.DB
 	sync.Mutex
 }
 
@@ -46,11 +47,11 @@ func (mod *BaseModule) Stop() {
 	mod.Running = false
 }
 
-func (mod *BaseModule) DB() *sql.DB {
+func (mod *BaseModule) DB() *gorm.DB {
 	return mod.db
 }
 
-func (mod *BaseModule) setDB(db *sql.DB) {
+func (mod *BaseModule) setDB(db *gorm.DB) {
 	mod.db = db
 }
 

@@ -35,7 +35,10 @@ func run(args []string) error {
 	startCli(connection)
 
 	stream, _ := connection.Connect()
-	manager := seras.NewModManager(mods.Default(), connection)
+	manager, err := seras.NewModManager(mods.Default(), connection)
+  if err != nil {
+    return err
+  }
 
 	return manager.Run(stream)
 }

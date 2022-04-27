@@ -8,23 +8,27 @@ import (
 )
 
 type BestBotMod struct {
-  seras.BaseModule
+	seras.BaseModule
 }
 
 func (mod *BestBotMod) Name() string {
-  return "best_bot"
+	return "best_bot"
 }
 
 func New() *BestBotMod {
 	mod := &BestBotMod{}
-	mod.LoopCheck = func() {
+	mod.Run = func() {
 		fmt.Println("BEE, BOO BOO, BOP")
 		for mod.Running {
 			msg := <-mod.Stream
 			// fmt.Println("BestBot: MSG RECEIVED=" + msg.Content)
-			r, _ := regexp.Compile(`[Cc]s(?:go)?\?`)
+			r, _ := regexp.Compile(`(?i)cs(?:go)?\?`)
 			if r.MatchString(msg.Content) {
 				mod.Actions.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
+			}
+			r, _ = regexp.Compile(`(?i)\bruck\b`)
+			if r.MatchString(msg.Content) {
+				mod.Actions.Send(seras.Message{Content: "yes", Channel: msg.Channel})
 			}
 			if msg.Content == "gentlemen" || msg.Content == "lenny" {
 				mod.Actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})

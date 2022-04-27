@@ -23,7 +23,7 @@ type BaseModule struct {
 	Stream  Stream
 	Running bool
 	// See loopCheckExample()
-	LoopCheck func()
+	Run func()
 	db      *gorm.DB
 	sync.Mutex
 }
@@ -35,7 +35,7 @@ func (mod *BaseModule) Loop(stream Stream, actions Actions) error {
 	mod.Actions = actions
 	mod.Stream = stream
 	mod.Running = true
-	go mod.LoopCheck()
+	go mod.Run()
 
 	return nil
 }
@@ -57,7 +57,7 @@ func (mod *BaseModule) setDB(db *gorm.DB) {
 
 func loopCheckExample() {
 	mod := &BaseModule{}
-	mod.LoopCheck = func() {
+	mod.Run = func() {
 		for mod.Running {
 			msg := <-mod.Stream
 			if msg.Content == "hello" {

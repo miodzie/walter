@@ -17,7 +17,7 @@ func (mod *PolicingMod) Name() string {
 
 func New() *PolicingMod {
 	mod := &PolicingMod{}
-	mod.LoopCheck = func() {
+	mod.Run = func() {
 		for mod.Running {
 			msg := <-mod.Stream
 			if IsSpam(msg) {

@@ -10,6 +10,7 @@ import (
 type FeedRepository struct {
 }
 
+
 func (repo *FeedRepository) All() ([]rss.Feed, error) {
 	rows, err := db.Query("SELECT rowid, * FROM feeds")
 	if err != nil {
@@ -33,15 +34,15 @@ func (repo *FeedRepository) All() ([]rss.Feed, error) {
 }
 
 func (repo *FeedRepository) Save(feed *rss.Feed) error {
-    result, err := db.Exec("INSERT INTO feeds (name, url) VALUES(?, ?)", feed.Name, feed.Url)
-    if err != nil {
-        return fmt.Errorf("Save: %v", err)
-    }
-    id, err := result.LastInsertId()
-    if err != nil {
-        return err
-    }
-    feed.Id = uint64(id)
+	result, err := db.Exec("INSERT INTO feeds (name, url) VALUES(?, ?)", feed.Name, feed.Url)
+	if err != nil {
+		return fmt.Errorf("Save: %v", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	feed.Id = uint64(id)
 
 	return nil
 }

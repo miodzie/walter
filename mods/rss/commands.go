@@ -7,6 +7,7 @@ import (
 	"github.com/miodzie/seras"
 )
 
+// !feeds
 func (mod *RssMod) showFeeds(msg seras.Message) {
 	feeds, err := mod.feeds.All()
 	if err != nil {

@@ -7,14 +7,15 @@ import (
 
 type ModuleManager struct {
 	modules []Module
-	streams []chan Message
 	actions Actions
+	streams map[string]chan Message
 }
 
 func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 	manager := &ModuleManager{
 		modules: mods,
 		actions: actions,
+		streams: make(map[string]chan Message),
 	}
 	var list []string
 	for _, mod := range mods {
@@ -29,7 +30,7 @@ func (manager *ModuleManager) Run(stream Stream) error {
 	// Init mod streams, start them up.
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
-		manager.streams = append(manager.streams, modStream)
+		manager.streams[mod.Name()] = modStream
 		go mod.Start(modStream, manager.actions)
 	}
 

@@ -92,16 +92,3 @@ func (listener *Listener) AddItem(item *gofeed.Item) error {
 
 	return nil
 }
-
-type InMemListenerRepository struct {
-	items []*Listener
-}
-
-func (r *InMemListenerRepository) All() []*Listener {
-	return r.items
-}
-
-func (r *InMemListenerRepository) Save(listener *Listener) error {
-	r.items = append(r.items, listener)
-	return nil
-}

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/miodzie/seras"
-	// "github.com/mmcdole/gofeed"
 )
+
 
 const CRUNCHYROLL = "https://www.crunchyroll.com/rss/anime"
 

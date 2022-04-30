@@ -27,6 +27,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 	go mod.checkFeeds()
 	for mod.running {
 		msg := <-stream
+		msg.Command("feeds", mod.showFeeds)
 		msg.Command("add_feed", mod.addFeed)
 		msg.Command("subscribe", mod.subscribe)
 	}

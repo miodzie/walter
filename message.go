@@ -2,6 +2,10 @@ package seras
 
 var token string = "!"
 
+func Token() string {
+    return token
+}
+
 type Messenger interface {
 	Send(Message) error
 }

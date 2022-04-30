@@ -66,6 +66,11 @@ func (con *Connection) Send(msg seras.Message) error {
 	return err
 }
 
+func (con *Connection) Reply(msg seras.Message, content string) error {
+    reply := seras.Message{Content: content, Channel: msg.Channel}
+    return con.Send(reply)
+}
+
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
 	return con.session.GuildMemberTimeout(channel, user, &until)
 }

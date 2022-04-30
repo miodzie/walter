@@ -26,19 +26,19 @@ func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
 		msg := <-stream
 		r, _ := regexp.Compile(`(?i)cs(?:go)?\?`)
 		if r.MatchString(msg.Content) {
-			actions.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
+			actions.Reply(msg, "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889")
 		}
 		r, _ = regexp.Compile(`(?i)\bruck\b`)
 		if r.MatchString(msg.Content) {
-			actions.Send(seras.Message{Content: "yes", Channel: msg.Channel})
+			actions.Reply(msg, "yes")
 		}
 		if msg.IsCommand("gentlemen") || msg.IsCommand("lenny") {
-			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
+			actions.Reply(msg, "( ͡° ͜ʖ ͡° )")
 		}
 		if msg.IsCommand("ladies") {
-			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
-			actions.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
-			actions.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})
+			actions.Reply(msg, "( ͡° ͜ʖ ͡° )")
+			actions.Reply(msg, "( ͡⊙ ͜ʖ ͡⊙ )")
+			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉ )")
 		}
 	}
 

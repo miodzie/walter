@@ -8,6 +8,7 @@ func Token() string {
 
 type Messenger interface {
 	Send(Message) error
+	Reply(Message, string) error
 }
 
 type Message struct {

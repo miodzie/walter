@@ -11,11 +11,11 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 	feeds, err := mod.feeds.All()
 	if err != nil {
 		fmt.Println(err)
-		mod.actions.Send(seras.Message{Content: "Failed to fetch feeds.", Channel: msg.Channel})
+		mod.actions.Reply(msg, "Failed to fetch feeds.")
 		return
 	}
 	if len(feeds) == 0 {
-		mod.actions.Send(seras.Message{Content: "No feeds available.", Channel: msg.Channel})
+		mod.actions.Reply(msg, "No feeds available.")
 		return
 	}
 
@@ -46,9 +46,12 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 
 // !subscribe {feed name} {keywords, comma separated}
 func (mod *RssMod) subscribe(msg seras.Message) {
+    if len(msg.Arguments) < 3 {
+        return
+    }
 	feed, err := mod.feeds.GetByName(msg.Arguments[1])
 	if err != nil {
-		mod.actions.Send(seras.Message{Content: "Unknown feed.", Channel: msg.Channel})
+		mod.actions.Reply(msg, "Unknown feed. Use !feeds to see available.")
 		fmt.Println(err)
 		return
 	}
@@ -64,9 +67,6 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	err = mod.subs.Save(sub)
 	if err != nil {
 		fmt.Println(err)
-		mod.actions.Send(seras.Message{
-			Content: "Failed to save feed, likely one already exists for this channel and feed.",
-			Channel: msg.Channel,
-		})
+		mod.actions.Reply(msg, "Failed to save feed, likely one already exists for this channel and feed.")
 	}
 }

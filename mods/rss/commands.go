@@ -25,18 +25,22 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 func (mod *RssMod) subscribe(msg seras.Message) {
 	feed, err := mod.feeds.GetByName(msg.Arguments[1])
 	if err != nil {
-		panic(err)
+		mod.actions.Send(seras.Message{Content: "Unknown feed."})
+		fmt.Println(err)
+		return
 	}
 	// TODO: parse, test
-	keywords := strings.Join(msg.Arguments[2:], "")
+	keywords := strings.Join(msg.Arguments[2:], " ")
+	fmt.Println(keywords)
 	sub := &Subscription{
 		FeedId:   feed.Id,
 		Channel:  msg.Channel,
 		Keywords: keywords,
-		User:     msg.Author,
+		User:     msg.AuthorId,
 	}
 	err = mod.subs.Save(sub)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		mod.actions.Send(seras.Message{Content: "Failed to save feed, likely one already exists for this channel and feed."})
 	}
 }

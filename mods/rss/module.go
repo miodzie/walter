@@ -1,6 +1,7 @@
 package rss
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/miodzie/seras"
@@ -40,9 +41,13 @@ func (mod *RssMod) checkFeeds() {
 			panic(err)
 		}
 		for _, feed := range feeds {
-			_, err := mod.subs.GetByFeedId(feed.Id)
+			fmt.Printf("Checking feed: %s: %s\n", feed.Name, feed.Url)
+			subs, err := mod.subs.GetByFeedId(feed.Id)
 			if err != nil {
-				panic(err)
+				fmt.Println(err)
+			}
+			for _, sub := range subs {
+				fmt.Printf("User: %s, Keywords: %s\n", sub.User, sub.Keywords)
 			}
 
 		}

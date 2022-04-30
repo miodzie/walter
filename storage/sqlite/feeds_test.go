@@ -2,7 +2,6 @@
 package sqlite
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/miodzie/seras/mods/rss"
@@ -10,8 +9,7 @@ import (
 
 var feedRepo FeedRepository
 
-
-func TestAll(t *testing.T) {
+func TestFeedAll(t *testing.T) {
 	feed := &rss.Feed{Name: "another_one", Url: "https://google.com/2"}
 	feedRepo.Save(feed)
 	feeds, err := feedRepo.All()
@@ -23,12 +21,9 @@ func TestAll(t *testing.T) {
 		t.Error(err)
 		t.Fail()
 	}
-	for _, f := range feeds {
-		fmt.Println(f)
-	}
 }
 
-func TestSave(t *testing.T) {
+func TestFeedSave(t *testing.T) {
 	feed := &rss.Feed{Name: "hackernews", Url: "https://google.com"}
 	err := feedRepo.Save(feed)
 	if err != nil {
@@ -37,19 +32,19 @@ func TestSave(t *testing.T) {
 	}
 }
 
-func TestGetByName(t *testing.T) {
+func TestFeedGetByName(t *testing.T) {
 	err := feedRepo.Save(&rss.Feed{Name: "cool_name", Url: "https://google.com/cool_name"})
 	if err != nil {
 		t.Error(err)
 		t.Fail()
 	}
 
-    feed, err := feedRepo.GetByName("cool_name")
-    if err != nil {
-        t.Error(err)
-        t.Fail()
-    }
-    if feed.Name != "cool_name" {
-        t.Fail()
-    }
+	feed, err := feedRepo.GetByName("cool_name")
+	if err != nil {
+		t.Error(err)
+		t.Fail()
+	}
+	if feed.Name != "cool_name" {
+		t.Fail()
+	}
 }

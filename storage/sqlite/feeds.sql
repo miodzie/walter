@@ -1,12 +1,9 @@
 CREATE TABLE IF NOT EXISTS feeds (
-  id          INT AUTO_INCREMENT NOT NULL,
   name        VARCHAR(255) UNIQUE NOT NULL,
-  url         VARCHAR(255) UNIQUE NOT NULL,
-  PRIMARY KEY ('id')
+  url         VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS feed_subscriptions (
-  id       INT AUTO_INCREMENT NOT NULL,
   feed_id  INT NOT NULL,
   channel  VARCHAR(255) NOT NULL,
   user     VARCHAR(255) NOT NULL,

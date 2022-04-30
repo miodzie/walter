@@ -35,10 +35,10 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 
 func (mod *RssMod) checkFeeds() {
 	for mod.running {
-        feeds, err := mod.feeds.All()
-        if err != nil {
-            panic(err)
-        }
+		feeds, err := mod.feeds.All()
+		if err != nil {
+			panic(err)
+		}
 		for _, feed := range feeds {
 			_, err := mod.subs.GetByFeedId(feed.Id)
 			if err != nil {

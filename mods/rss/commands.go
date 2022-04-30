@@ -14,6 +14,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		Name: msg.Arguments[1],
 		Url:  msg.Arguments[2],
 	}
+	fmt.Println(feed.Name, feed.Url)
 	err := mod.feeds.Save(feed)
 	if err != nil {
 		fmt.Println(err)
@@ -26,12 +27,12 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	if err != nil {
 		panic(err)
 	}
-	// TODO: write a test damn it
+	// TODO: parse, test
 	keywords := strings.Join(msg.Arguments[2:], "")
 	sub := &Subscription{
-		Feed:     feed,
+		FeedId:   feed.Id,
 		Channel:  msg.Channel,
-		Keywords: strings.Split(keywords, ","),
+		Keywords: keywords,
 		User:     msg.Author,
 	}
 	err = mod.subs.Save(sub)

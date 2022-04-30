@@ -21,6 +21,11 @@ type Listener struct {
 	Notifees []string
 }
 
+type ListenerRepository interface {
+	All() []*Listener
+	Save(*Listener) error
+}
+
 func (listener *Listener) Process() ([]seras.Message, error) {
 	msgs := []seras.Message{}
 	fd := gofeed.NewParser()
@@ -39,10 +44,10 @@ func (listener *Listener) Process() ([]seras.Message, error) {
 
 func (listener *Listener) CreateNotifcation(item *gofeed.Item) seras.Message {
 	msg := seras.Message{Channel: listener.Channel}
-    var images string
-    for _, enclosure := range item.Enclosures {
-        images += enclosure.URL
-    }
+	var images string
+	for _, enclosure := range item.Enclosures {
+		images += enclosure.URL
+	}
 	template := "Hot off the press!\n%s\n%s\nLink: %s\n\n%s"
 	msg.Content = fmt.Sprintf(
 		template,
@@ -85,5 +90,18 @@ func (listener *Listener) AddItem(item *gofeed.Item) error {
 	}
 	listener.Seen[item.GUID] = item
 
+	return nil
+}
+
+type InMemListenerRepository struct {
+	items []*Listener
+}
+
+func (r *InMemListenerRepository) All() []*Listener {
+	return r.items
+}
+
+func (r *InMemListenerRepository) Save(listener *Listener) error {
+	r.items = append(r.items, listener)
 	return nil
 }

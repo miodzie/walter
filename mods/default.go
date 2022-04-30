@@ -8,5 +8,9 @@ import (
 )
 
 func Default() []seras.Module {
-	return []seras.Module{bestbot.New(), policing.New(), rss.New()}
+	return []seras.Module{
+	    bestbot.New(),
+	    policing.New(),
+	    rss.New(&rss.InMemListenerRepository{}),
+	}
 }

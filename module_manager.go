@@ -33,8 +33,8 @@ func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 			return &ModuleManager{}, errors.New("duplicate module name")
 		}
 		manager.dbs[mod.Name()] = db
-		mod.setDB(db)
-    fmt.Printf("Module loaded: %s\n", mod.Name())
+		// mod.setDB(db)
+		fmt.Printf("Module loaded: %s\n", mod.Name())
 	}
 
 	return manager, nil
@@ -45,7 +45,7 @@ func (manager *ModuleManager) Run(stream Stream) error {
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
 		manager.streams = append(manager.streams, modStream)
-		mod.Loop(modStream, manager.actions)
+		go mod.Start(modStream, manager.actions)
 	}
 
 	// Collect messages from stream, broadcast to mods.

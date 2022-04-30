@@ -43,7 +43,7 @@ func (listener *Listener) CreateNotifcation(item *gofeed.Item) seras.Message {
     for _, enclosure := range item.Enclosures {
         images += enclosure.URL
     }
-	template := "NEW: %s\n%s\nLink: %s\n\n%s"
+	template := "Hot off the press!\n%s\n%s\nLink: %s\n\n%s"
 	msg.Content = fmt.Sprintf(
 		template,
 		item.Title,

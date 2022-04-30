@@ -8,27 +8,31 @@ import (
 )
 
 type PolicingMod struct {
-	seras.BaseModule
-}
-
-func (mod *PolicingMod) Name() string {
-  return "police"
+	running bool
 }
 
 func New() *PolicingMod {
-	mod := &PolicingMod{}
-	mod.Run = func() {
-		for mod.Running {
-			msg := <-mod.Stream
-			if IsSpam(msg) {
-				// mod.Actions.Send(seras.Message{Content: "bruh, shut up", Channel: msg.Channel})
-				err := mod.Actions.TimeoutUser(msg.Channel, msg.AuthorId, time.Now().Add(time.Minute*1))
-				if err != nil {
-					fmt.Printf("Failed to TimeoutUser: \"%s\"\n", err)
-				}
+	return &PolicingMod{}
+}
+
+func (mod *PolicingMod) Name() string {
+	return "police"
+}
+
+func (mod *PolicingMod) Start(stream seras.Stream, actions seras.Actions) error {
+	mod.running = true
+	for mod.running {
+		msg := <-stream
+		if IsSpam(msg) {
+			err := actions.TimeoutUser(msg.Channel, msg.AuthorId, time.Now().Add(time.Minute*1))
+			if err != nil {
+				fmt.Printf("Failed to TimeoutUser: \"%s\"\n", err)
 			}
 		}
 	}
+	return nil
+}
 
-	return mod
+func (mod *PolicingMod) Stop() {
+	mod.running = false
 }

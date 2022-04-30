@@ -8,38 +8,43 @@ import (
 )
 
 type BestBotMod struct {
-	seras.BaseModule
+	running bool
+}
+
+func New() *BestBotMod {
+	return &BestBotMod{}
 }
 
 func (mod *BestBotMod) Name() string {
 	return "best_bot"
 }
 
-func New() *BestBotMod {
-	mod := &BestBotMod{}
-	mod.Run = func() {
-		fmt.Println("BEE, BOO BOO, BOP")
-		for mod.Running {
-			msg := <-mod.Stream
-			// fmt.Println("BestBot: MSG RECEIVED=" + msg.Content)
-			r, _ := regexp.Compile(`(?i)cs(?:go)?\?`)
-			if r.MatchString(msg.Content) {
-				mod.Actions.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
-			}
-			r, _ = regexp.Compile(`(?i)\bruck\b`)
-			if r.MatchString(msg.Content) {
-				mod.Actions.Send(seras.Message{Content: "yes", Channel: msg.Channel})
-			}
-			if msg.Content == "gentlemen" || msg.Content == "lenny" {
-				mod.Actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
-			}
-			if msg.Content == "ladies" {
-				mod.Actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
-				mod.Actions.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
-				mod.Actions.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})
-			}
+func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
+	mod.running = true
+	fmt.Println("BEE, BOO BOO, BOP")
+	for mod.running {
+		msg := <-stream
+		r, _ := regexp.Compile(`(?i)cs(?:go)?\?`)
+		if r.MatchString(msg.Content) {
+			actions.Send(seras.Message{Content: "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889", Channel: msg.Channel})
+		}
+		r, _ = regexp.Compile(`(?i)\bruck\b`)
+		if r.MatchString(msg.Content) {
+			actions.Send(seras.Message{Content: "yes", Channel: msg.Channel})
+		}
+		if msg.Content == "gentlemen" || msg.Content == "lenny" {
+			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
+		}
+		if msg.Content == "ladies" {
+			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
+			actions.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
+			actions.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})
 		}
 	}
 
-	return mod
+	return nil
+}
+
+func (mod *BestBotMod) Stop() {
+	mod.running = false
 }

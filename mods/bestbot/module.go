@@ -32,10 +32,10 @@ func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
 		if r.MatchString(msg.Content) {
 			actions.Send(seras.Message{Content: "yes", Channel: msg.Channel})
 		}
-		if msg.Content == "gentlemen" || msg.Content == "lenny" {
+		if msg.IsCommand("gentlemen") || msg.IsCommand("lenny") {
 			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
 		}
-		if msg.Content == "ladies" {
+		if msg.IsCommand("ladies") {
 			actions.Send(seras.Message{Content: "( ͡° ͜ʖ ͡° )", Channel: msg.Channel})
 			actions.Send(seras.Message{Content: "( ͡⊙ ͜ʖ ͡⊙ )", Channel: msg.Channel})
 			actions.Send(seras.Message{Content: "( ͡◉ ͜ʖ ͡◉ )", Channel: msg.Channel})

@@ -1,25 +1,20 @@
 package rss
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/miodzie/seras"
 )
 
-
-const CRUNCHYROLL = "https://www.crunchyroll.com/rss/anime"
-
-var listeners []*Listener
-
 type RssMod struct {
-	actions      seras.Actions
-	running      bool
-	listenerRepo ListenerRepository
+	actions seras.Actions
+	running bool
+	feeds   FeedRepository
+	subs    SubscriptionRepository
 }
 
-func New(listenerRepo ListenerRepository) *RssMod {
-	return &RssMod{listenerRepo: listenerRepo}
+func New(feeds FeedRepository, subs SubscriptionRepository) *RssMod {
+	return &RssMod{feeds: feeds, subs: subs}
 }
 func (mod *RssMod) Name() string {
 	return "rss"
@@ -28,34 +23,28 @@ func (mod *RssMod) Name() string {
 func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	mod.actions = actions
-	// Start Another routine to check RSS
-	go mod.checkFeed()
+	go mod.checkFeeds()
 	for mod.running {
 		msg := <-stream
-		if msg.Arguments[0] == "!add_rss" {
-			// pretend to parse a Listener from text
-			listener := &Listener{}
-			mod.listenerRepo.Save(listener)
-		}
+		msg.Command("add_feed", mod.addFeed)
+		msg.Command("subscribe", mod.subscribe)
 	}
 
 	return nil
 }
 
-func (mod *RssMod) checkFeed() {
+func (mod *RssMod) checkFeeds() {
 	for mod.running {
-		for _, listener := range mod.listenerRepo.All() {
-			msgs, err := listener.Process()
+        feeds, err := mod.feeds.All()
+        if err != nil {
+            panic(err)
+        }
+		for _, feed := range feeds {
+			_, err := mod.subs.GetByFeedId(feed.Id)
 			if err != nil {
-				// TODO: log.
-				fmt.Println(err)
-				continue
+				panic(err)
 			}
-			for _, msg := range msgs {
-				fmt.Println(msg)
-				mod.actions.Send(msg)
-				break
-			}
+
 		}
 		time.Sleep(time.Minute * 30)
 	}

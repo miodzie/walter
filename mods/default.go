@@ -4,7 +4,7 @@ import (
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/bestbot"
 	"github.com/miodzie/seras/mods/policing"
-	"github.com/miodzie/seras/mods/rss"
+	rss "github.com/miodzie/seras/mods/rss/plugin"
 	"github.com/miodzie/seras/storage/sqlite"
 )
 

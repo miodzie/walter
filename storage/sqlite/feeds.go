@@ -10,7 +10,6 @@ import (
 type FeedRepository struct {
 }
 
-
 func (repo *FeedRepository) All() ([]rss.Feed, error) {
 	rows, err := db.Query("SELECT rowid, * FROM feeds")
 	if err != nil {

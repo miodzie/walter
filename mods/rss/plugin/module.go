@@ -1,20 +1,21 @@
-package rss
+package plugin
 
 import (
 	"fmt"
 	"time"
 
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/mods/rss"
 )
 
 type RssMod struct {
 	actions seras.Actions
 	running bool
-	feeds   FeedRepository
-	subs    SubscriptionRepository
+	feeds   rss.FeedRepository
+	subs    rss.SubscriptionRepository
 }
 
-func New(feeds FeedRepository, subs SubscriptionRepository) *RssMod {
+func New(feeds rss.FeedRepository, subs rss.SubscriptionRepository) *RssMod {
 	return &RssMod{feeds: feeds, subs: subs}
 }
 func (mod *RssMod) Name() string {

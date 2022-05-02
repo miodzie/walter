@@ -1,6 +1,10 @@
 package usecases
 
-import "github.com/miodzie/seras/mods/rss"
+import (
+	"fmt"
+
+	"github.com/miodzie/seras/mods/rss"
+)
 
 type Subscribe struct {
 	Feeds rss.FeedRepository
@@ -35,6 +39,7 @@ func (s *Subscribe) Handle(req SubscribeRequest) SubscribeResponse {
 		Keywords: req.Keywords,
 		User:     req.User,
 	}
+	resp.Message = fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
 	resp.Error = s.Subs.Save(sub)
 	if resp.Error != nil {
 		resp.Message = "Failed to save feed, likely one already exists for this channel and feed."

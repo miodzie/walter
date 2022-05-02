@@ -6,6 +6,7 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/seras/mods/rss/usecases"
 )
 
 type RssMod struct {
@@ -37,22 +38,13 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
+	checkFeeds := &usecases.CheckFeeds{Feeds: mod.feeds, Subs: mod.subs}
 	for mod.running {
-		feeds, err := mod.feeds.All()
-		if err != nil {
-			panic(err)
+		resp := checkFeeds.Handle()
+		if resp.Error != nil {
+			fmt.Println(resp.Error)
 		}
-		for _, feed := range feeds {
-			fmt.Printf("Checking feed: %s: %s\n", feed.Name, feed.Url)
-			subs, err := mod.subs.GetByFeedId(feed.Id)
-			if err != nil {
-				fmt.Println(err)
-			}
-			for _, sub := range subs {
-				fmt.Printf("User: %s, Keywords: %s\n", sub.User, sub.Keywords)
-			}
-
-		}
+        // TODO: Send Messages
 		time.Sleep(time.Minute * 30)
 	}
 }

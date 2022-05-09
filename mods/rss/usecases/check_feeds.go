@@ -13,20 +13,20 @@ type CheckFeeds struct {
 
 type CheckFeedsResponse struct {
 	Notifications []*rss.Notification
-	Error        error
+	Error         error
 }
 
-func (cf *CheckFeeds) Handle() CheckFeedsResponse {
+func (cl *CheckFeeds) Handle() CheckFeedsResponse {
 	var resp CheckFeedsResponse
-	feeds, err := cf.Feeds.All()
+	feeds, err := cl.Feeds.All()
 	if err != nil {
 		resp.Error = err
 		return resp
 	}
 
-	for _, feed := range feeds {
-		fmt.Printf("Checking feed: %s: %s\n", feed.Name, feed.Url)
-		subs, err := cf.Subs.GetByFeedId(feed.Id)
+	for _, listing := range feeds {
+		fmt.Printf("Checking feed: %s: %s\n", listing.Name, listing.Url)
+		subs, err := cl.Subs.ByFeedId(listing.Id)
 		if err != nil {
 			resp.Error = err
 		}
@@ -36,7 +36,7 @@ func (cf *CheckFeeds) Handle() CheckFeedsResponse {
 			//  Fetch feed.
 			//  Check feed for sub keywords.
 			// Add sub to SubsToNotify slice if so.
-            fmt.Printf("Channel: %s User: %s, Keywords: %s\n", sub.Channel, sub.User, sub.Keywords)
+			fmt.Printf("Channel: %s User: %s, Keywords: %s\n", sub.Channel, sub.User, sub.Keywords)
 			shouldNotify := true
 			if shouldNotify {
 				key := fmt.Sprintf("%d-%s", sub.FeedId, sub.Channel)
@@ -46,14 +46,14 @@ func (cf *CheckFeeds) Handle() CheckFeedsResponse {
 
 		// Sort by Channel and Feed, and group Users to notify into a
 		// new struct.
-        for _, subs := range notifications {
-            notification := &rss.Notification{}
-            for _, sub := range subs {
-                notification.Channel = sub.Channel // TODO: Set only once
-                notification.Users = append(notification.Users, sub.User)
-            }
-            resp.Notifications = append(resp.Notifications, notification)
-        }
+		for _, subs := range notifications {
+			notification := &rss.Notification{}
+			for _, sub := range subs {
+				notification.Channel = sub.Channel // TODO: Set only once
+				notification.Users = append(notification.Users, sub.User)
+			}
+			resp.Notifications = append(resp.Notifications, notification)
+		}
 	}
 
 	return resp

@@ -9,11 +9,11 @@ import (
 type SubscriptionRepository struct {
 }
 
-func (repo *SubscriptionRepository) Save(sub *rss.Subscription) error {
+func (repo *SubscriptionRepository) Add(sub *rss.Subscription) error {
 	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords) VALUES(?,?,?,?)"
 	result, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords)
 	if err != nil {
-		return fmt.Errorf("Save: %v", err)
+        return fmt.Errorf("SubscriptionRepository.add: %v", err)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
@@ -24,7 +24,7 @@ func (repo *SubscriptionRepository) Save(sub *rss.Subscription) error {
 	return nil
 }
 
-func (repo *SubscriptionRepository) GetByFeedId(id uint64) ([]rss.Subscription, error) {
+func (repo *SubscriptionRepository) ByFeedId(id uint64) ([]rss.Subscription, error) {
 	rows, err := db.Query("SELECT rowid, * FROM feed_subscriptions WHERE feed_id = ?", id)
 	if err != nil {
 		return nil, err

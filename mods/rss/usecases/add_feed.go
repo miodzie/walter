@@ -16,14 +16,14 @@ type AddFeedResponse struct {
 	Error   error
 }
 
-func (addFeed *AddFeed) Handle(req AddFeedRequest) AddFeedResponse {
+func (a *AddFeed) Handle(req AddFeedRequest) AddFeedResponse {
 	var resp AddFeedResponse
 
-	var feed *rss.Feed
-	feed.Name = req.Name
-	feed.Url = req.Url
+	var listing *rss.Feed
+	listing.Name = req.Name
+	listing.Url = req.Url
 
-	err := addFeed.Feeds.Save(feed)
+	err := a.Feeds.Add(listing)
 
 	resp.Message = "Feed saved."
 	if err != nil {

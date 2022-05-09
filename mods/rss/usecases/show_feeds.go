@@ -1,19 +1,24 @@
 package usecases
 
-import "github.com/miodzie/seras/mods/rss"
+import (
+	"text/template"
+
+	"github.com/miodzie/seras/mods/rss"
+)
 
 type ShowFeeds struct{}
 
 type ShowFeedsResponse struct {
-	Feeds   []rss.Feed
-	Message string
-	Error   error
+	Feeds []rss.Feed // NOTE: Using the domain model is crossing a boundry, and against the Dependency Inversion Principle.
+	Message  string
+	Error    error
 }
 
-func (sf *ShowFeeds) Handle(feeds rss.FeedRepository) ShowFeedsResponse {
+func (sl *ShowFeeds) Handle(listings rss.FeedRepository) ShowFeedsResponse {
 	var resp ShowFeedsResponse
+	template.New("test")
 
-	resp.Feeds, resp.Error = feeds.All()
+	resp.Feeds, resp.Error = listings.All()
 
 	if len(resp.Feeds) == 0 {
 		resp.Message = "No feeds available."

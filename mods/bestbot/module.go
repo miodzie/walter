@@ -1,7 +1,6 @@
 package bestbot
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/miodzie/seras"
@@ -21,10 +20,9 @@ func (mod *BestBotMod) Name() string {
 
 func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
-	fmt.Println("BEE, BOO BOO, BOP")
 	for mod.running {
 		msg := <-stream
-		r, _ := regexp.Compile(`(?i)cs(?:go)?\?`)
+		r, _ := regexp.Compile(`(?i)\bcs(?:go)?\?`)
 		if r.MatchString(msg.Content) {
 			actions.Reply(msg, "https://tenor.com/view/diego-eric-csgo-csgo-players-counter-strike-gif-22766889")
 		}

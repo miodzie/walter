@@ -32,10 +32,10 @@ func (repo *FeedRepository) All() ([]rss.Feed, error) {
 	return feeds, nil
 }
 
-func (repo *FeedRepository) Save(feed *rss.Feed) error {
+func (repo *FeedRepository) Add(feed *rss.Feed) error {
 	result, err := db.Exec("INSERT INTO feeds (name, url) VALUES(?, ?)", feed.Name, feed.Url)
 	if err != nil {
-		return fmt.Errorf("Save: %v", err)
+        return fmt.Errorf("FeedRepository.add: %v", err)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
@@ -46,7 +46,7 @@ func (repo *FeedRepository) Save(feed *rss.Feed) error {
 	return nil
 }
 
-func (repo *FeedRepository) GetByName(name string) (rss.Feed, error) {
+func (repo *FeedRepository) ByName(name string) (rss.Feed, error) {
 	var feed rss.Feed
 	row := db.QueryRow("SELECT rowid, * FROM feeds WHERE name = ?", name)
 	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {

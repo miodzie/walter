@@ -2,7 +2,6 @@ package rss
 
 import "strings"
 
-
 type Subscription struct {
 	Id       uint64
 	FeedId   uint64
@@ -18,6 +17,6 @@ func (sub *Subscription) KeywordsSlice() []string {
 }
 
 type SubscriptionRepository interface {
-	Save(*Subscription) error
-	GetByFeedId(id uint64) ([]Subscription, error)
+	Add(*Subscription) error
+	ByFeedId(id uint64) ([]Subscription, error)
 }

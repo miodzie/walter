@@ -7,8 +7,17 @@ import (
 )
 
 type CheckFeeds struct {
-	Feeds rss.FeedRepository
-	Subs  rss.SubscriptionRepository
+	Feeds  rss.FeedRepository
+	Subs   rss.SubscriptionRepository
+	parser rss.Parser
+}
+
+func NewCheckFeeds(f rss.FeedRepository, s rss.SubscriptionRepository, parser rss.Parser) *CheckFeeds {
+	return &CheckFeeds{
+		Feeds:  f,
+		Subs:   s,
+		parser: parser,
+	}
 }
 
 type CheckFeedsResponse struct {
@@ -16,17 +25,17 @@ type CheckFeedsResponse struct {
 	Error         error
 }
 
-func (cl *CheckFeeds) Handle() CheckFeedsResponse {
+func (checker *CheckFeeds) Handle() CheckFeedsResponse {
 	var resp CheckFeedsResponse
-	feeds, err := cl.Feeds.All()
+	feeds, err := checker.Feeds.All()
 	if err != nil {
 		resp.Error = err
 		return resp
 	}
 
-	for _, listing := range feeds {
-		fmt.Printf("Checking feed: %s: %s\n", listing.Name, listing.Url)
-		subs, err := cl.Subs.ByFeedId(listing.Id)
+	for _, feed := range feeds {
+		fmt.Printf("Checking feed: %s: %s\n", feed.Name, feed.Url)
+		subs, err := checker.Subs.ByFeedId(feed.Id)
 		if err != nil {
 			resp.Error = err
 		}

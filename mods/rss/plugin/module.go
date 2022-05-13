@@ -38,7 +38,8 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	checkFeeds := &usecases.CheckFeeds{Feeds: mod.feeds, Subs: mod.subs}
+    // TODO: Replace parser.
+	checkFeeds := usecases.NewCheckFeeds(mod.feeds, mod.subs, &rss.DefaultParser{})
 	for mod.running {
 		resp := checkFeeds.Handle()
 		if resp.Error != nil {

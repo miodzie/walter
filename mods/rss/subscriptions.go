@@ -1,6 +1,8 @@
 package rss
 
-import "strings"
+import (
+	"strings"
+)
 
 type Subscription struct {
 	Id       uint64
@@ -11,6 +13,7 @@ type Subscription struct {
 	Feed     *Feed
 	Seen     map[string]interface{} // [guid]item
 }
+
 
 func (sub *Subscription) KeywordsSlice() []string {
 	return strings.Split(sub.Keywords, ",")

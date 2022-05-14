@@ -5,12 +5,19 @@ import (
 )
 
 func TestProcessor_Handle(t *testing.T) {
-	sut := &CheckFeeds{
+	sut := &Processor{
 		feeds:  &InMemFeeds{},
 		subs:   &InMemSubs{},
 		parser: &NulledParser{},
 	}
 	sut.feeds.Add(&Feed{})
 
-	sut.Handle()
+	notes, err := sut.Handle()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(notes) == 0 {
+		t.Error("notes is empty")
+	}
 }

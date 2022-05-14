@@ -1,7 +1,6 @@
 package rss
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -30,22 +29,23 @@ func TestProcessor_Handle(t *testing.T) {
 		t.Error("notes is empty")
 	}
 
+    // TODO: Grouping probably should be per Notifiable level.
+    // e.g. two people listen to one feed, but different keywords result
+    // in different Items being notified to a user.
+
 	// notifs[0] should have Users: adam and dakota
 	fooNotif := notifs[0]
-	for _, i := range notifs {
-		fmt.Printf("%v\n", i)
-	}
 	if len(fooNotif.Users) != 2 {
 		t.Errorf("fooNotif should have %s and %s", adam.User, dakota.User)
 	}
-	checkSub(t, fooNotif, adam, feed)
-	checkSub(t, notifs[1], alice, feed)
+	checkNotif(t, fooNotif, adam, feed)
+	checkNotif(t, notifs[1], alice, feed)
 	if len(notifs) > 2 {
-		t.Error("there should only be a notification for fooSub and barSub")
+		t.Error("there shouldn't be a notification for james")
 	}
 }
 
-func checkSub(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
+func checkNotif(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
 	if n.Channel != sub.Channel {
 		t.Error("expected notification not found")
 	}

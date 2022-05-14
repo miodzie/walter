@@ -6,7 +6,6 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/rss"
-	"github.com/miodzie/seras/mods/rss/usecases"
 )
 
 type RssMod struct {
@@ -38,14 +37,17 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-    // TODO: Replace parser.
-	checkFeeds := usecases.NewCheckFeeds(mod.feeds, mod.subs, &rss.StubParser{})
+	// TODO: Replace parser.
+	p := rss.NewProcessor(mod.feeds, mod.subs, &rss.NulledParser{})
 	for mod.running {
-		resp := checkFeeds.Handle()
-		if resp.Error != nil {
-			fmt.Println(resp.Error)
+		notifs, err := p.Handle()
+		if err != nil {
+			fmt.Println(err)
 		}
-        // TODO: Send Messages
+		for _, notif := range notifs {
+			// TODO: Format, send messages.
+			fmt.Println("notif: %s", notif.Channel)
+		}
 		time.Sleep(time.Minute * 30)
 	}
 }

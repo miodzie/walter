@@ -9,16 +9,16 @@ import (
 type ShowFeeds struct{}
 
 type ShowFeedsResponse struct {
-	Feeds []rss.Feed // NOTE: Using the domain model is crossing a boundry, and against the Dependency Inversion Principle.
-	Message  string
-	Error    error
+	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundry, and against the Dependency Inversion Principle.
+	Message string
+	Error   error
 }
 
-func (sl *ShowFeeds) Handle(listings rss.Feeds) ShowFeedsResponse {
+func (sl *ShowFeeds) Handle(feeds rss.Feeds) ShowFeedsResponse {
 	var resp ShowFeedsResponse
 	template.New("test")
 
-	resp.Feeds, resp.Error = listings.All()
+	resp.Feeds, resp.Error = feeds.All()
 
 	if len(resp.Feeds) == 0 {
 		resp.Message = "No feeds available."

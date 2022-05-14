@@ -10,16 +10,16 @@ import (
 type FeedRepository struct {
 }
 
-func (repo *FeedRepository) All() ([]rss.Feed, error) {
+func (repo *FeedRepository) All() ([]*rss.Feed, error) {
 	rows, err := db.Query("SELECT rowid, * FROM feeds")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var feeds []rss.Feed
+	var feeds []*rss.Feed
 	for rows.Next() {
-		var feed rss.Feed
+		var feed *rss.Feed
 		if err := rows.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 			return nil, err
 		}
@@ -46,8 +46,8 @@ func (repo *FeedRepository) Add(feed *rss.Feed) error {
 	return nil
 }
 
-func (repo *FeedRepository) ByName(name string) (rss.Feed, error) {
-	var feed rss.Feed
+func (repo *FeedRepository) ByName(name string) (*rss.Feed, error) {
+	var feed *rss.Feed
 	row := db.QueryRow("SELECT rowid, * FROM feeds WHERE name = ?", name)
 	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 		if err == sql.ErrNoRows {

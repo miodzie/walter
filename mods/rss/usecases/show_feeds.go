@@ -14,7 +14,7 @@ type ShowFeedsResponse struct {
 	Error    error
 }
 
-func (sl *ShowFeeds) Handle(listings rss.FeedRepository) ShowFeedsResponse {
+func (sl *ShowFeeds) Handle(listings rss.Feeds) ShowFeedsResponse {
 	var resp ShowFeedsResponse
 	template.New("test")
 

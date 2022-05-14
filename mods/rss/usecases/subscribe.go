@@ -7,8 +7,8 @@ import (
 )
 
 type Subscribe struct {
-	Feeds rss.FeedRepository
-	Subs  rss.SubscriptionRepository
+	Feeds rss.Feeds
+	Subs  rss.Subscriptions
 }
 
 type SubscribeRequest struct {

@@ -12,11 +12,11 @@ import (
 type RssMod struct {
 	actions seras.Actions
 	running bool
-	feeds   rss.FeedRepository
-	subs    rss.SubscriptionRepository
+	feeds   rss.Feeds
+	subs    rss.Subscriptions
 }
 
-func New(feeds rss.FeedRepository, subs rss.SubscriptionRepository) *RssMod {
+func New(feeds rss.Feeds, subs rss.Subscriptions) *RssMod {
 	return &RssMod{feeds: feeds, subs: subs}
 }
 func (mod *RssMod) Name() string {
@@ -39,7 +39,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 
 func (mod *RssMod) checkFeeds() {
     // TODO: Replace parser.
-	checkFeeds := usecases.NewCheckFeeds(mod.feeds, mod.subs, &rss.DefaultParser{})
+	checkFeeds := usecases.NewCheckFeeds(mod.feeds, mod.subs, &rss.StubParser{})
 	for mod.running {
 		resp := checkFeeds.Handle()
 		if resp.Error != nil {

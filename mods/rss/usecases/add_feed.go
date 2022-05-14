@@ -3,7 +3,7 @@ package usecases
 import "github.com/miodzie/seras/mods/rss"
 
 type AddFeed struct {
-	Feeds rss.FeedRepository
+	Feeds rss.Feeds
 }
 
 type AddFeedRequest struct {

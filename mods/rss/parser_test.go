@@ -2,7 +2,7 @@ package rss
 
 import "testing"
 
-func TestItemsWithKeywords(t *testing.T) {
+func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "foo,bar"}
 	feed := &ParsedFeed{
 		Items: []*Item{{Title: "foo"}, {Title: "bar"}, {Title: "baz"}},
@@ -15,7 +15,7 @@ func TestItemsWithKeywords(t *testing.T) {
 	}
 }
 
-func TestHasKeywords(t *testing.T) {
+func TestParsedFeed_HasKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "foo,bar,baz"}
 
 	for _, feed := range hasKeywords {

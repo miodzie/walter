@@ -24,16 +24,16 @@ func (repo *SubscriptionRepository) Add(sub *rss.Subscription) error {
 	return nil
 }
 
-func (repo *SubscriptionRepository) ByFeedId(id uint64) ([]rss.Subscription, error) {
+func (repo *SubscriptionRepository) ByFeedId(id uint64) ([]*rss.Subscription, error) {
 	rows, err := db.Query("SELECT rowid, * FROM feed_subscriptions WHERE feed_id = ?", id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var subs []rss.Subscription
+	var subs []*rss.Subscription
 	for rows.Next() {
-		var sub rss.Subscription
+		var sub *rss.Subscription
 		if err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords); err != nil {
 			return nil, err
 		}

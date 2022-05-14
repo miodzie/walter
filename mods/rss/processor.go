@@ -14,15 +14,23 @@ func NewProcessor(f Feeds, s Subscriptions, parser Parser) *Processor {
 	}
 }
 
-func (c *Processor) Handle() ([]*Notification, error) {
+func (p *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
 
-	n := &Notification{
-		Channel: "#chat",
-		Users:   []string{"adam"},
-		Feed:    Feed{Id: 1},
+	feeds, _ := p.feeds.All()
+	for _, feed := range feeds {
+		parsed, _ := p.parser.Parse(feed.Url)
+		subs, _ := p.subs.ByFeedId(feed.Id)
+		for _, sub := range subs {
+			if parsed.HasKeywords(sub.KeywordsSlice()) {
+				notifications = append(notifications, &Notification{
+					Channel: sub.Channel,
+					Users:   []string{sub.User},
+					Feed:    *feed,
+				})
+			}
+		}
 	}
-	notifications = append(notifications, n)
 
 	return notifications, nil
 }

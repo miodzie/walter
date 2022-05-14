@@ -10,7 +10,8 @@ func TestProcessor_Handle(t *testing.T) {
 		subs:   &InMemSubs{},
 		parser: &NulledParser{},
 	}
-	sut.feeds.Add(&Feed{})
+	feed := &Feed{Id: 1}
+	sub := &Subscription{Channel: "#chat"}
 
 	notes, err := sut.Handle()
 	if err != nil {
@@ -19,5 +20,16 @@ func TestProcessor_Handle(t *testing.T) {
 
 	if len(notes) == 0 {
 		t.Error("notes is empty")
+	}
+
+	n := notes[0]
+	if n.Channel != sub.Channel {
+		t.Error("expected notification not found")
+	}
+	if n.Users[0] != "adam" {
+		t.Error("expected notification not found")
+	}
+	if n.Feed.Id != feed.Id {
+		t.Error("expected notification not found")
 	}
 }

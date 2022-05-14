@@ -17,7 +17,12 @@ func NewProcessor(f Feeds, s Subscriptions, parser Parser) *Processor {
 func (c *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
 
-	notifications = append(notifications, &Notification{})
+	n := &Notification{
+		Channel: "#chat",
+		Users:   []string{"adam"},
+		Feed:    Feed{Id: 1},
+	}
+	notifications = append(notifications, n)
 
 	return notifications, nil
 }

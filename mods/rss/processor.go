@@ -1,5 +1,9 @@
 package rss
 
+import (
+	"fmt"
+)
+
 type Processor struct {
 	feeds  Feeds
 	subs   Subscriptions
@@ -21,13 +25,20 @@ func (p *Processor) Handle() ([]*Notification, error) {
 	for _, feed := range feeds {
 		parsed, _ := p.parser.Parse(feed.Url)
 		subs, _ := p.subs.ByFeedId(feed.Id)
+		seenNotifs := make(map[string]*Notification)
 		for _, sub := range subs {
 			if parsed.HasKeywords(sub.KeywordsSlice()) {
-				notifications = append(notifications, &Notification{
-					Channel: sub.Channel,
-					Users:   []string{sub.User},
-					Feed:    *feed,
-				})
+				key := fmt.Sprintf("%d-%s", feed.Id, sub.Channel)
+				if seen, ok := seenNotifs[key]; ok {
+					seen.Users = append(seen.Users, sub.User)
+				} else {
+					notifications = append(notifications, &Notification{
+						Channel: sub.Channel,
+						Users:   []string{sub.User},
+						Feed:    *feed,
+					})
+					seenNotifs[key] = notifications[len(notifications)-1]
+				}
 			}
 		}
 	}

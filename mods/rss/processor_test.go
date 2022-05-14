@@ -1,11 +1,12 @@
 package rss
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestProcessor_Handle(t *testing.T) {
-	parsed := &ParsedFeed{Title: "foo"}
+	parsed := &ParsedFeed{Title: "foo", Description: "bar"}
 	sut := &Processor{
 		feeds:  &InMemFeeds{},
 		subs:   &InMemSubs{},
@@ -13,20 +14,13 @@ func TestProcessor_Handle(t *testing.T) {
 	}
 	feed := &Feed{Id: 1}
 	sut.feeds.Add(feed)
-	fooSub := &Subscription{
-		User:     "adam",
-		Channel:  "#chat",
-		Keywords: "foo",
-		FeedId:   feed.Id,
-	}
-	sut.subs.Add(fooSub)
-	barSub := &Subscription{
-		User:     "alice",
-		Channel:  "#chat2",
-		Keywords: "bar",
-		FeedId:   feed.Id,
-	}
-	sut.subs.Add(barSub)
+	adam := &Subscription{User: "adam", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
+	sut.subs.Add(adam)
+	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id}
+	sut.subs.Add(alice)
+	sut.subs.Add(&Subscription{User: "james", Channel: "#chat2", Keywords: "baz", FeedId: feed.Id})
+	dakota := &Subscription{User: "dakota", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+	sut.subs.Add(dakota)
 
 	// Act
 	notifs, _ := sut.Handle()
@@ -36,11 +30,18 @@ func TestProcessor_Handle(t *testing.T) {
 		t.Error("notes is empty")
 	}
 
+	// notifs[0] should have Users: adam and dakota
 	fooNotif := notifs[0]
-	checkSub(t, fooNotif, fooSub, feed)
-
-	if len(notifs) > 1 {
-		t.Error("there should only be a notification for fooSub")
+	for _, i := range notifs {
+		fmt.Printf("%v\n", i)
+	}
+	if len(fooNotif.Users) != 2 {
+		t.Errorf("fooNotif should have %s and %s", adam.User, dakota.User)
+	}
+	checkSub(t, fooNotif, adam, feed)
+	checkSub(t, notifs[1], alice, feed)
+	if len(notifs) > 2 {
+		t.Error("there should only be a notification for fooSub and barSub")
 	}
 }
 

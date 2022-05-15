@@ -5,14 +5,14 @@ import (
 	"strings"
 
 	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/rss/usecases"
+	"github.com/miodzie/seras/mods/rss/interactors"
 )
 
 // !add_feed {name} {url}
 func (mod *RssMod) addFeed(msg seras.Message) {
-	var addFeed = &usecases.AddFeed{Feeds: mod.feeds}
+	var addFeed = &interactors.AddFeed{Feeds: mod.feeds}
 	// TODO: validate.
-	req := usecases.AddFeedRequest{
+	req := interactors.AddFeedRequest{
 		Name: msg.Arguments[1],
 		Url:  msg.Arguments[2],
 	}
@@ -28,7 +28,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 
 // !feeds
 func (mod *RssMod) showFeeds(msg seras.Message) {
-	var showFeeds usecases.ShowFeeds
+	var showFeeds interactors.ShowFeeds
 
 	resp := showFeeds.Handle(mod.feeds)
 
@@ -56,13 +56,13 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	}
 	// TODO: validate & parse?
 	keywords := strings.Join(msg.Arguments[2:], " ")
-	req := usecases.SubscribeRequest{
+	req := interactors.SubscribeRequest{
 		FeedName: msg.Arguments[1],
 		Keywords: keywords,
 		Channel:  msg.Channel,
 		User:     msg.AuthorId,
 	}
-	var subscribe = &usecases.Subscribe{
+	var subscribe = &interactors.Subscribe{
 		Feeds: mod.feeds,
 		Subs:  mod.subs,
 	}

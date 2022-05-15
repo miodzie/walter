@@ -1,4 +1,4 @@
-package usecases
+package interactors
 
 import (
 	"text/template"

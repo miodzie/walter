@@ -46,8 +46,11 @@ func (mod *RssMod) checkFeeds() {
 			fmt.Println(err)
 		}
 		for _, notif := range notifs {
-			// TODO: Format, send messages.
-			fmt.Printf("notif: %s\n", notif.Channel)
+			msg := seras.Message{
+				Channel: notif.Channel,
+				Content: notif.String(),
+			}
+			mod.actions.Send(msg)
 		}
 		time.Sleep(time.Minute * 30)
 	}

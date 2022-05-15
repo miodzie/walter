@@ -12,12 +12,10 @@ type ParsedFeed struct {
 	Title       string
 	Description string
 	Link        string
-	FeedLink    string
 	Updated     string
 	Published   string
 	Items       []*Item
 	Custom      map[string]string
-	Raw         string
 }
 
 func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {

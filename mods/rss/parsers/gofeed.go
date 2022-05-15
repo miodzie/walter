@@ -8,7 +8,7 @@ import (
 type GoFeedParser struct {
 }
 
-func (receiver *GoFeedParser) Parse(url string) (*rss.ParsedFeed, error) {
+func (receiver *GoFeedParser) ParseURL(url string) (*rss.ParsedFeed, error) {
 	var parsed *rss.ParsedFeed
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(url)

@@ -5,7 +5,7 @@ import "strings"
 // Parser downloads a Feed.Url and translates it to a ParsedFeed to
 // be checked by a Subscription.
 type Parser interface {
-	Parse(string) (*ParsedFeed, error)
+	ParseURL(string) (*ParsedFeed, error)
 }
 
 type ParsedFeed struct {
@@ -16,6 +16,7 @@ type ParsedFeed struct {
 	Published   string
 	Items       []*Item
 	Custom      map[string]string
+	Raw         string
 }
 
 func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {
@@ -77,6 +78,6 @@ type NulledParser struct {
 	parsed *ParsedFeed
 }
 
-func (p *NulledParser) Parse(url string) (*ParsedFeed, error) {
+func (p *NulledParser) ParseURL(url string) (*ParsedFeed, error) {
 	return p.parsed, nil
 }

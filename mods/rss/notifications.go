@@ -12,7 +12,6 @@ type Notification struct {
 	Users   []string
 }
 
-// Default Notification Format.
 func (n Notification) String() string {
 	i := n.Item
 	t := "%s\n%s\n%s\n%s\n"

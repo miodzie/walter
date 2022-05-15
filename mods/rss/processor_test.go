@@ -4,55 +4,76 @@ import (
 	"testing"
 )
 
-func TestProcessor_Handle(t *testing.T) {
-	parsed := &ParsedFeed{Title: "foo", Description: "bar"}
-	sut := &Processor{
-		feeds:  &InMemFeeds{},
-		subs:   &InMemSubs{},
-		parser: &NulledParser{parsed: parsed},
-	}
+func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
+	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
+	sut := &Processor{parser: &NulledParser{parsed: parsed}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
 	feed := &Feed{Id: 1}
 	sut.feeds.Add(feed)
-	adam := &Subscription{User: "adam", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
-	sut.subs.Add(adam)
+
 	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id}
 	sut.subs.Add(alice)
-	sut.subs.Add(&Subscription{User: "james", Channel: "#chat2", Keywords: "baz", FeedId: feed.Id})
-	dakota := &Subscription{User: "dakota", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
-	sut.subs.Add(dakota)
+	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+	sut.subs.Add(james)
 
 	// Act
-	notifs, _ := sut.Handle()
+	results, _ := sut.Handle()
 
 	// Assert
-	if len(notifs) == 0 {
-		t.Error("notes is empty")
+	if len(results) != 2 {
+		t.Error("unexpected results")
 	}
 
-    // TODO: Grouping probably should be per Notifiable level.
-    // e.g. two people listen to one feed, but different keywords result
-    // in different Items being notified to a user.
+	checkNotif(t, results[0], alice, feed)
+	checkNotif(t, results[1], james, feed)
+}
 
-	// notifs[0] should have Users: adam and dakota
-	fooNotif := notifs[0]
-	if len(fooNotif.Users) != 2 {
-		t.Errorf("fooNotif should have %s and %s", adam.User, dakota.User)
+func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
+	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
+	sut := &Processor{parser: &NulledParser{parsed: parsed}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
+	feed := &Feed{Id: 1}
+	sut.feeds.Add(feed)
+
+	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+	sut.subs.Add(alice)
+	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+	sut.subs.Add(james)
+
+	// Act
+	results, _ := sut.Handle()
+
+	// Assert
+	if len(results) != 1 {
+		t.Error("unexpected results")
 	}
-	checkNotif(t, fooNotif, adam, feed)
-	checkNotif(t, notifs[1], alice, feed)
-	if len(notifs) > 2 {
-		t.Error("there shouldn't be a notification for james")
+
+	checkNotif(t, results[0], alice, feed)
+	if len(results[0].Users) != 2 {
+		t.Error("notification should have alice and james")
+	}
+}
+
+func TestProcessor_Handle_returns_empty_when_no_keywords_found(t *testing.T) {
+	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
+	sut := &Processor{parser: &NulledParser{parsed: p}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
+	feed := &Feed{Id: 1}
+	sut.feeds.Add(feed)
+	sut.subs.Add(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})
+
+	notifs, _ := sut.Handle()
+
+	if len(notifs) != 0 {
+		t.Fail()
 	}
 }
 
 func checkNotif(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
 	if n.Channel != sub.Channel {
-		t.Error("expected notification not found")
+		t.Error("unexpected notification.Channel")
 	}
 	if n.Users[0] != sub.User {
-		t.Error("expected notification not found")
+		t.Error("unexpected notification.Users")
 	}
 	if n.Feed.Id != feed.Id {
-		t.Error("expected notification not found")
+		t.Error("unexpected feed.Id")
 	}
 }

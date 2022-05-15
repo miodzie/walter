@@ -31,22 +31,6 @@ func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {
 }
 
 func (feed *ParsedFeed) HasKeywords(keywords []string) bool {
-	// for _, k := range keywords {
-	// 	if strings.Contains(feed.Raw, k) {
-	// 		return true
-	// 	}
-	// }
-	// return false
-	for _, keyword := range keywords {
-		checks := []bool{
-			strings.Contains(feed.Title, keyword),
-			strings.Contains(feed.Description, keyword),
-		}
-		if anyTrue(checks) {
-			return true
-		}
-	}
-
 	for _, item := range feed.Items {
 		if item.HasKeywords(keywords) {
 			return true
@@ -60,6 +44,8 @@ type Item struct {
 	Title       string
 	Description string
 	Content     string
+	Link        string
+	Links       []string
 	GUID        string
 	Custom      map[string]string
 }

@@ -11,7 +11,11 @@ type Subscription struct {
 	Keywords string
 	Channel  string
 	Feed     *Feed
-	Seen     map[string]interface{} // [guid]item
+	Seen     map[string]bool // [guid]item
+}
+
+func (s *Subscription) HasSeen(item Item) bool {
+	return false
 }
 
 func (sub *Subscription) KeywordsSlice() []string {

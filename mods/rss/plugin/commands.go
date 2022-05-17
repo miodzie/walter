@@ -66,10 +66,11 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		Feeds: mod.feeds,
 		Subs:  mod.subs,
 	}
-	resp := subscribe.Handle(req)
+	resp, err := subscribe.Handle(req)
 
-	if resp.Error != nil {
-		fmt.Println(resp.Error)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
 
 	mod.actions.Reply(msg, resp.Message)

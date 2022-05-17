@@ -20,17 +20,15 @@ type SubscribeRequest struct {
 
 type SubscribeResponse struct {
 	Message string
-	Error   error
 }
 
-func (s *Subscribe) Handle(req SubscribeRequest) SubscribeResponse {
+func (s *Subscribe) Handle(req SubscribeRequest) (SubscribeResponse, error) {
 	var resp SubscribeResponse
 
 	feed, err := s.Feeds.ByName(req.FeedName)
 	if err != nil {
-		resp.Message = "Unknown feed. Use !feeds to see available."
-		resp.Error = err
-		return resp
+		resp.Message = "Unknown feed."
+		return resp, err
 	}
 
 	sub := &rss.Subscription{
@@ -40,9 +38,10 @@ func (s *Subscribe) Handle(req SubscribeRequest) SubscribeResponse {
 		User:     req.User,
 	}
 	resp.Message = fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
-	if resp.Error = s.Subs.Add(sub); resp.Error != nil {
+	if err = s.Subs.Add(sub); err != nil {
 		resp.Message = "Failed to save feed, likely one already exists for this channel and feed."
+		return resp, err
 	}
 
-	return resp
+	return resp, nil
 }

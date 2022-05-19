@@ -6,8 +6,6 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/rss"
-	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
-	// "github.com/miodzie/seras/mods/rss/parsers/gofeed"
 )
 
 type RssMod struct {
@@ -15,10 +13,11 @@ type RssMod struct {
 	running bool
 	feeds   rss.Feeds
 	subs    rss.Subscriptions
+	parser rss.Parser
 }
 
-func New(feeds rss.Feeds, subs rss.Subscriptions) *RssMod {
-	return &RssMod{feeds: feeds, subs: subs}
+func New(feeds rss.Feeds, subs rss.Subscriptions, parser rss.Parser) *RssMod {
+	return &RssMod{feeds: feeds, subs: subs, parser: parser}
 }
 func (mod *RssMod) Name() string {
 	return "rss"
@@ -40,7 +39,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	p := rss.NewProcessor(mod.feeds, mod.subs, gofeed.New())
+	p := rss.NewProcessor(mod.feeds, mod.subs, mod.parser)
 	for mod.running {
 		notifs, err := p.Handle()
 		if err != nil {

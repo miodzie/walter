@@ -16,7 +16,6 @@ type ParsedFeed struct {
 	Published   string
 	Items       []*Item
 	Custom      map[string]string
-	Raw         string
 }
 
 func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {

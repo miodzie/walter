@@ -20,7 +20,7 @@ func (repo *FeedRepository) All() ([]*rss.Feed, error) {
 	var feeds []*rss.Feed
 	for rows.Next() {
 		var feed rss.Feed
-		if err := rows.Scan(feed.Id, feed.Name, feed.Url); err != nil {
+		if err := rows.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 			return nil, err
 		}
 		feeds = append(feeds, &feed)
@@ -49,7 +49,7 @@ func (repo *FeedRepository) Add(feed *rss.Feed) error {
 func (repo *FeedRepository) ByName(name string) (*rss.Feed, error) {
 	var feed rss.Feed
 	row := db.QueryRow("SELECT rowid, * FROM feeds WHERE name = ?", name)
-	if err := row.Scan(feed.Id, feed.Name, feed.Url); err != nil {
+	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 		if err == sql.ErrNoRows {
 			return &feed, fmt.Errorf("GetByName %s: no such feed", name)
 		}

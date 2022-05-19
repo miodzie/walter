@@ -75,9 +75,9 @@ func anyTrue(checks []bool) bool {
 }
 
 type NulledParser struct {
-	parsed *ParsedFeed
+	Parsed *ParsedFeed
 }
 
 func (p *NulledParser) ParseURL(url string) (*ParsedFeed, error) {
-	return p.parsed, nil
+	return p.Parsed, nil
 }

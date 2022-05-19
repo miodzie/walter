@@ -19,11 +19,11 @@ type AddFeedResponse struct {
 func (a *AddFeed) Handle(req AddFeedRequest) AddFeedResponse {
 	var resp AddFeedResponse
 
-	var listing *rss.Feed
-	listing.Name = req.Name
-	listing.Url = req.Url
+	var feed rss.Feed
+	feed.Name = req.Name
+	feed.Url = req.Url
 
-	err := a.Feeds.Add(listing)
+	err := a.Feeds.Add(&feed)
 
 	resp.Message = "Feed saved."
 	if err != nil {

@@ -19,8 +19,14 @@ func (p *Processor) Handle() ([]*Notification, error) {
 
 	feeds, _ := p.feeds.All()
 	for _, feed := range feeds {
-		parsed, _ := p.parser.ParseURL(feed.Url)
-		subs, _ := p.subs.ByFeedId(feed.Id)
+		parsed, err := p.parser.ParseURL(feed.Url)
+		if err != nil {
+			return notifications, err
+		}
+		subs, err := p.subs.ByFeedId(feed.Id)
+		if err != nil {
+			return notifications, err
+		}
 
 		seen := make(map[string]*Notification)
 		for _, sub := range subs {

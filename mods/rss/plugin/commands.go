@@ -34,6 +34,7 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 
 	if resp.Error != nil {
 		mod.actions.Reply(msg, resp.Message)
+		fmt.Println(resp.Error)
 		return
 	}
 

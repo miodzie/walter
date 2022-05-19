@@ -1,4 +1,4 @@
-package parsers
+package gofeed
 
 import (
 	"github.com/miodzie/seras/mods/rss"
@@ -8,8 +8,12 @@ import (
 type GoFeedParser struct {
 }
 
+func New() *GoFeedParser {
+	return &GoFeedParser{}
+}
+
 func (receiver *GoFeedParser) ParseURL(url string) (*rss.ParsedFeed, error) {
-	var parsed *rss.ParsedFeed
+	var parsed rss.ParsedFeed
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(url)
 	if err != nil {
@@ -24,7 +28,7 @@ func (receiver *GoFeedParser) ParseURL(url string) (*rss.ParsedFeed, error) {
 	parsed.Custom = feed.Custom
 
 	for _, i := range feed.Items {
-		var pi *rss.Item
+		var pi rss.Item
 		pi.Title = i.Title
 		pi.Description = i.Description
 		pi.Content = i.Content
@@ -32,8 +36,8 @@ func (receiver *GoFeedParser) ParseURL(url string) (*rss.ParsedFeed, error) {
 		pi.Links = i.Links
 		pi.GUID = i.GUID
 		pi.Custom = i.Custom
-		parsed.Items = append(parsed.Items, pi)
+		parsed.Items = append(parsed.Items, &pi)
 	}
 
-	return parsed, nil
+	return &parsed, nil
 }

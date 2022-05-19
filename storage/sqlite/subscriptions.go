@@ -44,7 +44,7 @@ func (repo *SubscriptionRepository) ByFeedId(id uint64) ([]*rss.Subscription, er
 	var subs []*rss.Subscription
 	for rows.Next() {
 		var sub rss.Subscription
-		if err := rows.Scan(sub.Id, sub.FeedId, sub.Channel, sub.User, sub.Keywords); err != nil {
+		if err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords); err != nil {
 			return nil, err
 		}
 		subs = append(subs, &sub)

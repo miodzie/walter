@@ -13,13 +13,23 @@ func (repo *SubscriptionRepository) Add(sub *rss.Subscription) error {
 	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords) VALUES(?,?,?,?)"
 	result, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords)
 	if err != nil {
-        return fmt.Errorf("SubscriptionRepository.add: %v", err)
+		return fmt.Errorf("SubscriptionRepository.add: %v", err)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
 		return err
 	}
 	sub.Id = uint64(id)
+
+	return nil
+}
+
+func (repo *SubscriptionRepository) Update(sub *rss.Subscription) error {
+	q := "UPDATE feed_subscriptions SET feed_id = ?, channel = ?, user = ?, keywords = ? WHERE id = ?"
+	_, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Id)
+	if err != nil {
+		return fmt.Errorf("SubscriptionRepository.Update: %v", err)
+	}
 
 	return nil
 }

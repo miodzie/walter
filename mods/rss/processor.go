@@ -25,6 +25,9 @@ func (p *Processor) Handle() ([]*Notification, error) {
 		seen := make(map[string]*Notification)
 		for _, sub := range subs {
 			for _, item := range parsed.ItemsWithKeywords(sub.KeywordsSlice()) {
+				if sub.HasSeen(*item) {
+					continue
+				}
 				key := item.GUID + sub.Channel
 
 				if noti, ok := seen[key]; ok {
@@ -38,7 +41,9 @@ func (p *Processor) Handle() ([]*Notification, error) {
 					})
 					seen[key] = notifications[len(notifications)-1]
 				}
+				sub.See(*item)
 			}
+			p.subs.Update(sub)
 		}
 	}
 

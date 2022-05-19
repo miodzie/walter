@@ -35,7 +35,7 @@ func (repo *FeedRepository) All() ([]*rss.Feed, error) {
 func (repo *FeedRepository) Add(feed *rss.Feed) error {
 	result, err := db.Exec("INSERT INTO feeds (name, url) VALUES(?, ?)", feed.Name, feed.Url)
 	if err != nil {
-        return fmt.Errorf("FeedRepository.add: %v", err)
+		return fmt.Errorf("FeedRepository.add: %v", err)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {

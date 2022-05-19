@@ -38,7 +38,6 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	// TODO: Replace parser.
 	p := rss.NewProcessor(mod.feeds, mod.subs, &rss.NulledParser{})
 	for mod.running {
 		notifs, err := p.Handle()

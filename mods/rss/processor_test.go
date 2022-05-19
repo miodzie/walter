@@ -5,8 +5,11 @@ import (
 )
 
 func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
-	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
-	sut := &Processor{parser: &NulledParser{parsed: parsed}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
+	item := &Item{Title: "bar", GUID: "1"}
+	parsed := &ParsedFeed{Items: []*Item{item}}
+	sut := &Processor{parser: &NulledParser{parsed: parsed},
+		feeds: &InMemFeeds{},
+		subs:  NewInMemSubs()}
 	feed := &Feed{Id: 1}
 	sut.feeds.Add(feed)
 
@@ -24,12 +27,20 @@ func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
 	}
 
 	checkNotif(t, results[0], alice, feed)
+	if !alice.HasSeen(*item) {
+		t.Fail()
+	}
 	checkNotif(t, results[1], james, feed)
+	if !james.HasSeen(*item) {
+		t.Fail()
+	}
 }
 
 func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
 	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
-	sut := &Processor{parser: &NulledParser{parsed: parsed}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
+	sut := &Processor{parser: &NulledParser{parsed: parsed},
+		feeds: &InMemFeeds{},
+		subs:  NewInMemSubs()}
 	feed := &Feed{Id: 1}
 	sut.feeds.Add(feed)
 
@@ -54,10 +65,29 @@ func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *t
 
 func TestProcessor_Handle_returns_empty_when_no_keywords_found(t *testing.T) {
 	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
-	sut := &Processor{parser: &NulledParser{parsed: p}, feeds: &InMemFeeds{}, subs: &InMemSubs{}}
+	sut := &Processor{parser: &NulledParser{parsed: p},
+		feeds: &InMemFeeds{},
+		subs:  NewInMemSubs()}
 	feed := &Feed{Id: 1}
 	sut.feeds.Add(feed)
 	sut.subs.Add(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})
+
+	notifs, _ := sut.Handle()
+
+	if len(notifs) != 0 {
+		t.Fail()
+	}
+}
+
+func TestProcessor_Handle_ignores_seen_items(t *testing.T) {
+	item := &Item{Title: "foo"}
+	p := &ParsedFeed{Items: []*Item{item}}
+	sut := &Processor{parser: &NulledParser{parsed: p}, feeds: &InMemFeeds{}, subs: NewInMemSubs()}
+	feed := &Feed{Id: 1}
+	sut.feeds.Add(feed)
+	sub := &Subscription{User: "james", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
+	sub.See(*item)
+	sut.subs.Add(sub)
 
 	notifs, _ := sut.Handle()
 

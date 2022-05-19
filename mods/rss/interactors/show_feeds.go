@@ -9,7 +9,7 @@ import (
 type ShowFeeds struct{}
 
 type ShowFeedsResponse struct {
-	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundry, and against the Dependency Inversion Principle.
+	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundry, violates DIP.
 	Message string
 	Error   error
 }

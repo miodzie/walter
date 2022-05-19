@@ -13,7 +13,7 @@ type RssMod struct {
 	running bool
 	feeds   rss.Feeds
 	subs    rss.Subscriptions
-	parser rss.Parser
+	parser  rss.Parser
 }
 
 func New(feeds rss.Feeds, subs rss.Subscriptions, parser rss.Parser) *RssMod {

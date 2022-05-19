@@ -20,6 +20,6 @@ func Default() []seras.Module {
 		bestbot.New(),
 		policing.New(),
 		rss.New(&sqlite.FeedRepository{}, &sqlite.SubscriptionRepository{},
-			decorators.WrapStripHtml(gofeed.New())),
+			decorators.StripHtml(gofeed.New())),
 	}
 }

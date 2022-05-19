@@ -7,15 +7,15 @@ import (
 	"github.com/miodzie/seras/mods/rss"
 )
 
-type StripHtml struct {
+type cleanHtml struct {
 	BaseParser rss.Parser
 }
 
-func WrapStripHtml(p rss.Parser) rss.Parser {
-	return &StripHtml{BaseParser: p}
+func StripHtml(p rss.Parser) rss.Parser {
+	return &cleanHtml{BaseParser: p}
 }
 
-func (s *StripHtml) ParseURL(url string) (*rss.ParsedFeed, error) {
+func (s *cleanHtml) ParseURL(url string) (*rss.ParsedFeed, error) {
 	feed, err := s.BaseParser.ParseURL(url)
 	if err != nil {
 		return feed, err

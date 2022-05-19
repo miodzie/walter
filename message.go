@@ -3,7 +3,7 @@ package seras
 var token string = "!"
 
 func Token() string {
-    return token
+	return token
 }
 
 type Messenger interface {
@@ -12,12 +12,13 @@ type Messenger interface {
 }
 
 type Message struct {
-	Content   string
-	Arguments []string
-	Channel   string
-	// TODO: Rename these?
-	Author   string
-	AuthorId string
+	Content       string
+	Arguments     []string
+	Channel       string
+	AuthorId      string
+	AuthorNick    string
+    // TODO: Refactor, this is quick fix.
+	AuthorMention string
 }
 
 func (msg *Message) Command(command string, call func(Message)) {

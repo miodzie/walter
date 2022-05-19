@@ -51,13 +51,14 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		return
 	}
 	msg := seras.Message{
-		Content:   e.Content,
-		Channel:   e.ChannelID,
-		Arguments: strings.Split(e.Content, " "),
-		Author:    e.Author.Username,
-		AuthorId:  e.Author.ID,
+		Content:       e.Content,
+		Channel:       e.ChannelID,
+		Arguments:     strings.Split(e.Content, " "),
+		AuthorId:      e.Author.ID,
+		AuthorNick:    e.Author.Username,
+		AuthorMention: "<@" + e.Author.ID + ">",
 	}
-	fmt.Printf("Discord:  [%s]: %s\n", msg.Author, msg.Content)
+	fmt.Printf("Discord:  [%s]: %s\n", msg.AuthorNick, msg.Content)
 	con.stream <- msg
 }
 
@@ -67,8 +68,8 @@ func (con *Connection) Send(msg seras.Message) error {
 }
 
 func (con *Connection) Reply(msg seras.Message, content string) error {
-    reply := seras.Message{Content: content, Channel: msg.Channel}
-    return con.Send(reply)
+	reply := seras.Message{Content: content, Channel: msg.Channel}
+	return con.Send(reply)
 }
 
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {

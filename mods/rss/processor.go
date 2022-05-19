@@ -52,6 +52,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 			}
             err := p.subs.Update(sub)
             if err != nil {
+                // TODO: remove?
                 fmt.Println(err)
             }
 		}

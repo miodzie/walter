@@ -61,7 +61,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		FeedName: msg.Arguments[1],
 		Keywords: keywords,
 		Channel:  msg.Channel,
-		User:     msg.AuthorId,
+		User:     msg.AuthorMention,
 	}
 	var subscribe = &interactors.Subscribe{
 		Feeds: mod.feeds,

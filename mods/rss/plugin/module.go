@@ -6,6 +6,7 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
 	// "github.com/miodzie/seras/mods/rss/parsers/gofeed"
 )
 
@@ -31,7 +32,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 		msg := <-stream
 		msg.Command("feeds", mod.showFeeds)
 		// Disabled until I have admin users.
-		msg.Command("add_feed", mod.addFeed)
+		// msg.Command("add_feed", mod.addFeed)
 		msg.Command("subscribe", mod.subscribe)
 	}
 
@@ -39,8 +40,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	feed := &rss.ParsedFeed{Items: []*rss.Item{{Title: "spy x family", GUID: "1234"}}}
-	p := rss.NewProcessor(mod.feeds, mod.subs, &rss.NulledParser{Parsed: feed})
+	p := rss.NewProcessor(mod.feeds, mod.subs, gofeed.New())
 	for mod.running {
 		notifs, err := p.Handle()
 		if err != nil {

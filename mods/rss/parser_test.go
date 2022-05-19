@@ -16,7 +16,7 @@ func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 }
 
 func TestParsedFeed_HasKeywords(t *testing.T) {
-	sub := &Subscription{Keywords: "foo,bar,baz"}
+	sub := &Subscription{Keywords: "fOo,bar,baz"}
 	for _, feed := range hasKeywords {
 		if !feed.HasKeywords(sub.KeywordsSlice()) {
 			t.Error("feed should have keyword")
@@ -31,6 +31,9 @@ func TestParsedFeed_HasKeywords(t *testing.T) {
 }
 
 var hasKeywords = []*ParsedFeed{
+	{Items: []*Item{
+		{Title: "FOO"},
+	}},
 	{Items: []*Item{
 		{Title: "baz"},
 	}},

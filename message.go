@@ -12,12 +12,12 @@ type Messenger interface {
 }
 
 type Message struct {
-	Content       string
-	Arguments     []string
-	Channel       string
-	AuthorId      string
-	AuthorNick    string
-    // TODO: Refactor, this is quick fix.
+	Content    string
+	Arguments  []string
+	Channel    string
+	AuthorId   string
+	AuthorNick string
+	// TODO: Refactor, this is quick fix.
 	AuthorMention string
 }
 

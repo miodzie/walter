@@ -47,7 +47,6 @@ func (mod *RssMod) checkFeeds() {
 			fmt.Println(err)
 		}
 		for _, notif := range notifs {
-			fmt.Println(notif.String())
 			msg := seras.Message{
 				Channel: notif.Channel,
 				Content: notif.String(),

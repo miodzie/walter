@@ -51,10 +51,11 @@ type Item struct {
 
 func (i *Item) HasKeywords(keywords []string) bool {
 	for _, keyword := range keywords {
+		keyword = strings.ToLower(keyword)
 		checks := []bool{
-			strings.Contains(i.Title, keyword),
-			strings.Contains(i.Description, keyword),
-			strings.Contains(i.Content, keyword),
+			strings.Contains(strings.ToLower(i.Title), keyword),
+			strings.Contains(strings.ToLower(i.Description), keyword),
+			strings.Contains(strings.ToLower(i.Content), keyword),
 		}
 		if anyTrue(checks) {
 			return true

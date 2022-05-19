@@ -21,6 +21,18 @@ type Message struct {
 	AuthorMention string
 }
 
+type Author struct {
+	Id      string
+	Nick    string
+	Mention string
+}
+
+type MessageFormatter interface {
+	Bold(string) string
+	Italicize(string) string
+	StrikeThrough(string) string
+}
+
 func (msg *Message) Command(command string, call func(Message)) {
 	if msg.IsCommand(command) {
 		call(*msg)

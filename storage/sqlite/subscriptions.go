@@ -10,8 +10,8 @@ type SubscriptionRepository struct {
 }
 
 func (repo *SubscriptionRepository) Add(sub *rss.Subscription) error {
-	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords) VALUES(?,?,?,?)"
-	result, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords)
+	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords, seen) VALUES(?,?,?,?,?)"
+	result, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen)
 	if err != nil {
 		return fmt.Errorf("SubscriptionRepository.add: %v", err)
 	}
@@ -25,8 +25,8 @@ func (repo *SubscriptionRepository) Add(sub *rss.Subscription) error {
 }
 
 func (repo *SubscriptionRepository) Update(sub *rss.Subscription) error {
-	q := "UPDATE feed_subscriptions SET feed_id = ?, channel = ?, user = ?, keywords = ? WHERE id = ?"
-	_, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Id)
+	q := "UPDATE feed_subscriptions SET feed_id = ?, channel = ?, user = ?, keywords = ?, seen = ? WHERE rowid = ?"
+	_, err := db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen, sub.Id)
 	if err != nil {
 		return fmt.Errorf("SubscriptionRepository.Update: %v", err)
 	}
@@ -44,7 +44,7 @@ func (repo *SubscriptionRepository) ByFeedId(id uint64) ([]*rss.Subscription, er
 	var subs []*rss.Subscription
 	for rows.Next() {
 		var sub rss.Subscription
-		if err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords); err != nil {
+		if err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen); err != nil {
 			return nil, err
 		}
 		subs = append(subs, &sub)

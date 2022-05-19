@@ -9,8 +9,13 @@ func TestSubscription_Seen(t *testing.T) {
 	item := Item{GUID: "1234"}
 
 	sub.See(item)
+	sub.See(Item{GUID: "1"})
+	sub.See(Item{GUID: "1"})
 
 	if _, ok := sub.SeenItems[item.GUID]; !ok {
+		t.Fail()
+	}
+	if sub.Seen != "1234,1" {
 		t.Fail()
 	}
 }

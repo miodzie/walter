@@ -1,5 +1,7 @@
 package rss
 
+import "fmt"
+
 type Processor struct {
 	feeds  Feeds
 	subs   Subscriptions
@@ -27,7 +29,6 @@ func (p *Processor) Handle() ([]*Notification, error) {
 		if err != nil {
 			return notifications, err
 		}
-
 		seen := make(map[string]*Notification)
 		for _, sub := range subs {
 			for _, item := range parsed.ItemsWithKeywords(sub.KeywordsSlice()) {
@@ -49,7 +50,10 @@ func (p *Processor) Handle() ([]*Notification, error) {
 				}
 				sub.See(*item)
 			}
-			p.subs.Update(sub)
+            err := p.subs.Update(sub)
+            if err != nil {
+                fmt.Println(err)
+            }
 		}
 	}
 

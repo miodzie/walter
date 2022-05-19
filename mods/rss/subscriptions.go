@@ -13,26 +13,39 @@ type Subscription struct {
 	Channel   string
 	Feed      *Feed
 	Seen      string          // Item.GUID comma separated
-	SeenItems map[string]bool // [guid]item
+	SeenItems map[string]bool // [guid]bool
 }
 
 func (s *Subscription) See(item Item) {
-	if s.SeenItems == nil {
-		s.SeenItems = make(map[string]bool)
+	s.makeSeenMap()
+	if _, seen := s.SeenItems[item.GUID]; !seen {
+		s.SeenItems[item.GUID] = true
+		s.Seen = ""
+		var keys []string
+		for k := range s.SeenItems {
+			keys = append(keys, k)
+		}
+		s.Seen = strings.Join(keys, ",")
 	}
-	s.SeenItems[item.GUID] = true
 }
 
 func (s *Subscription) HasSeen(item Item) bool {
-	if s.SeenItems == nil {
-		s.SeenItems = make(map[string]bool)
-	}
-	_, ok := s.SeenItems[item.GUID]
-	return ok
+	s.makeSeenMap()
+	_, seen := s.SeenItems[item.GUID]
+	return seen
 }
 
 func (sub *Subscription) KeywordsSlice() []string {
 	return strings.Split(sub.Keywords, ",")
+}
+
+func (s *Subscription) makeSeenMap() {
+	if s.SeenItems == nil {
+		s.SeenItems = make(map[string]bool)
+		for _, i := range strings.Split(s.Seen, ",") {
+			s.SeenItems[i] = true
+		}
+	}
 }
 
 type Subscriptions interface {

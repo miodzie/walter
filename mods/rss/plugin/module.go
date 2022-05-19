@@ -39,7 +39,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-    feed := &rss.ParsedFeed{Items: []*rss.Item{{Title: "spy x family"}}}
+	feed := &rss.ParsedFeed{Items: []*rss.Item{{Title: "spy x family", GUID: "1234"}}}
 	p := rss.NewProcessor(mod.feeds, mod.subs, &rss.NulledParser{Parsed: feed})
 	for mod.running {
 		notifs, err := p.Handle()
@@ -47,7 +47,7 @@ func (mod *RssMod) checkFeeds() {
 			fmt.Println(err)
 		}
 		for _, notif := range notifs {
-		    fmt.Println(notif.String())
+			fmt.Println(notif.String())
 			msg := seras.Message{
 				Channel: notif.Channel,
 				Content: notif.String(),

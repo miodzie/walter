@@ -13,17 +13,19 @@ import (
 type Connection struct {
 	session *discordgo.Session
 	stream  chan seras.Message
+	config  *Config
 	sync.Mutex
 }
 
-func New(token string) *Connection {
+func New(token string) (*Connection, error) {
+	var disc Connection
 	session, err := discordgo.New("Bot " + token)
 	if err != nil {
-		panic(err)
+		return &disc, err
 	}
-	disc := &Connection{session: session}
+	disc.session = session
 
-	return disc
+	return &disc, nil
 }
 
 func (con *Connection) Connect() (seras.Stream, error) {
@@ -70,6 +72,11 @@ func (con *Connection) Send(msg seras.Message) error {
 func (con *Connection) Reply(msg seras.Message, content string) error {
 	reply := seras.Message{Content: content, Channel: msg.Channel}
 	return con.Send(reply)
+}
+func (con *Connection) IsAdmin(userId string) bool {
+	_, ok := con.config.Admins[userId]
+
+	return ok
 }
 
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {

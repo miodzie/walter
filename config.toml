@@ -1,14 +1,16 @@
+# Mods to load on all connections.
 mods = ["best_bot", "rss", "policing"]
 
 [connections]
 
   [connections.libera]
   type = "irc"
+  admins = ["nick@user/nick"]
   server = "irc.libera.chat:6667"
   nick = "seras"
-  admins = ["nick@user/nick"]
 
   [connections.discord]
   type = "discord"
-  auth_token = ""
-  admins = [1234]
+  admins = ["1234"]
+  mods = ["meme_police"]
+  token = "$DISCORD_TOKEN"

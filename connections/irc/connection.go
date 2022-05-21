@@ -24,7 +24,7 @@ func New(conf Config) (*Connection, error) {
 }
 
 func (con *Connection) Server() string {
-	return con.config.Host
+	return con.config.Server
 }
 
 func (con *Connection) SendMessage(msg seras.Message) error {
@@ -34,7 +34,7 @@ func (con *Connection) SendMessage(msg seras.Message) error {
 func (con *Connection) Connect() (seras.Stream, error) {
 	con.mu.Lock()
 	defer con.mu.Unlock()
-	err := con.irc.Connect(con.config.Host)
+	err := con.irc.Connect(con.config.Server)
 	if err != nil {
 		return nil, err
 	}

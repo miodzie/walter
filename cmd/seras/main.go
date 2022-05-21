@@ -69,7 +69,7 @@ func startCli(messenger seras.Messenger) {
 }
 
 func makeIrc() (*irc.Connection, error) {
-	return irc.New(irc.Config{Host: "irc.libera.chat:6667", Nick: "Guest", Username: "Guest"})
+	return irc.New(irc.Config{Server: "irc.libera.chat:6667", Nick: "Guest", Username: "Guest"})
 }
 
 func makeFake() *fake.Connection {

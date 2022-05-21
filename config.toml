@@ -1,0 +1,14 @@
+mods = ["best_bot", "rss", "policing"]
+
+[connections]
+
+  [connections.libera]
+  type = "irc"
+  server = "irc.libera.chat:6667"
+  nick = "seras"
+  admins = ["nick@user/nick"]
+
+  [connections.discord]
+  type = "discord"
+  auth_token = ""
+  admins = [1234]

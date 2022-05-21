@@ -1,6 +1,7 @@
 package decorators
 
 import (
+	"html"
 	"reflect"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -35,7 +36,7 @@ func stripHtml(any interface{}) {
 	for i := 0; i < r.NumField(); i++ {
 		f := r.Field(i)
 		if f.Kind() == reflect.String {
-			f.SetString(p.Sanitize(f.String()))
+			f.SetString(html.UnescapeString(p.Sanitize(f.String())))
 		}
 	}
 }

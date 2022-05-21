@@ -1,16 +1,16 @@
 package decorators
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/miodzie/seras/mods/rss"
 )
 
 func TestStripHtml(t *testing.T) {
+	expected := "cool bean's!"
 	feed := &rss.ParsedFeed{
 		Title: "<strong>hello</strong> world!",
-		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool beans!"}},
+		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
 	dummy := &rss.NulledParser{Parsed: feed}
 	sut := cleanHtml{BaseParser: dummy}
@@ -21,9 +21,9 @@ func TestStripHtml(t *testing.T) {
 		t.Error("failed to strip html")
 	}
 
-	if parsed.Items[0].Description != "cool beans!" {
-		fmt.Println(parsed.Title)
-		t.Log(parsed.Items[0].Description)
+	d := parsed.Items[0].Description
+	if d != expected {
 		t.Error("failed to strip html")
+		t.Errorf("expected: %s, got: %s", expected, d)
 	}
 }

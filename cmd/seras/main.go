@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"runtime"
 	"strings"
 	"syscall"
 
@@ -24,16 +25,19 @@ func main() {
 }
 
 func run(args []string) error {
-	err := godotenv.Load()
+	cfg, err := initConfig()
 	if err != nil {
 		return err
 	}
 	interupt(func() {})
+	seras.AddConnector("discord", &discord.ConfigParser{})
+  err = seras.ParseConnects(cfg)
+  if err != nil {
+    return err
+  }
 
-	// seras.RegisterConnection("discord", discord.ConfigParser{})
-
-	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
-
+	// Hard code for now.
+	connection := seras.Connects["discord"].(*discord.Connection)
 	startCli(connection)
 
 	stream, _ := connection.Connect()
@@ -70,6 +74,18 @@ func startCli(messenger seras.Messenger) {
 
 }
 
+func initConfig() (*seras.Config, error) {
+	cfg, err := seras.ParseToml(UserHomeDir() + "/.seras/config.toml")
+	if err != nil {
+		return cfg, err
+	}
+	err = godotenv.Load()
+	if err != nil {
+		return cfg, err
+	}
+	return cfg, nil
+}
+
 func makeIrc() (*irc.Connection, error) {
 	return irc.New(irc.Config{Server: "irc.libera.chat:6667", Nick: "Guest", Username: "Guest"})
 }
@@ -78,7 +94,14 @@ func makeFake() *fake.Connection {
 	return fake.NewConnection()
 }
 
-func makeDiscord(token string) *discord.Connection {
-	disc := discord.New(token)
-	return disc
+
+func UserHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
 }

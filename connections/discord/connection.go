@@ -74,9 +74,12 @@ func (con *Connection) Reply(msg seras.Message, content string) error {
 	return con.Send(reply)
 }
 func (con *Connection) IsAdmin(userId string) bool {
-	_, ok := con.config.Admins[userId]
-
-	return ok
+	for _, a := range con.config.Admins {
+		if a == userId {
+			return true
+		}
+	}
+	return false
 }
 
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {

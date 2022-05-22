@@ -7,7 +7,7 @@ mods = ["best_bot", "rss", "policing"]
   type = "irc"
   admins = ["nick@user/nick"]
   server = "irc.libera.chat:6667"
-  nick = "seras"
+  nick = "Guest1"
 
   [connections.discord]
   type = "discord"

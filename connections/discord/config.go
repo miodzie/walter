@@ -9,7 +9,7 @@ import (
 var ErrIncorrectType = errors.New("config is not of type: 'discord'")
 
 type Config struct {
-	Admins map[string]bool
+	Admins []string
 	Mods   []string
 	Token  string
 }
@@ -26,13 +26,19 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	if !ok {
 		return cfg, errors.New("unable to parse token")
 	}
-	cfg.Admins, ok = val["admins"].(map[string]bool)
+	admins, ok := val["admins"].([]interface{})
 	if !ok {
 		return cfg, errors.New("unable to parse admin")
 	}
-	cfg.Mods, ok = val["mods"].([]string)
+	for _, a := range admins {
+		cfg.Admins = append(cfg.Admins, a.(string))
+	}
+	mods, ok := val["mods"].([]interface{})
 	if !ok {
 		return cfg, errors.New("unable to parse mods")
+	}
+	for _, a := range mods {
+		cfg.Mods = append(cfg.Mods, a.(string))
 	}
 
 	return cfg, nil

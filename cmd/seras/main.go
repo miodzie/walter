@@ -9,7 +9,6 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/joho/godotenv"
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/connections/discord"
 	"github.com/miodzie/seras/connections/fake"
@@ -44,6 +43,14 @@ func run(args []string) error {
 	return seras.RunBot(bot)
 }
 
+func initConfig() (*seras.Config, error) {
+	cfg, err := seras.ParseToml(UserHomeDir() + "/.seras/config.toml")
+	if err != nil {
+		return cfg, err
+	}
+	return cfg, nil
+}
+
 func interupt(callable func()) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
@@ -67,18 +74,6 @@ func startCli(messenger seras.Messenger) {
 		}
 	}()
 
-}
-
-func initConfig() (*seras.Config, error) {
-	cfg, err := seras.ParseToml(UserHomeDir() + "/.seras/config.toml")
-	if err != nil {
-		return cfg, err
-	}
-	err = godotenv.Load()
-	if err != nil {
-		return cfg, err
-	}
-	return cfg, nil
 }
 
 func makeIrc() (*irc.Connection, error) {

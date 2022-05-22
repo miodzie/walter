@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/bwmarrin/discordgo v0.24.0
-	github.com/joho/godotenv v1.4.0
 	github.com/mattn/go-sqlite3 v1.14.12
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/mmcdole/gofeed v1.1.3

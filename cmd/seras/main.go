@@ -11,8 +11,6 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/connections/discord"
-	"github.com/miodzie/seras/connections/fake"
-	"github.com/miodzie/seras/connections/irc"
 	"github.com/miodzie/seras/mods"
 )
 
@@ -44,7 +42,7 @@ func run(args []string) error {
 }
 
 func initConfig() (*seras.Config, error) {
-	cfg, err := seras.ParseToml(UserHomeDir() + "/.seras/config.toml")
+	cfg, err := seras.ParseToml(homeDir() + "/.seras/config.toml")
 	if err != nil {
 		return cfg, err
 	}
@@ -76,15 +74,7 @@ func startCli(messenger seras.Messenger) {
 
 }
 
-func makeIrc() (*irc.Connection, error) {
-	return irc.New(irc.Config{Server: "irc.libera.chat:6667", Nick: "Guest", Username: "Guest"})
-}
-
-func makeFake() *fake.Connection {
-	return fake.NewConnection()
-}
-
-func UserHomeDir() string {
+func homeDir() string {
 	if runtime.GOOS == "windows" {
 		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
 		if home == "" {

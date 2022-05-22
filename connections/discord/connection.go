@@ -14,6 +14,7 @@ type Connection struct {
 	session *discordgo.Session
 	stream  chan seras.Message
 	config  *Config
+	mods    []seras.Module
 	sync.Mutex
 }
 
@@ -46,6 +47,14 @@ func (con *Connection) Close() error {
 	close(con.stream)
 
 	return con.session.Close()
+}
+
+func (con *Connection) Mods() []seras.Module {
+	return con.mods
+}
+
+func (con *Connection) AddMods(mods []seras.Module) {
+	con.mods = append(con.mods, mods...)
 }
 
 func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.MessageCreate) {

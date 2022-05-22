@@ -44,10 +44,10 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	return cfg, nil
 }
 
-type ConfigParser struct {
+type BotParser struct {
 }
 
-func (c *ConfigParser) Parse(val map[string]interface{}) (seras.Connection, error) {
+func (c *BotParser) Parse(val map[string]interface{}) (seras.Bot, error) {
 	cfg, err := ParseConfig(val)
 	if err != nil {
 		return nil, err

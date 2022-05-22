@@ -30,23 +30,18 @@ func run(args []string) error {
 		return err
 	}
 	interupt(func() {})
-	seras.AddConnector("discord", &discord.ConfigParser{})
-	err = seras.ParseConnects(cfg)
+	seras.AddBotParser("discord", &discord.BotParser{})
+	err = seras.ParseBots(cfg)
 	if err != nil {
 		return err
 	}
 
 	// Hard code for now.
-	connection := seras.Connects["discord"].(*discord.Connection)
-	startCli(connection)
+	bot := seras.Bots["discord"]
+	startCli(bot)
+	bot.AddMods(mods.Default("database.sqlite"))
 
-	stream, _ := connection.Connect()
-	manager, err := seras.NewModManager(mods.Default(), connection)
-	if err != nil {
-		return err
-	}
-
-	return manager.Run(stream)
+	return seras.RunBot(bot)
 }
 
 func interupt(callable func()) {

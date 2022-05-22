@@ -1,16 +1,23 @@
-# Mods to load on all connections.
+# Mods to load on all Bots.
 mods = ["best_bot", "rss", "policing"]
 
-[connections]
+[bots]
 
-  [connections.libera]
+  [bots.libera]
   type = "irc"
   admins = ["nick@user/nick"]
   server = "irc.libera.chat:6667"
   nick = "Guest1"
 
-  [connections.discord]
+  [bots.discord]
   type = "discord"
   admins = ["1234"]
   mods = ["meme_police"]
   token = "$DISCORD_TOKEN"
+  storage = "discord"
+
+[storage]
+  [storage.discord]
+  type = "sqlite"
+  file = "discord.sqlite"
+

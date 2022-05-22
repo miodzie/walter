@@ -7,20 +7,20 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 )
 
-var connectors map[string]ConfigParser
+var connectors map[string]BotParser
 
 type Config struct {
-	Mods        []string
-	Connections map[string]map[string]interface{}
+	Mods []string
+	Bots map[string]map[string]interface{}
 }
 
-type ConfigParser interface {
-	Parse(map[string]interface{}) (Connection, error)
+type BotParser interface {
+	Parse(map[string]interface{}) (Bot, error)
 }
 
-func AddConnector(name string, parser ConfigParser) error {
+func AddBotParser(name string, parser BotParser) error {
 	if connectors == nil {
-		connectors = make(map[string]ConfigParser)
+		connectors = make(map[string]BotParser)
 	}
 	if _, ok := connectors[name]; ok {
 		return errors.New("connector already registered")

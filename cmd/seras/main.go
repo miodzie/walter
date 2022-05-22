@@ -31,10 +31,10 @@ func run(args []string) error {
 	}
 	interupt(func() {})
 	seras.AddConnector("discord", &discord.ConfigParser{})
-  err = seras.ParseConnects(cfg)
-  if err != nil {
-    return err
-  }
+	err = seras.ParseConnects(cfg)
+	if err != nil {
+		return err
+	}
 
 	// Hard code for now.
 	connection := seras.Connects["discord"].(*discord.Connection)
@@ -93,7 +93,6 @@ func makeIrc() (*irc.Connection, error) {
 func makeFake() *fake.Connection {
 	return fake.NewConnection()
 }
-
 
 func UserHomeDir() string {
 	if runtime.GOOS == "windows" {

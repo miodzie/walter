@@ -1,7 +1,4 @@
 # TODO
-* Admin users
-  - Audit Log
-
 * Logging
   * ElasticSearch :O
 
@@ -15,6 +12,8 @@ connections:
 
 * Multiple Connections
   - Should be easier after Configuration stuff is setup.
+
+* Interactive CLI
 
 ## Modules
 

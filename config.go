@@ -8,17 +8,11 @@ import (
 
 type Config struct {
 	Mods        []string
-	Connections map[string]Con
-}
-
-type Con struct {
-	Type   string
-	Admins []string
-	Mods   []string
+	Connections map[string]map[string]interface{}
 }
 
 type ConfigParser interface {
-	Parse(file string) (Connection, error)
+	Parse(map[string]interface{}) (Connection, error)
 }
 
 func ParseToml(file string) (*Config, error) {

@@ -6,11 +6,11 @@ import (
 )
 
 func TestParseToml(t *testing.T) {
-  cfg, err := ParseToml("config.toml")
-  if err != nil {
-    t.Error(err)
-  }
+	cfg, err := ParseToml("config.toml")
+	if err != nil {
+		t.Error(err)
+	}
 
-  t.Fail()
-  fmt.Println(cfg)
+	t.Fail()
+	fmt.Println(cfg)
 }

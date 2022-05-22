@@ -30,7 +30,7 @@ func run(args []string) error {
 	}
 	interupt(func() {})
 
-	seras.RegisterConnection("discord", discord.ConfigParser{})
+	// seras.RegisterConnection("discord", discord.ConfigParser{})
 
 	connection := makeDiscord(os.Getenv("DISCORD_TOKEN"))
 

@@ -17,15 +17,15 @@ type Connection struct {
 	sync.Mutex
 }
 
-func New(token string) (*Connection, error) {
-	var disc Connection
-	session, err := discordgo.New("Bot " + token)
+func New(config Config) (*Connection, error) {
+	disc := &Connection{config: &config}
+	session, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
-		return &disc, err
+		return disc, err
 	}
 	disc.session = session
 
-	return &disc, nil
+	return disc, nil
 }
 
 func (con *Connection) Connect() (seras.Stream, error) {

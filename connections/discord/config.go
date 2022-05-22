@@ -53,7 +53,7 @@ func (c *ConfigParser) Parse(val map[string]interface{}) (seras.Connection, erro
 		return nil, err
 	}
 
-	disc, err := New(cfg.Token)
+	disc, err := New(cfg)
 	if err != nil {
 		return disc, err
 	}

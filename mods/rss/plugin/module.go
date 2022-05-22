@@ -30,8 +30,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 	for mod.running {
 		msg := <-stream
 		msg.Command("feeds", mod.showFeeds)
-		// Disabled until I have admin users.
-		// msg.Command("add_feed", mod.addFeed)
+		msg.Command("add_feed", mod.addFeed)
 		msg.Command("subscribe", mod.subscribe)
 	}
 

@@ -31,12 +31,12 @@ func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
 			actions.Reply(msg, "yes")
 		}
 		if msg.IsCommand("gentlemen") || msg.IsCommand("lenny") {
-			actions.Reply(msg, "( ͡° ͜ʖ ͡° )")
+			actions.Reply(msg, "( ͡° ͜ʖ ͡°)")
 		}
 		if msg.IsCommand("ladies") {
-			actions.Reply(msg, "( ͡° ͜ʖ ͡° )")
-			actions.Reply(msg, "( ͡⊙ ͜ʖ ͡⊙ )")
-			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉ )")
+			actions.Reply(msg, "( ͡° ͜ʖ ͡°)")
+			actions.Reply(msg, "( ͡⊙ ͜ʖ ͡⊙)")
+			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉)")
 		}
 	}
 

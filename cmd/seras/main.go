@@ -35,7 +35,7 @@ func run(args []string) error {
 
 	// Hard code for now.
 	bot := seras.Bots["discord"]
-	startCli(bot)
+	cli(bot)
 	bot.AddMods(mods.Default("database.sqlite"))
 
 	return seras.RunBot(bot)
@@ -59,7 +59,7 @@ func interupt(callable func()) {
 	}()
 }
 
-func startCli(messenger seras.Messenger) {
+func cli(messenger seras.Messenger) {
 	reader := bufio.NewReader(os.Stdin)
 	go func() {
 		for {

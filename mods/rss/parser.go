@@ -48,6 +48,15 @@ type Item struct {
 	Custom      map[string]string
 }
 
+func (i *Item) Desc() string {
+    if len(i.Description) < 100 {
+        return i.Description
+    }
+	sp := strings.Split(i.Description, "")
+
+	return strings.Join(sp[:100], "") + "..."
+}
+
 func (i *Item) HasKeywords(keywords []string) bool {
 	for _, keyword := range keywords {
 		keyword = strings.ToLower(keyword)

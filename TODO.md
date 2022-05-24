@@ -20,6 +20,8 @@ connections:
 * Word triggers
 
 * RSS
+  * Ignore words.
+  * Item.Description character limit on String()
   * Better Message formatting (Impl MessageFormatter)
   * NotificationFormatter for RSS. For IRC, it'd be pretty annoying to have a
     giant wall of text.

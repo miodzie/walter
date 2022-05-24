@@ -12,8 +12,8 @@ type Message struct {
 
 func (msg *Message) ToMsg() seras.Message {
 	return seras.Message{
-	  Content: msg.Body(),
-	  Arguments: msg.Arguments(),
+		Content:   msg.Body(),
+		Arguments: msg.Arguments(),
 	}
 }
 

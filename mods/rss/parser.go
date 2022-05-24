@@ -49,9 +49,9 @@ type Item struct {
 }
 
 func (i *Item) Desc() string {
-    if len(i.Description) < 100 {
-        return i.Description
-    }
+	if len(i.Description) < 100 {
+		return i.Description
+	}
 	sp := strings.Split(i.Description, "")
 
 	return strings.Join(sp[:100], "") + "..."

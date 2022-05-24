@@ -11,13 +11,13 @@ import (
 // !add_feed {name} {url}
 func (mod *RssMod) addFeed(msg seras.Message) {
 	if !mod.actions.IsAdmin(msg.AuthorId) {
-    mod.actions.Reply(msg, "Only admins can add feeds.")
+		mod.actions.Reply(msg, "Only admins can add feeds.")
 		return
 	}
-  if len(msg.Arguments) != 3 {
-    mod.actions.Reply(msg, "Incorrect amount of arguments.")
-    return
-  }
+	if len(msg.Arguments) != 3 {
+		mod.actions.Reply(msg, "Incorrect amount of arguments.")
+		return
+	}
 
 	var addFeed = &interactors.AddFeed{Feeds: mod.feeds}
 	// TODO: validate.

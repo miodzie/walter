@@ -50,11 +50,11 @@ func (p *Processor) Handle() ([]*Notification, error) {
 				}
 				sub.See(*item)
 			}
-            err := p.subs.Update(sub)
-            if err != nil {
-                // TODO: remove?
-                fmt.Println(err)
-            }
+			err := p.subs.Update(sub)
+			if err != nil {
+				// TODO: remove?
+				fmt.Println(err)
+			}
 		}
 	}
 

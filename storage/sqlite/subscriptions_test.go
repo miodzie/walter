@@ -8,6 +8,5 @@ import (
 var subRepo SubscriptionRepository
 
 func TestSubSave(t *testing.T) {
-    // t.Fail()
+	// t.Fail()
 }
-

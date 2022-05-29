@@ -12,25 +12,21 @@ type Messenger interface {
 }
 
 type Message struct {
-	Content    string
-	Arguments  []string
-	Channel    string
-	AuthorId   string
-	AuthorNick string
-	// TODO: Refactor, this is quick fix.
-	AuthorMention string
+	Content       string
+	Arguments     []string
+	Channel       string
+	Author        Author
 }
 
 type Author struct {
-	Id      string
+	Id      string // Host in IRC, User ID in Discord.
 	Nick    string
-	Mention string
+	Mention string // TODO: Refactor?, this is quick fix to get mentions working in Discord.
 }
 
 type MessageFormatter interface {
 	Bold(string) string
 	Italicize(string) string
-	StrikeThrough(string) string
 }
 
 func (msg *Message) Command(command string, call func(Message)) {

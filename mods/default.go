@@ -19,7 +19,13 @@ func Default(db string) []seras.Module {
 	return []seras.Module{
 		bestbot.New(),
 		policing.New(),
-		rss.New(&sqlite.FeedRepository{}, &sqlite.SubscriptionRepository{},
-			decorators.StripHtml(gofeed.New())),
+		rss.New(
+			rss.Services{
+				Feeds:         &sqlite.FeedRepository{},
+				Subscriptions: &sqlite.SubscriptionRepository{},
+				Parser:        decorators.StripHtml(gofeed.New()),
+				Formatter:     nil,
+			},
+		),
 	}
 }

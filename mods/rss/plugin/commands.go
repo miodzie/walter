@@ -10,7 +10,7 @@ import (
 
 // !add_feed {name} {url}
 func (mod *RssMod) addFeed(msg seras.Message) {
-	if !mod.actions.IsAdmin(msg.AuthorId) {
+	if !mod.actions.IsAdmin(msg.Author.Id) {
 		mod.actions.Reply(msg, "Only admins can add feeds.")
 		return
 	}
@@ -19,7 +19,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		return
 	}
 
-	var addFeed = &interactors.AddFeed{Feeds: mod.feeds}
+	var addFeed = &interactors.AddFeed{Feeds: mod.Feeds}
 	// TODO: validate.
 	req := interactors.AddFeedRequest{
 		Name: msg.Arguments[1],
@@ -39,7 +39,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 func (mod *RssMod) showFeeds(msg seras.Message) {
 	var showFeeds interactors.ShowFeeds
 
-	resp := showFeeds.Handle(mod.feeds)
+	resp := showFeeds.Handle(mod.Feeds)
 
 	if resp.Error != nil {
 		mod.actions.Reply(msg, resp.Message)
@@ -70,11 +70,11 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		FeedName: msg.Arguments[1],
 		Keywords: keywords,
 		Channel:  msg.Channel,
-		User:     msg.AuthorMention,
+		User:     msg.Author.Mention,
 	}
 	var subscribe = &interactors.Subscribe{
-		Feeds: mod.feeds,
-		Subs:  mod.subs,
+		Feeds: mod.Feeds,
+		Subs:  mod.Subscriptions,
 	}
 	resp, err := subscribe.Handle(req)
 

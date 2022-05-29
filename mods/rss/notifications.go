@@ -18,3 +18,7 @@ func (n Notification) String() string {
 	t = fmt.Sprintf(t, i.Title, i.Desc(), i.Link, strings.Join(n.Users, ", "))
 	return t
 }
+
+type Formatter interface {
+	Format(Notification) string
+}

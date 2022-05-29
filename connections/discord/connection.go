@@ -62,14 +62,16 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		return
 	}
 	msg := seras.Message{
-		Content:       e.Content,
-		Channel:       e.ChannelID,
-		Arguments:     strings.Split(e.Content, " "),
-		AuthorId:      e.Author.ID,
-		AuthorNick:    e.Author.Username,
-		AuthorMention: "<@" + e.Author.ID + ">",
+		Content:   e.Content,
+		Channel:   e.ChannelID,
+		Arguments: strings.Split(e.Content, " "),
+		Author: seras.Author{
+			Id:      e.Author.ID,
+			Nick:    e.Author.Username,
+			Mention: "<@" + e.Author.ID + ">",
+		},
 	}
-	fmt.Printf("Discord:  [%s]: %s\n", msg.AuthorNick, msg.Content)
+	fmt.Printf("Discord:  [%s]: %s\n", msg.Author.Nick, msg.Content)
 	con.stream <- msg
 }
 
@@ -93,4 +95,12 @@ func (con *Connection) IsAdmin(userId string) bool {
 
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
 	return con.session.GuildMemberTimeout(channel, user, &until)
+}
+
+func (r *Connection) Bold(str string) string {
+	return fmt.Sprintf("**%s**", str)
+}
+
+func (r *Connection) Italicize(str string) string {
+	return fmt.Sprintf("**%s**", str)
 }

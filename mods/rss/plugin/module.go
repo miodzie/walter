@@ -11,13 +11,18 @@ import (
 type RssMod struct {
 	actions seras.Actions
 	running bool
-	feeds   rss.Feeds
-	subs    rss.Subscriptions
-	parser  rss.Parser
+	Services
 }
 
-func New(feeds rss.Feeds, subs rss.Subscriptions, parser rss.Parser) *RssMod {
-	return &RssMod{feeds: feeds, subs: subs, parser: parser}
+type Services struct {
+	rss.Feeds
+	rss.Subscriptions
+	rss.Parser
+	rss.Formatter
+}
+
+func New(services Services) *RssMod {
+	return &RssMod{Services: services}
 }
 func (mod *RssMod) Name() string {
 	return "rss"
@@ -38,7 +43,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	p := rss.NewProcessor(mod.feeds, mod.subs, mod.parser)
+	p := rss.NewProcessor(mod.Feeds, mod.Subscriptions, mod.Parser)
 	for mod.running {
 		notifs, err := p.Handle()
 		if err != nil {
@@ -47,7 +52,7 @@ func (mod *RssMod) checkFeeds() {
 		for _, notif := range notifs {
 			msg := seras.Message{
 				Channel: notif.Channel,
-				Content: notif.String(),
+				Content: mod.Formatter.Format(*notif),
 			}
 			mod.actions.Send(msg)
 		}

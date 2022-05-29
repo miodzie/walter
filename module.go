@@ -13,6 +13,7 @@ type Module interface {
 
 type Actions interface {
 	Messenger
+	MessageFormatter
 	Admin
 }
 

@@ -6,6 +6,7 @@ type Bot interface {
 	Connection
 	Admin
 	Messenger
+	MessageFormatter
 	Modable
 }
 

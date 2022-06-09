@@ -9,7 +9,7 @@ import (
 
 var db *sql.DB
 
-//go:embed feeds.sql
+//go:embed rss.sql
 var migration string
 
 func Setup(path string) error {

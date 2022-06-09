@@ -1,14 +1,20 @@
 package plugin
 
-import "github.com/miodzie/seras"
+import (
+	"log"
+
+	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/mods/trigger"
+)
 
 type TriggerMod struct {
 	actions seras.Actions
 	running bool
+	repo    trigger.Repository
 }
 
-func New() *TriggerMod {
-	return &TriggerMod{}
+func New(repo trigger.Repository) *TriggerMod {
+	return &TriggerMod{repo: repo}
 }
 
 func (mod *TriggerMod) Start(stream seras.Stream, actions seras.Actions) error {
@@ -16,7 +22,18 @@ func (mod *TriggerMod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.actions = actions
 	for mod.running {
 		msg := <-stream
-		msg.Command("feeds", mod.addTrig)
+		msg.Command("add_trig", mod.addTrig)
+		trigs, err := mod.repo.All()
+		if err != nil {
+			log.Printf("err: failed retrieving triggers to check message: %s\n", err)
+			continue
+		}
+
+		for _, t := range trigs {
+			if t.Check(msg.Content) {
+				mod.actions.Reply(msg, t.Reply)
+			}
+		}
 	}
 
 	return nil

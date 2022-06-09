@@ -1,9 +1,14 @@
 package rss
 
 import (
-	"math/rand"
 	"strings"
 )
+
+type Subscriptions interface {
+	Add(*Subscription) error
+	Update(*Subscription) error
+	ByFeedId(id uint64) ([]*Subscription, error)
+}
 
 type Subscription struct {
 	Id        uint64
@@ -46,43 +51,4 @@ func (s *Subscription) makeSeenMap() {
 			s.SeenItems[i] = true
 		}
 	}
-}
-
-type Subscriptions interface {
-	Add(*Subscription) error
-	Update(*Subscription) error
-	ByFeedId(id uint64) ([]*Subscription, error)
-}
-
-type InMemSubs struct {
-	items map[uint64]*Subscription
-}
-
-func NewInMemSubs() *InMemSubs {
-	return &InMemSubs{items: make(map[uint64]*Subscription)}
-}
-
-func (m *InMemSubs) Add(s *Subscription) error {
-	if s.Id == 0 {
-		s.Id = rand.Uint64()
-	}
-	m.items[s.Id] = s
-	return nil
-}
-
-func (m *InMemSubs) Update(s *Subscription) error {
-	m.items[s.Id] = s
-	return nil
-}
-
-func (m *InMemSubs) ByFeedId(id uint64) ([]*Subscription, error) {
-	var found []*Subscription
-
-	for _, s := range m.items {
-		if s.FeedId == id {
-			found = append(found, s)
-		}
-	}
-
-	return found, nil
 }

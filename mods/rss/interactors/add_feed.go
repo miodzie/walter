@@ -3,7 +3,7 @@ package interactors
 import "github.com/miodzie/seras/mods/rss"
 
 type AddFeed struct {
-	Feeds rss.Feeds
+	Repo rss.Repository
 }
 
 type AddFeedRequest struct {
@@ -23,7 +23,7 @@ func (a *AddFeed) Handle(req AddFeedRequest) AddFeedResponse {
 	feed.Name = req.Name
 	feed.Url = req.Url
 
-	err := a.Feeds.Add(&feed)
+	err := a.Repo.AddFeed(&feed)
 
 	resp.Message = "Feed saved."
 	if err != nil {

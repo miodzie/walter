@@ -20,11 +20,10 @@ func Default(db string) []seras.Module {
 		bestbot.New(),
 		policing.New(),
 		rss.New(
-			rss.Services{
-				Feeds:         &sqlite.FeedRepository{},
-				Subscriptions: &sqlite.SubscriptionRepository{},
-				Parser:        decorators.StripHtml(gofeed.New()),
-				Formatter:     nil,
+			rss.Context{
+				Repository: &sqlite.RssRepository{},
+				Parser:     decorators.StripHtml(gofeed.New()),
+				Formatter:  nil,
 			},
 		),
 	}

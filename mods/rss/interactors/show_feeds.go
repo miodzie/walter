@@ -14,11 +14,11 @@ type ShowFeedsResponse struct {
 	Error   error
 }
 
-func (sl *ShowFeeds) Handle(feeds rss.Feeds) ShowFeedsResponse {
+func (sl *ShowFeeds) Handle(repo rss.Repository) ShowFeedsResponse {
 	var resp ShowFeedsResponse
 	template.New("test")
 
-	resp.Feeds, resp.Error = feeds.All()
+	resp.Feeds, resp.Error = repo.AllFeeds()
 
 	if len(resp.Feeds) == 0 {
 		resp.Message = "No feeds available."

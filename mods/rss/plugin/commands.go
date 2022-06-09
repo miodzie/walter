@@ -19,7 +19,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		return
 	}
 
-	var addFeed = &interactors.AddFeed{Feeds: mod.Feeds}
+	var addFeed = &interactors.AddFeed{Repo: mod.Repository}
 	// TODO: validate.
 	req := interactors.AddFeedRequest{
 		Name: msg.Arguments[1],
@@ -39,7 +39,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 func (mod *RssMod) showFeeds(msg seras.Message) {
 	var showFeeds interactors.ShowFeeds
 
-	resp := showFeeds.Handle(mod.Feeds)
+	resp := showFeeds.Handle(mod.Repository)
 
 	if resp.Error != nil {
 		mod.actions.Reply(msg, resp.Message)
@@ -72,10 +72,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		Channel:  msg.Channel,
 		User:     msg.Author.Mention,
 	}
-	var subscribe = &interactors.Subscribe{
-		Feeds: mod.Feeds,
-		Subs:  mod.Subscriptions,
-	}
+	var subscribe = &interactors.Subscribe{Repo: mod.Repository}
 	resp, err := subscribe.Handle(req)
 
 	if err != nil {

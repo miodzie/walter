@@ -11,18 +11,17 @@ import (
 type RssMod struct {
 	actions seras.Actions
 	running bool
-	Services
+	Context
 }
 
-type Services struct {
-	rss.Feeds
-	rss.Subscriptions
+type Context struct {
+	rss.Repository
 	rss.Parser
 	rss.Formatter
 }
 
-func New(services Services) *RssMod {
-	return &RssMod{Services: services}
+func New(ctx Context) *RssMod {
+	return &RssMod{Context: ctx}
 }
 func (mod *RssMod) Name() string {
 	return "rss"
@@ -43,7 +42,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	p := rss.NewProcessor(mod.Feeds, mod.Subscriptions, mod.Parser)
+	p := rss.NewProcessor(mod.Repository, mod.Parser)
 	for mod.running {
 		notifs, err := p.Handle()
 		if err != nil {

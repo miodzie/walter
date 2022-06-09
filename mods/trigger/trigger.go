@@ -21,7 +21,7 @@ func (t *Trigger) Check(str string) bool {
 	return r.Match([]byte(str))
 }
 
-type Triggers interface {
+type Repository interface {
 	All() ([]Trigger, error)
 	Add(*Trigger) error
 	Remove(id uint64)

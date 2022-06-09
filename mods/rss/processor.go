@@ -3,15 +3,13 @@ package rss
 import "fmt"
 
 type Processor struct {
-	feeds  Feeds
-	subs   Subscriptions
+	repo Repository
 	parser Parser
 }
 
-func NewProcessor(f Feeds, s Subscriptions, parser Parser) *Processor {
+func NewProcessor(repo Repository, parser Parser) *Processor {
 	return &Processor{
-		feeds:  f,
-		subs:   s,
+        repo: repo,
 		parser: parser,
 	}
 }
@@ -19,13 +17,13 @@ func NewProcessor(f Feeds, s Subscriptions, parser Parser) *Processor {
 func (p *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
 
-	feeds, _ := p.feeds.All()
+	feeds, _ := p.repo.AllFeeds()
 	for _, feed := range feeds {
 		parsed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
 			return notifications, err
 		}
-		subs, err := p.subs.ByFeedId(feed.Id)
+		subs, err := p.repo.SubByFeedId(feed.Id)
 		if err != nil {
 			return notifications, err
 		}
@@ -50,7 +48,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 				}
 				sub.See(*item)
 			}
-			err := p.subs.Update(sub)
+			err := p.repo.UpdateSub(sub)
 			if err != nil {
 				// TODO: remove?
 				fmt.Println(err)

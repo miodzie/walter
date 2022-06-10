@@ -42,7 +42,7 @@ func (f *InMemRepository) FeedByName(name string) (*Feed, error) {
 	return &Feed{}, errors.New("feed not found")
 }
 
-func (m *InMemRepository) Add(s *Subscription) error {
+func (m *InMemRepository) AddSub(s *Subscription) error {
 	if s.Id == 0 {
 		s.Id = rand.Uint64()
 	}
@@ -50,12 +50,12 @@ func (m *InMemRepository) Add(s *Subscription) error {
 	return nil
 }
 
-func (m *InMemRepository) Update(s *Subscription) error {
+func (m *InMemRepository) UpdateSub(s *Subscription) error {
 	m.subs[s.Id] = s
 	return nil
 }
 
-func (m *InMemRepository) ByFeedId(id uint64) ([]*Subscription, error) {
+func (m *InMemRepository) SubByFeedId(id uint64) ([]*Subscription, error) {
 	var found []*Subscription
 
 	for _, s := range m.subs {

@@ -1,7 +1,6 @@
 package seras
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -11,6 +10,14 @@ func TestParseToml(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Fail()
-	fmt.Println(cfg)
+	if len(cfg.Bots) != 2 {
+		t.Fail()
+	}
+	d, ok := cfg.Bots["discord"]
+	if !ok {
+		t.Fail()
+	}
+	if d["type"] != "discord" {
+		t.Fail()
+	}
 }

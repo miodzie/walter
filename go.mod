@@ -1,6 +1,6 @@
 module github.com/miodzie/seras
 
-go 1.18
+go 1.17
 
 require (
 	github.com/bwmarrin/discordgo v0.24.0

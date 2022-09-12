@@ -1,6 +1,7 @@
 package seras
 
 import (
+	_ "embed"
 	"errors"
 	"os"
 
@@ -8,6 +9,9 @@ import (
 )
 
 var connectors map[string]BotParser
+
+//go:embed config.toml
+var DefaultConfig string
 
 type Config struct {
 	Mods []string

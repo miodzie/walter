@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"github.com/miodzie/seras/connections/irc"
 	"os"
 	"os/signal"
 	"runtime"
@@ -11,7 +13,6 @@ import (
 
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/connections/discord"
-	"github.com/miodzie/seras/mods"
 )
 
 func main() {
@@ -28,21 +29,36 @@ func run() error {
 	}
 	interrupt(func() {})
 	_ = seras.AddBotParser("discord", &discord.BotParser{})
+	_ = seras.AddBotParser("irc", &irc.BotParser{})
 	err = seras.ParseBots(cfg)
 	if err != nil {
 		return err
 	}
 
 	// Hard code for now.
-	bot := seras.Bots["discord"]
-	cli(bot)
-	bot.AddMods(mods.Default("database.sqlite"))
+	//bot := seras.Bots["discord"]
+	//cli(bot)
+	//bot.AddMods(mods.Default("database.sqlite"))
 
-	return seras.RunBot(bot)
+	//return seras.RunBot(bot)
+	return seras.RunAll()
 }
 
 func initConfig() (*seras.Config, error) {
-	cfg, err := seras.ParseToml(homeDir() + "/.seras/config.toml")
+	file := homeDir() + "/.seras/config.toml"
+	if _, err := os.Stat(file); errors.Is(err, os.ErrNotExist) {
+		err := os.MkdirAll(homeDir()+"/.seras", 0700)
+		if err != nil {
+			return nil, err
+		}
+		err = os.WriteFile(file, []byte(seras.DefaultConfig), 0600)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Printf("Config was not found, created.\nPlease update the config located at: %s\nAnd restart.", file)
+		os.Exit(0)
+	}
+	cfg, err := seras.ParseToml(file)
 	if err != nil {
 		return cfg, err
 	}

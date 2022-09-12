@@ -1,6 +1,7 @@
 package irc
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"github.com/miodzie/seras/connections/irc/plugin"
@@ -20,6 +21,11 @@ type Connection struct {
 
 func New(conf Config) (*Connection, error) {
 	ircCon := irc.IRC(conf.Nick, conf.Username)
+	ircCon.UseTLS = true
+	ircCon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	ircCon.UseSASL = conf.SASL
+	ircCon.SASLLogin = conf.SASLUsername
+	ircCon.SASLPassword = conf.SASLPassword
 	con := &Connection{
 		irc:    ircCon,
 		config: &conf,

@@ -8,12 +8,15 @@ import (
 var ErrIncorrectType = errors.New("config is not of type: 'irc'")
 
 type Config struct {
-	Server   string
-	Nick     string
-	Username string
-	Channels []string
-	Admins   []string
-	Mods     []string
+	Server       string
+	Nick         string
+	Username     string
+	Channels     []string
+	Admins       []string
+	Mods         []string
+	SASL         bool
+	SASLUsername string
+	SASLPassword string
 }
 
 func ParseConfig(val map[string]interface{}) (Config, error) {
@@ -32,6 +35,19 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	cfg.Username, ok = val["username"].(string)
 	if !ok {
 		return cfg, errors.New("unable to parse username")
+	}
+
+	cfg.SASL, ok = val["sasl"].(bool)
+	if !ok {
+		return cfg, errors.New("unable to parse sasl")
+	}
+	cfg.SASLUsername, ok = val["sasl_username"].(string)
+	if !ok {
+		return cfg, errors.New("unable to parse sasl_username")
+	}
+	cfg.SASLPassword, ok = val["sasl_password"].(string)
+	if !ok {
+		return cfg, errors.New("unable to parse sasl_password")
 	}
 
 	cfg.Server, ok = val["server"].(string)

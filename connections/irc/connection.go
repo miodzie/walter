@@ -3,6 +3,7 @@ package irc
 import (
 	"errors"
 	"fmt"
+	"github.com/miodzie/seras/connections/irc/plugin"
 	"time"
 
 	"github.com/miodzie/seras"
@@ -18,9 +19,11 @@ type Connection struct {
 }
 
 func New(conf Config) (*Connection, error) {
+	ircCon := irc.IRC(conf.Nick, conf.Username)
 	con := &Connection{
-		irc:    irc.IRC(conf.Nick, conf.Username),
+		irc:    ircCon,
 		config: &conf,
+		mods:   []seras.Module{plugin.New(ircCon)},
 	}
 
 	return con, nil
@@ -36,10 +39,22 @@ func (con *Connection) Connect() (seras.Stream, error) {
 	stream := make(chan seras.Message)
 
 	con.irc.AddCallback("*", func(event *irc.Event) {
+		// TODO: Remove me.
+		args := event.Arguments
+		if event.Code == "PRIVMSG" {
+			args = event.Arguments[1:]
+		}
 		fmt.Println(event.Raw)
 		stream <- seras.Message{
 			Content:   event.Message(),
-			Arguments: event.Arguments,
+			Arguments: args,
+			Target:    event.Arguments[0],
+			Author: seras.Author{
+				Id:      event.Host,
+				Nick:    event.Nick,
+				Mention: "",
+			},
+			Code: event.Code,
 		}
 	})
 
@@ -54,17 +69,18 @@ func (con *Connection) Close() error {
 	con.Lock()
 	defer con.Unlock()
 	con.irc.Disconnect()
-	fmt.Println("why hang")
 	con.irc.ClearCallback("*")
 
 	return nil
 }
 
 func (con *Connection) Send(msg seras.Message) error {
-	return errors.New("not implemented")
+	con.irc.Privmsg(msg.Target, msg.Content)
+	return nil
 }
 func (con *Connection) Reply(msg seras.Message, content string) error {
-	return errors.New("not implemented")
+	reply := seras.Message{Content: content, Target: msg.Target}
+	return con.Send(reply)
 }
 
 func (con *Connection) Mods() []seras.Module {
@@ -75,8 +91,14 @@ func (con *Connection) AddMods(mods []seras.Module) {
 }
 
 func (con *Connection) IsAdmin(userId string) bool {
+	for _, a := range con.config.Admins {
+		if a == userId {
+			return true
+		}
+	}
 	return false
 }
+
 func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
 	return errors.New("not implemented")
 }

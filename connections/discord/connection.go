@@ -63,7 +63,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 	}
 	msg := seras.Message{
 		Content:   e.Content,
-		Channel:   e.ChannelID,
+		Target:    e.ChannelID,
 		Arguments: strings.Split(e.Content, " "),
 		Author: seras.Author{
 			Id:      e.Author.ID,
@@ -76,12 +76,12 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 }
 
 func (con *Connection) Send(msg seras.Message) error {
-	_, err := con.session.ChannelMessageSend(msg.Channel, msg.Content)
+	_, err := con.session.ChannelMessageSend(msg.Target, msg.Content)
 	return err
 }
 
 func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Channel: msg.Channel}
+	reply := seras.Message{Content: content, Target: msg.Target}
 	return con.Send(reply)
 }
 func (con *Connection) IsAdmin(userId string) bool {

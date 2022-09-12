@@ -46,13 +46,11 @@ func RunBot(bot Bot) error {
 	return manager.Run(stream)
 }
 
-func RunAll() error {
+// TODO: refactor the addMods thingy
+func RunAll(addMods func(string) []Module) error {
 	for name, bot := range Bots {
-		//// TODO: Change from defaults to configured.
-		// TODO: Change to use configured storage type.
-		//bot.AddMods(mods.Default(fmt.Sprintf("%s.sqlite", name)))
 		fmt.Printf("Starting %s\n", name)
-		// TODO: I'm pretty sure this is blocking lel
+		bot.AddMods(addMods(name))
 		err := RunBot(bot)
 		if err != nil {
 			return err

@@ -12,10 +12,11 @@ type Messenger interface {
 }
 
 type Message struct {
-	Content       string
-	Arguments     []string
-	Channel       string
-	Author        Author
+	Content   string
+	Arguments []string
+	Target    string
+	Author    Author
+	Code      string
 }
 
 type Author struct {

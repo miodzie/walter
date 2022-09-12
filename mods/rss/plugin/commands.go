@@ -48,7 +48,7 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 	}
 
 	// TODO: Presenter layer.
-	var reply = seras.Message{Channel: msg.Channel}
+	var reply = seras.Message{Target: msg.Target}
 	var parsed []string
 	for _, feed := range resp.Feeds {
 		parsed = append(parsed, fmt.Sprintf("%s: %s", feed.Name, feed.Url))
@@ -69,7 +69,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	req := interactors.SubscribeRequest{
 		FeedName: msg.Arguments[1],
 		Keywords: keywords,
-		Channel:  msg.Channel,
+		Channel:  msg.Target,
 		User:     msg.Author.Mention,
 	}
 	var subscribe = &interactors.Subscribe{Repo: mod.Repository}

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/miodzie/seras/connections/irc"
+	"github.com/miodzie/seras/mods"
 	"os"
 	"os/signal"
 	"runtime"
@@ -41,7 +42,9 @@ func run() error {
 	//bot.AddMods(mods.Default("database.sqlite"))
 
 	//return seras.RunBot(bot)
-	return seras.RunAll()
+	return seras.RunAll(func(name string) []seras.Module {
+		return mods.Default(fmt.Sprintf("%s.sqlite", name))
+	})
 }
 
 func initConfig() (*seras.Config, error) {

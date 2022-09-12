@@ -15,19 +15,19 @@ import (
 )
 
 func main() {
-	if err := run(os.Args); err != nil {
+	if err := run(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
 }
 
-func run(args []string) error {
+func run() error {
 	cfg, err := initConfig()
 	if err != nil {
 		return err
 	}
-	interupt(func() {})
-	seras.AddBotParser("discord", &discord.BotParser{})
+	interrupt(func() {})
+	_ = seras.AddBotParser("discord", &discord.BotParser{})
 	err = seras.ParseBots(cfg)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func initConfig() (*seras.Config, error) {
 	return cfg, nil
 }
 
-func interupt(callable func()) {
+func interrupt(callable func()) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	go func() {

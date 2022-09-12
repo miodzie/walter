@@ -5,14 +5,14 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-type GoFeedParser struct {
+type Parser struct {
 }
 
-func New() *GoFeedParser {
-	return &GoFeedParser{}
+func New() *Parser {
+	return &Parser{}
 }
 
-func (receiver *GoFeedParser) ParseURL(url string) (*rss.ParsedFeed, error) {
+func (receiver *Parser) ParseURL(url string) (*rss.ParsedFeed, error) {
 	var parsed rss.ParsedFeed
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(url)

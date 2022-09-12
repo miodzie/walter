@@ -14,6 +14,7 @@ type Config struct {
 	Bots map[string]map[string]interface{}
 }
 
+// BotParser intakes a map of config settings for a particular bot type.
 type BotParser interface {
 	Parse(map[string]interface{}) (Bot, error)
 }

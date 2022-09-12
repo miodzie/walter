@@ -14,7 +14,7 @@ type Messenger interface {
 type Message struct {
 	Content   string
 	Arguments []string
-	Target    string
+	Channel   string
 	Author    Author
 	Code      string
 }

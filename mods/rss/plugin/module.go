@@ -50,7 +50,7 @@ func (mod *RssMod) checkFeeds() {
 		}
 		for _, notif := range notifs {
 			msg := seras.Message{
-				Target:  notif.Channel,
+				Channel: notif.Channel,
 				Content: mod.Format(*notif),
 			}
 			mod.actions.Send(msg)

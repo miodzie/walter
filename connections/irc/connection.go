@@ -54,7 +54,7 @@ func (con *Connection) Connect() (seras.Stream, error) {
 		stream <- seras.Message{
 			Content:   event.Message(),
 			Arguments: args,
-			Target:    event.Arguments[0],
+			Channel:   event.Arguments[0],
 			Author: seras.Author{
 				Id:      event.Host,
 				Nick:    event.Nick,
@@ -81,11 +81,11 @@ func (con *Connection) Close() error {
 }
 
 func (con *Connection) Send(msg seras.Message) error {
-	con.irc.Privmsg(msg.Target, msg.Content)
+	con.irc.Privmsg(msg.Channel, msg.Content)
 	return nil
 }
 func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Target: msg.Target}
+	reply := seras.Message{Content: content, Channel: msg.Channel}
 	return con.Send(reply)
 }
 

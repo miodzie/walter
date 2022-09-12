@@ -24,7 +24,7 @@ func (mod *PolicingMod) Start(stream seras.Stream, actions seras.Actions) error 
 	for mod.running {
 		msg := <-stream
 		if IsSpam(msg) {
-			err := actions.TimeoutUser(msg.Target, msg.Author.Id, time.Now().Add(time.Minute*1))
+			err := actions.TimeoutUser(msg.Channel, msg.Author.Id, time.Now().Add(time.Minute*1))
 			if err != nil {
 				fmt.Printf("Failed to TimeoutUser: \"%s\"\n", err)
 			}

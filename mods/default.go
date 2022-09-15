@@ -7,6 +7,7 @@ import (
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
 	rss "github.com/miodzie/seras/mods/rss/plugin"
+	sed "github.com/miodzie/seras/mods/sed/plugin"
 	"github.com/miodzie/seras/storage/sqlite"
 )
 
@@ -17,6 +18,7 @@ func Default(db string) []seras.Module {
 	}
 
 	return []seras.Module{
+		sed.New(),
 		bestbot.New(),
 		policing.New(),
 		rss.New(

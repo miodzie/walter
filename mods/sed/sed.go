@@ -42,6 +42,11 @@ func (s Sed) Replace(str string) string {
 	return str
 }
 
+func (s Sed) HasMatch(str string) bool {
+	// 😎
+	return str != s.Replace(str)
+}
+
 func (s Sed) HasOption(opt string) bool {
 	return strings.Contains(s.Options, opt)
 }

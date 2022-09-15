@@ -1,6 +1,6 @@
 package seras
 
-var token string = "!"
+var token = "!"
 
 func Token() string {
 	return token

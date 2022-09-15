@@ -1,8 +1,6 @@
 package interactors
 
 import (
-	"text/template"
-
 	"github.com/miodzie/seras/mods/rss"
 )
 
@@ -16,7 +14,6 @@ type ShowFeedsResponse struct {
 
 func (sl *ShowFeeds) Handle(repo rss.Repository) ShowFeedsResponse {
 	var resp ShowFeedsResponse
-	template.New("test")
 
 	resp.Feeds, resp.Error = repo.AllFeeds()
 

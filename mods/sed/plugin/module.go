@@ -30,10 +30,12 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 			mod.logMsg(msg)
 		}
 		if s.Command == ".s" {
-			for _, m := range mod.log[msg.Channel] {
+			for i := len(mod.log[msg.Channel]) - 1; i >= 0; i-- {
+				m := mod.log[msg.Channel][i]
 				if s.HasMatch(m.Content) {
 					r := fmt.Sprintf("%s meant to say: %s", m.Author.Nick, s.Replace(m.Content))
 					actions.Reply(msg, r)
+					break
 				}
 			}
 		}

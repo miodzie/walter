@@ -3,6 +3,7 @@ package mods
 import (
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/bestbot"
+	"github.com/miodzie/seras/mods/dong"
 	"github.com/miodzie/seras/mods/policing"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
@@ -19,6 +20,7 @@ func Default(db string) []seras.Module {
 
 	return []seras.Module{
 		sed.New(),
+		dong.New(),
 		bestbot.New(),
 		policing.New(),
 		rss.New(

@@ -3,13 +3,13 @@ package rss
 import "fmt"
 
 type Processor struct {
-	repo Repository
+	repo   Repository
 	parser Parser
 }
 
 func NewProcessor(repo Repository, parser Parser) *Processor {
 	return &Processor{
-        repo: repo,
+		repo:   repo,
 		parser: parser,
 	}
 }

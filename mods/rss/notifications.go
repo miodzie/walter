@@ -16,9 +16,17 @@ func (n Notification) String() string {
 	i := n.Item
 	t := "%s\n%s\n%s\n%s\n"
 	t = fmt.Sprintf(t, i.Title, i.Desc(), i.Link, strings.Join(n.Users, ", "))
+
 	return t
 }
 
 type Formatter interface {
 	Format(Notification) string
+}
+
+type DefaultFormatter struct {
+}
+
+func (d DefaultFormatter) Format(notification Notification) string {
+	return notification.String()
 }

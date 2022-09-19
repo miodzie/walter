@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/miodzie/seras/connections/irc/plugin"
+	"strings"
 	"time"
 
 	"github.com/miodzie/seras"
@@ -45,16 +46,16 @@ func (con *Connection) Connect() (seras.Stream, error) {
 	stream := make(chan seras.Message)
 
 	con.irc.AddCallback("*", func(event *irc.Event) {
-		// TODO: Remove me.
-		args := event.Arguments
+		var channel string
+		var args = event.Arguments
 		if event.Code == "PRIVMSG" {
 			args = event.Arguments[1:]
+			channel = event.Arguments[0]
 		}
-		fmt.Println(event.Raw)
 		stream <- seras.Message{
 			Content:   event.Message(),
 			Arguments: args,
-			Channel:   event.Arguments[0],
+			Target:    channel,
 			Author: seras.Author{
 				Id:      event.Host,
 				Nick:    event.Nick,
@@ -81,11 +82,16 @@ func (con *Connection) Close() error {
 }
 
 func (con *Connection) Send(msg seras.Message) error {
-	con.irc.Privmsg(msg.Channel, msg.Content)
+	con.irc.Privmsg(msg.Target, msg.Content)
+	fmt.Printf("OUT: %+v\n", msg)
 	return nil
 }
 func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Channel: msg.Channel}
+	reply := seras.Message{Content: content, Target: msg.Target}
+	// Target was not a channel, it was a PM.
+	if !strings.Contains(reply.Target, "#") {
+		reply.Target = msg.Author.Nick
+	}
 	return con.Send(reply)
 }
 

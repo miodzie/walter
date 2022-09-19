@@ -101,7 +101,7 @@ func TestProcessor_Handle_ignores_seen_items(t *testing.T) {
 
 func checkNotif(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
 	if n.Channel != sub.Channel {
-		t.Error("unexpected notification.Channel")
+		t.Error("unexpected notification.Target")
 	}
 	if n.Users[0] != sub.User {
 		t.Error("unexpected notification.Users")

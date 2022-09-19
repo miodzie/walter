@@ -1,22 +1,19 @@
 package interactors
 
 import (
-	"text/template"
-
 	"github.com/miodzie/seras/mods/rss"
 )
 
 type ShowFeeds struct{}
 
 type ShowFeedsResponse struct {
-	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundry, violates DIP.
+	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundary, violates DIP.
 	Message string
 	Error   error
 }
 
 func (sl *ShowFeeds) Handle(repo rss.Repository) ShowFeedsResponse {
 	var resp ShowFeedsResponse
-	template.New("test")
 
 	resp.Feeds, resp.Error = repo.AllFeeds()
 

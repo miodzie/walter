@@ -2,7 +2,6 @@
 mods = ["best_bot", "rss", "policing"]
 
 [bots]
-
   [bots.libera]
   type = "irc"
   admins = ["nick@user/nick"]
@@ -20,4 +19,3 @@ mods = ["best_bot", "rss", "policing"]
   [storage.discord]
   type = "sqlite"
   file = "discord.sqlite"
-

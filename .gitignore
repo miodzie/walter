@@ -1,5 +1,2 @@
-.env
-database.sqlite
-gorm.db
-*.sqlite
 .idea/
+*.sqlite

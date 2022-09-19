@@ -1,6 +1,7 @@
 package seras
 
 import (
+	_ "embed"
 	"errors"
 	"os"
 
@@ -9,11 +10,15 @@ import (
 
 var connectors map[string]BotParser
 
+//go:embed config.toml
+var DefaultConfig string
+
 type Config struct {
 	Mods []string
 	Bots map[string]map[string]interface{}
 }
 
+// BotParser intakes a map of config settings for a particular bot type.
 type BotParser interface {
 	Parse(map[string]interface{}) (Bot, error)
 }

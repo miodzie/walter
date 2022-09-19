@@ -40,8 +40,8 @@ func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
 func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
 	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
 	sut := &Processor{
-	    parser: &NulledParser{Parsed: parsed},
-        repo: NewInMemRepo(),
+		parser: &NulledParser{Parsed: parsed},
+		repo:   NewInMemRepo(),
 	}
 	feed := &Feed{Id: 1}
 	sut.repo.AddFeed(feed)
@@ -68,9 +68,9 @@ func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *t
 func TestProcessor_Handle_returns_empty_when_no_keywords_found(t *testing.T) {
 	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
 	sut := &Processor{
-	    parser: &NulledParser{Parsed: p},
-        repo: NewInMemRepo(),
-    }
+		parser: &NulledParser{Parsed: p},
+		repo:   NewInMemRepo(),
+	}
 	feed := &Feed{Id: 1}
 	sut.repo.AddFeed(feed)
 	sut.repo.AddSub(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})

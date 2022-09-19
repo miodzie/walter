@@ -1,6 +1,6 @@
 package seras
 
-var token string = "!"
+var token = "!"
 
 func Token() string {
 	return token
@@ -12,10 +12,11 @@ type Messenger interface {
 }
 
 type Message struct {
-	Content       string
-	Arguments     []string
-	Channel       string
-	Author        Author
+	Content   string
+	Arguments []string
+	Channel   string
+	Author    Author
+	Code      string
 }
 
 type Author struct {

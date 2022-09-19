@@ -42,10 +42,8 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	fmt.Println("Check feeds")
 	time.Sleep(time.Minute * 3)
 	p := rss.NewProcessor(mod.Repository, mod.Parser)
-	fmt.Println("Delay gone")
 	for mod.running {
 		fmt.Println("Processing feed subscriptions...")
 		notifs, err := p.Handle()

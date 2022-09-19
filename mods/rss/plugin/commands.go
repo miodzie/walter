@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/rss/interactors"
+	"github.com/miodzie/seras/mods/rss/usecases"
 )
 
 // !add_feed {name} {url}
@@ -19,9 +19,9 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		return
 	}
 
-	var addFeed = &interactors.AddFeed{Repo: mod.Repository}
+	var addFeed = &usecases.AddFeed{Repo: mod.Repository}
 	// TODO: validate.
-	req := interactors.AddFeedRequest{
+	req := usecases.AddFeedRequest{
 		Name: msg.Arguments[1],
 		Url:  msg.Arguments[2],
 	}
@@ -37,7 +37,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 
 // !feeds
 func (mod *RssMod) showFeeds(msg seras.Message) {
-	var showFeeds interactors.ShowFeeds
+	var showFeeds usecases.ShowFeeds
 
 	resp := showFeeds.Handle(mod.Repository)
 
@@ -70,13 +70,13 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	}
 	// TODO: validate & parse?
 	keywords := strings.Join(msg.Arguments[2:], " ")
-	req := interactors.SubscribeRequest{
+	req := usecases.SubscribeRequest{
 		FeedName: msg.Arguments[1],
 		Keywords: keywords,
 		Channel:  msg.Target,
 		User:     msg.Author.Mention,
 	}
-	var subscribe = &interactors.Subscribe{Repo: mod.Repository}
+	var subscribe = &usecases.Subscribe{Repo: mod.Repository}
 	resp, err := subscribe.Handle(req)
 
 	if err != nil {

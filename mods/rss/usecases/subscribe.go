@@ -1,4 +1,4 @@
-package interactors
+package usecases
 
 import (
 	"fmt"

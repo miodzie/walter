@@ -42,6 +42,8 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
+	// Delay for IRC connections.
+	time.Sleep(time.Minute * 3)
 	p := rss.NewProcessor(mod.Repository, mod.Parser)
 	for mod.running {
 		notifs, err := p.Handle()

@@ -49,7 +49,7 @@ func (con *Connection) Connect() (seras.Stream, error) {
 		var channel string
 		var args = event.Arguments
 		if event.Code == "PRIVMSG" {
-			args = event.Arguments[1:]
+			args = strings.Split(event.Arguments[1], " ")
 			channel = event.Arguments[0]
 		}
 		stream <- seras.Message{

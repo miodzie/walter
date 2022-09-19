@@ -55,10 +55,11 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 		parsed = append(parsed, fmt.Sprintf("%s: %s", feed.Name, feed.Url))
 	}
 	reply.Content = strings.Join(parsed, "\n")
-	reply.Content += fmt.Sprintf("\n\nTo subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", seras.Token())
-	fmt.Printf("%+v\n", reply)
-	fmt.Println(reply.Content)
-
+	if len(parsed) == 0 {
+		reply.Content = "No feeds available. Ask an admin to add some."
+	}
+	mod.actions.Send(reply)
+	reply.Content = fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", seras.Token())
 	mod.actions.Send(reply)
 }
 

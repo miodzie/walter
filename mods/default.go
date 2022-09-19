@@ -14,7 +14,7 @@ import (
 )
 
 func Default(dbPath string) []seras.Module {
-	err := sqlite.Setup(dbPath)
+	db, err := sqlite.Setup(dbPath)
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +26,7 @@ func Default(dbPath string) []seras.Module {
 		policing.New(),
 		rss.New(
 			rss.Context{
-				Repository: &sqlite.RssRepository{},
+				Repository: sqlite.NewRssRepository(db),
 				Parser:     decorators.StripHtml(gofeed.New()),
 				Formatter:  rss2.MinimalFormatter{},
 			},

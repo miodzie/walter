@@ -59,7 +59,7 @@ func (con *Connection) Connect() (seras.Stream, error) {
 			Author: seras.Author{
 				Id:      event.Host,
 				Nick:    event.Nick,
-				Mention: "",
+				Mention: event.Nick,
 			},
 			Code: event.Code,
 		}

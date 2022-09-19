@@ -42,19 +42,23 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	// Delay for IRC connections.
+	fmt.Println("Check feeds")
 	time.Sleep(time.Minute * 3)
 	p := rss.NewProcessor(mod.Repository, mod.Parser)
+	fmt.Println("Delay gone")
 	for mod.running {
+		fmt.Println("Processing feed subscriptions...")
 		notifs, err := p.Handle()
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Printf("%d notifications found.\n", len(notifs))
 		for _, notif := range notifs {
 			msg := seras.Message{
 				Target:  notif.Channel,
 				Content: mod.Format(*notif),
 			}
+			fmt.Println(notif)
 			mod.actions.Send(msg)
 		}
 		time.Sleep(time.Minute * 30)

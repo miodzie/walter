@@ -7,22 +7,19 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
-
 //go:embed rss.sql
 var migration string
 
-func Setup(path string) error {
-	var err error
-	db, err = sql.Open("sqlite3", path)
+func Setup(path string) (*sql.DB, error) {
+	db, err := sql.Open("sqlite3", path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return migrate()
+	return db, migrate(db)
 }
 
-func migrate() error {
+func migrate(db *sql.DB) error {
 	_, err := db.Exec(migration)
 
 	return err

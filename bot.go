@@ -46,15 +46,14 @@ func RunBot(bot Bot) error {
 	return manager.Run(stream)
 }
 
-// TODO: refactor the addMods thingy
 func RunAll(addMods func(string) []Module) error {
+	errc := make(chan error)
 	for name, bot := range Bots {
 		fmt.Printf("Starting %s\n", name)
 		bot.AddMods(addMods(name))
-		err := RunBot(bot)
-		if err != nil {
-			return err
-		}
+		go func(bot Bot) {
+			errc <- RunBot(bot)
+		}(bot)
 	}
-	return nil
+	return <-errc
 }

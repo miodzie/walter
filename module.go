@@ -39,14 +39,12 @@ func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 }
 
 func (manager *ModuleManager) Run(stream Stream) error {
-	// Init plugin streams, start them up.
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
 		manager.streams[mod.Name()] = modStream
 		go mod.Start(modStream, manager.actions)
 	}
 
-	// Collect messages from stream, broadcast to mods.
 	for msg := range stream {
 		for _, ch := range manager.streams {
 			ch <- msg

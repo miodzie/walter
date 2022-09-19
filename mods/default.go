@@ -13,8 +13,8 @@ import (
 	"github.com/miodzie/seras/storage/sqlite"
 )
 
-func Default(db string) []seras.Module {
-	err := sqlite.Setup(db)
+func Default(dbPath string) []seras.Module {
+	err := sqlite.Setup(dbPath)
 	if err != nil {
 		panic(err)
 	}

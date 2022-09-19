@@ -36,12 +36,6 @@ func run() error {
 		return err
 	}
 
-	// Hard code for now.
-	//bot := seras.Bots["discord"]
-	//cli(bot)
-	//bot.AddMods(mods.Default("database.sqlite"))
-
-	//return seras.RunBot(bot)
 	return seras.RunAll(func(name string) []seras.Module {
 		return mods.Default(fmt.Sprintf("%s.sqlite", name))
 	})

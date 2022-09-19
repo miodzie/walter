@@ -28,7 +28,7 @@ func Default(dbPath string) []seras.Module {
 			rss.Context{
 				Repository: &sqlite.RssRepository{},
 				Parser:     decorators.StripHtml(gofeed.New()),
-				Formatter:  rss2.DefaultFormatter{},
+				Formatter:  rss2.MinimalFormatter{},
 			},
 		),
 	}

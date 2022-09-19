@@ -30,3 +30,14 @@ type DefaultFormatter struct {
 func (d DefaultFormatter) Format(notification Notification) string {
 	return notification.String()
 }
+
+type MinimalFormatter struct {
+}
+
+func (m MinimalFormatter) Format(n Notification) string {
+	i := n.Item
+	return fmt.Sprintf(
+		"%s - %s : %s",
+		i.Title, i.Link, strings.Join(n.Users, ","),
+	)
+}

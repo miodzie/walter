@@ -5,6 +5,7 @@ import (
 	"github.com/miodzie/seras/mods/bestbot"
 	"github.com/miodzie/seras/mods/dong"
 	"github.com/miodzie/seras/mods/policing"
+	rss2 "github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
 	rss "github.com/miodzie/seras/mods/rss/plugin"
@@ -27,7 +28,7 @@ func Default(db string) []seras.Module {
 			rss.Context{
 				Repository: &sqlite.RssRepository{},
 				Parser:     decorators.StripHtml(gofeed.New()),
-				Formatter:  nil,
+				Formatter:  rss2.DefaultFormatter{},
 			},
 		),
 	}

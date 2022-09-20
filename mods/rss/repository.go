@@ -12,6 +12,11 @@ type Repository interface {
 
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
+	// TODO: Refactor to use Feed Name, Id is a database concept.
+	// Separate the all mighty database from the domain!
+	// e.g. SubsByFeed(*Feed) .. Let the repository accept the whole feed,
+	//and let them figure it out, or,
+	//just use the Feed.Name since it should be unique anyways!
 	SubsByFeedId(id uint64) ([]*Subscription, error)
 }
 

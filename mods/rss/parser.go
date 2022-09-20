@@ -1,6 +1,10 @@
 package rss
 
-import "strings"
+import (
+	"fmt"
+	"regexp"
+	"strings"
+)
 
 // Parser downloads a Feed.Url and translates it to a ParsedFeed to
 // be checked by a Subscription.
@@ -59,11 +63,15 @@ func (i *Item) Desc() string {
 
 func (i *Item) HasKeywords(keywords []string) bool {
 	for _, keyword := range keywords {
-		keyword = strings.ToLower(keyword)
+		reg, err := createWordBoundaryRegex(keyword)
+		if err != nil {
+			fmt.Println("Error compiling regex: ", err)
+			continue
+		}
 		checks := []bool{
-			strings.Contains(strings.ToLower(i.Title), keyword),
-			strings.Contains(strings.ToLower(i.Description), keyword),
-			strings.Contains(strings.ToLower(i.Content), keyword),
+			reg.MatchString(i.Title),
+			reg.MatchString(i.Description),
+			reg.MatchString(i.Content),
 		}
 		if anyTrue(checks) {
 			return true
@@ -71,6 +79,12 @@ func (i *Item) HasKeywords(keywords []string) bool {
 	}
 
 	return false
+}
+
+const WordBoundary = `(?i)\b$WORD$\b`
+
+func createWordBoundaryRegex(word string) (*regexp.Regexp, error) {
+	return regexp.Compile(strings.Replace(WordBoundary, "$WORD$", word, 1))
 }
 
 func anyTrue(checks []bool) bool {

@@ -5,6 +5,16 @@ import (
 	"testing"
 )
 
+func TestItem_HasKeywords_Ignores_words_within_a_word(t *testing.T) {
+	item := &Item{Title: "Financially"}
+	if item.HasKeywords([]string{"CIA"}) {
+		t.Fail()
+	}
+	if !item.HasKeywords([]string{"financially"}) {
+		t.Fail()
+	}
+}
+
 func TestItem_Desc_returns_the_string_if_less_than_100_chars(t *testing.T) {
 	item := &Item{Description: ""}
 	for i := 0; i < 99; i++ {

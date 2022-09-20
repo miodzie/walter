@@ -1,8 +1,10 @@
 package gofeed
 
 import (
+	"crypto/tls"
 	"github.com/miodzie/seras/mods/rss"
 	"github.com/mmcdole/gofeed"
+	"net/http"
 )
 
 type Parser struct {
@@ -15,6 +17,8 @@ func New() *Parser {
 func (receiver *Parser) ParseURL(url string) (*rss.ParsedFeed, error) {
 	var parsed rss.ParsedFeed
 	fp := gofeed.NewParser()
+	// If TLSClientConfig is non-nil, HTTP/2 support may not be enabled by default.
+	fp.Client = &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{}}}
 	feed, err := fp.ParseURL(url)
 	if err != nil {
 		return nil, err

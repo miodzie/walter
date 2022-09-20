@@ -24,7 +24,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 		if err != nil {
 			return notifications, err
 		}
-		subs, err := p.repo.SubByFeedId(feed.Id)
+		subs, err := p.repo.SubsByFeedId(feed.Id)
 		if err != nil {
 			return notifications, err
 		}

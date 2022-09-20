@@ -89,7 +89,7 @@ func (repo *RssRepository) UpdateSub(sub *rss.Subscription) error {
 	return nil
 }
 
-func (repo *RssRepository) SubByFeedId(id uint64) ([]*rss.Subscription, error) {
+func (repo *RssRepository) SubsByFeedId(id uint64) ([]*rss.Subscription, error) {
 	rows, err := repo.db.Query("SELECT rowid, * FROM feed_subscriptions WHERE feed_id = ?", id)
 	if err != nil {
 		return nil, err

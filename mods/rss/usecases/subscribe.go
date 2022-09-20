@@ -7,7 +7,11 @@ import (
 )
 
 type Subscribe struct {
-	Repo rss.Repository
+	repository rss.Repository
+}
+
+func NewSubscribeUseCase(repo rss.Repository) *Subscribe {
+	return &Subscribe{repository: repo}
 }
 
 type SubscribeRequest struct {
@@ -24,7 +28,7 @@ type SubscribeResponse struct {
 func (s *Subscribe) Handle(req SubscribeRequest) (SubscribeResponse, error) {
 	var resp SubscribeResponse
 
-	feed, err := s.Repo.FeedByName(req.FeedName)
+	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {
 		resp.Message = "Unknown feed."
 		return resp, err
@@ -37,7 +41,7 @@ func (s *Subscribe) Handle(req SubscribeRequest) (SubscribeResponse, error) {
 		User:     req.User,
 	}
 	resp.Message = fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
-	if err = s.Repo.AddSub(sub); err != nil {
+	if err = s.repository.AddSub(sub); err != nil {
 		resp.Message = "Failed to save feed, likely one already exists for this channel and feed."
 		return resp, err
 	}

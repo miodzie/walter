@@ -76,7 +76,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		Channel:  msg.Target,
 		User:     msg.Author.Mention,
 	}
-	var subscribe = &usecases.Subscribe{Repo: mod.Repository}
+	var subscribe = usecases.NewSubscribeUseCase(mod.Repository)
 	resp, err := subscribe.Handle(req)
 
 	if err != nil {

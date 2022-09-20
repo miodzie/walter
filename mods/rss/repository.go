@@ -12,7 +12,7 @@ type Repository interface {
 
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
-	SubByFeedId(id uint64) ([]*Subscription, error)
+	SubsByFeedId(id uint64) ([]*Subscription, error)
 }
 
 type InMemRepository struct {
@@ -24,17 +24,17 @@ func NewInMemRepo() *InMemRepository {
 	return &InMemRepository{subs: make(map[uint64]*Subscription)}
 }
 
-func (f *InMemRepository) AllFeeds() ([]*Feed, error) {
-	return f.feeds, nil
+func (m *InMemRepository) AllFeeds() ([]*Feed, error) {
+	return m.feeds, nil
 }
 
-func (f *InMemRepository) AddFeed(feed *Feed) error {
-	f.feeds = append(f.feeds, feed)
+func (m *InMemRepository) AddFeed(feed *Feed) error {
+	m.feeds = append(m.feeds, feed)
 	return nil
 }
 
-func (f *InMemRepository) FeedByName(name string) (*Feed, error) {
-	for _, c := range f.feeds {
+func (m *InMemRepository) FeedByName(name string) (*Feed, error) {
+	for _, c := range m.feeds {
 		if c.Name == name {
 			return c, nil
 		}
@@ -55,7 +55,7 @@ func (m *InMemRepository) UpdateSub(s *Subscription) error {
 	return nil
 }
 
-func (m *InMemRepository) SubByFeedId(id uint64) ([]*Subscription, error) {
+func (m *InMemRepository) SubsByFeedId(id uint64) ([]*Subscription, error) {
 	var found []*Subscription
 
 	for _, s := range m.subs {

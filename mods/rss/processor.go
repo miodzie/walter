@@ -19,6 +19,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 
 	feeds, _ := p.repo.AllFeeds()
 	for _, feed := range feeds {
+		fmt.Println("feed: " + feed.Name)
 		parsed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
 			return notifications, err

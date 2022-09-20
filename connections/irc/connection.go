@@ -88,11 +88,14 @@ func (con *Connection) Send(msg seras.Message) error {
 }
 func (con *Connection) Reply(msg seras.Message, content string) error {
 	reply := seras.Message{Content: content, Target: msg.Target}
-	// Target was not a channel, it was a PM.
-	if !strings.Contains(reply.Target, "#") {
+	if isPM(msg) {
 		reply.Target = msg.Author.Nick
 	}
 	return con.Send(reply)
+}
+
+func isPM(msg seras.Message) bool {
+	return !strings.Contains(msg.Target, "#")
 }
 
 func (con *Connection) Mods() []seras.Module {

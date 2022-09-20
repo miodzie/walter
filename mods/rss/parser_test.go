@@ -15,18 +15,18 @@ func TestItem_HasKeywords_Ignores_words_within_a_word(t *testing.T) {
 	}
 }
 
-func TestItem_Desc_returns_the_string_if_less_than_100_chars(t *testing.T) {
+func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing.T) {
 	item := &Item{Description: ""}
 	for i := 0; i < 99; i++ {
 		item.Description += "A"
 	}
 
-	if item.Description != item.Desc() {
+	if item.Description != item.DescTruncated() {
 		t.Fail()
 	}
 }
 
-func TestItem_Desc_shortens_the_description_length_to_100_chars(t *testing.T) {
+func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *testing.T) {
 	item := &Item{Description: ""}
 	for i := 0; i < 150; i++ {
 		item.Description += "A"
@@ -34,7 +34,7 @@ func TestItem_Desc_shortens_the_description_length_to_100_chars(t *testing.T) {
 	sp := strings.Split(item.Description, "")
 	expected := strings.Join(sp[:100], "") + "..."
 
-	if expected != item.Desc() {
+	if expected != item.DescTruncated() {
 		t.Fail()
 	}
 }

@@ -17,7 +17,7 @@ func NewProcessor(repo Repository, parser Parser) *Processor {
 func (p *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
 
-	feeds, _ := p.repo.AllFeeds()
+	feeds, _ := p.repo.Feeds()
 	for _, feed := range feeds {
 		fmt.Println("feed: " + feed.Name)
 		parsed, err := p.parser.ParseURL(feed.Url)

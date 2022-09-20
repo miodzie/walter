@@ -6,7 +6,7 @@ import (
 )
 
 type Repository interface {
-	AllFeeds() ([]*Feed, error)
+	Feeds() ([]*Feed, error)
 	AddFeed(*Feed) error
 	FeedByName(name string) (*Feed, error)
 
@@ -29,7 +29,7 @@ func NewInMemRepo() *InMemRepository {
 	return &InMemRepository{subs: make(map[uint64]*Subscription)}
 }
 
-func (m *InMemRepository) AllFeeds() ([]*Feed, error) {
+func (m *InMemRepository) Feeds() ([]*Feed, error) {
 	return m.feeds, nil
 }
 

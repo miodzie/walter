@@ -15,7 +15,7 @@ func NewRssRepository(db *sql.DB) *RssRepository {
 	return &RssRepository{db: db}
 }
 
-func (repo *RssRepository) AllFeeds() ([]*rss.Feed, error) {
+func (repo *RssRepository) Feeds() ([]*rss.Feed, error) {
 	rows, err := repo.db.Query("SELECT rowid, * FROM feeds")
 	if err != nil {
 		return nil, err

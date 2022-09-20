@@ -15,7 +15,7 @@ type ShowFeedsResponse struct {
 func (sl *ShowFeeds) Handle(repo rss.Repository) ShowFeedsResponse {
 	var resp ShowFeedsResponse
 
-	resp.Feeds, resp.Error = repo.AllFeeds()
+	resp.Feeds, resp.Error = repo.Feeds()
 
 	if len(resp.Feeds) == 0 {
 		resp.Message = "No feeds available."

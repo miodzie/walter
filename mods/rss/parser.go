@@ -84,7 +84,11 @@ func (i *Item) HasKeywords(keywords []string) bool {
 const WordBoundary = `(?i)\b$WORD$\b`
 
 func createWordBoundaryRegex(word string) (*regexp.Regexp, error) {
-	return regexp.Compile(strings.Replace(WordBoundary, "$WORD$", word, 1))
+	return regexp.Compile(
+		strings.Replace(WordBoundary,
+			"$WORD$",
+			regexp.QuoteMeta(word),
+			1))
 }
 
 func anyTrue(checks []bool) bool {

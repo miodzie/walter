@@ -8,7 +8,7 @@ func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
 	item := &Item{Title: "bar", GUID: "1"}
 	parsed := &ParsedFeed{Items: []*Item{item}}
 	sut := &Processor{
-		parser: &NulledParser{Parsed: parsed},
+		parser: &NullParser{Parsed: parsed},
 		repo:   NewInMemRepo(),
 	}
 	feed := &Feed{Id: 1}
@@ -40,7 +40,7 @@ func TestProcessor_Handle_returns_the_expected_notifications(t *testing.T) {
 func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
 	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
 	sut := &Processor{
-		parser: &NulledParser{Parsed: parsed},
+		parser: &NullParser{Parsed: parsed},
 		repo:   NewInMemRepo(),
 	}
 	feed := &Feed{Id: 1}
@@ -68,7 +68,7 @@ func TestProcessor_Handle_returns_grouped_notifications_by_channel_and_item(t *t
 func TestProcessor_Handle_returns_empty_when_no_keywords_found(t *testing.T) {
 	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
 	sut := &Processor{
-		parser: &NulledParser{Parsed: p},
+		parser: &NullParser{Parsed: p},
 		repo:   NewInMemRepo(),
 	}
 	feed := &Feed{Id: 1}
@@ -85,7 +85,7 @@ func TestProcessor_Handle_returns_empty_when_no_keywords_found(t *testing.T) {
 func TestProcessor_Handle_ignores_seen_items(t *testing.T) {
 	item := &Item{Title: "foo"}
 	p := &ParsedFeed{Items: []*Item{item}}
-	sut := &Processor{parser: &NulledParser{Parsed: p}, repo: NewInMemRepo()}
+	sut := &Processor{parser: &NullParser{Parsed: p}, repo: NewInMemRepo()}
 	feed := &Feed{Id: 1}
 	sut.repo.AddFeed(feed)
 	sub := &Subscription{User: "james", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}

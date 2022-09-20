@@ -97,10 +97,10 @@ func anyTrue(checks []bool) bool {
 	return false
 }
 
-type NulledParser struct {
+type NullParser struct {
 	Parsed *ParsedFeed
 }
 
-func (p *NulledParser) ParseURL(url string) (*ParsedFeed, error) {
+func (p *NullParser) ParseURL(url string) (*ParsedFeed, error) {
 	return p.Parsed, nil
 }

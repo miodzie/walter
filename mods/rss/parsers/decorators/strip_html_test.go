@@ -12,7 +12,7 @@ func TestStripHtml(t *testing.T) {
 		Title: "<strong>hello</strong> world!",
 		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
-	dummy := &rss.NulledParser{Parsed: feed}
+	dummy := &rss.NullParser{Parsed: feed}
 	sut := cleanHtml{BaseParser: dummy}
 
 	parsed, _ := sut.ParseURL("")

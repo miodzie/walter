@@ -2,6 +2,7 @@ package rss
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 )
 
@@ -12,11 +13,13 @@ type Repository interface {
 
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
+	RemoveSub(*Subscription) error
+	SubByUserFeedNameChannel(user, feedName, channel string) (*Subscription, error)
 	// TODO: Refactor to use Feed Name, Id is a database concept.
 	// Separate the all mighty database from the domain!
 	// e.g. SubsByFeed(*Feed) .. Let the repository accept the whole feed,
 	//and let them figure it out, or,
-	//just use the Feed.Name since it should be unique anyways!
+	//just use the Feed.Name since it should be unique anyways.
 	SubsByFeedId(id uint64) ([]*Subscription, error)
 }
 
@@ -58,6 +61,33 @@ func (m *InMemRepository) AddSub(s *Subscription) error {
 func (m *InMemRepository) UpdateSub(s *Subscription) error {
 	m.subs[s.Id] = s
 	return nil
+}
+
+func (m *InMemRepository) RemoveSub(subscription *Subscription) error {
+	delete(m.subs, subscription.Id)
+	return nil
+}
+
+func (m *InMemRepository) SubByUserFeedNameChannel(user, feedName, channel string) (*Subscription, error) {
+	var feed *Feed
+	for _, f := range m.feeds {
+		if f.Name == feedName {
+			feed = f
+		}
+	}
+	if feed == nil {
+		return nil, errors.New(
+			fmt.Sprintf("Could not locate Feed with name: %s",
+				feedName,
+			))
+	}
+
+	for _, sub := range m.subs {
+		if sub.User == user && sub.FeedId == feed.Id && sub.Channel == channel {
+			return sub, nil
+		}
+	}
+	return nil, errors.New("subscription not found")
 }
 
 func (m *InMemRepository) SubsByFeedId(id uint64) ([]*Subscription, error) {

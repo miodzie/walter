@@ -25,7 +25,7 @@ func TestNewUnsubscribeUseCase_Handle_unsubs_a_user(t *testing.T) {
 
 	useCase := NewUnsubscribeUseCase(repository)
 
-	request := UnsubscribeRequest{Channel: "#news", FeedName: "news"}
+	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
 	response := useCase.Handle(request)
 
 	subs, err := repository.SubsByFeedId(feed.Id)
@@ -34,11 +34,12 @@ func TestNewUnsubscribeUseCase_Handle_unsubs_a_user(t *testing.T) {
 		t.Fail()
 	}
 	if len(subs) != 0 {
+		fmt.Println(subs[0])
 		fmt.Println("There should be no subscriptions after a user unsubscribed.")
 		t.Fail()
 	}
 
-	if response.Message != "Successfully unsubscribed from news feed." {
+	if response.Message != "Successfully unsubscribed from `news` feed." {
 		fmt.Println("Unexpected message.")
 		t.Fail()
 	}

@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"fmt"
 	"github.com/miodzie/seras/mods/rss"
 )
 
@@ -24,9 +25,26 @@ type UnsubscribeResponse struct {
 }
 
 func (useCase Unsubscribe) Handle(request UnsubscribeRequest) UnsubscribeResponse {
+	sub, err := useCase.repository.SubByUserFeedNameChannel(
+		request.User, request.FeedName, request.Channel,
+	)
+	if err != nil || sub == nil {
+		return UnsubscribeResponse{
+			Message: "Failed to locate user subscription.",
+			Error:   err,
+		}
+	}
+
+	err = useCase.repository.RemoveSub(sub)
+	if err != nil {
+		return UnsubscribeResponse{
+			Message: "Failed to unsubscribe.",
+			Error:   err,
+		}
+	}
 
 	return UnsubscribeResponse{
-		Message: "Successfully unsubscribed from news feed.",
+		Message: fmt.Sprintf("Successfully unsubscribed from `%s` feed.", request.FeedName),
 		Error:   nil,
 	}
 }

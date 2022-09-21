@@ -66,6 +66,7 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 // !subscribe {feed name} {keywords, comma separated}
 func (mod *RssMod) subscribe(msg seras.Message) {
 	if len(msg.Arguments) < 3 {
+		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", seras.Token()))
 		return
 	}
 	// TODO: validate & parse?
@@ -78,11 +79,25 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	}
 	var subscribe = usecases.NewSubscribeUseCase(mod.Repository)
 	resp, err := subscribe.Handle(req)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// TODO: Probably remove err return argument.
+	fmt.Println(err)
 
 	mod.actions.Reply(msg, resp.Message)
+}
+
+func (mod *RssMod) unsubscribe(msg seras.Message) {
+	if len(msg.Arguments) != 2 {
+		mod.actions.Reply(msg, "Invalid amount of arguments. !unsubscribe $feedName")
+		return
+	}
+	feedName := msg.Arguments[1]
+	request := usecases.UnsubscribeRequest{
+		User:     msg.Author.Mention,
+		Channel:  msg.Target,
+		FeedName: feedName,
+	}
+	fmt.Printf("%+v\n", request)
+	uc := usecases.NewUnsubscribeUseCase(mod.Repository)
+	response := uc.Handle(request)
+	mod.actions.Reply(msg, response.Message)
 }

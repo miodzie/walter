@@ -30,7 +30,7 @@ func (useCase Unsubscribe) Handle(request UnsubscribeRequest) UnsubscribeRespons
 	)
 	if err != nil || sub == nil {
 		return UnsubscribeResponse{
-			Message: "Failed to locate user subscription.",
+			Message: fmt.Sprintf("Failed to locate user subscription. err: %s", err),
 			Error:   err,
 		}
 	}
@@ -38,7 +38,7 @@ func (useCase Unsubscribe) Handle(request UnsubscribeRequest) UnsubscribeRespons
 	err = useCase.repository.RemoveSub(sub)
 	if err != nil {
 		return UnsubscribeResponse{
-			Message: "Failed to unsubscribe.",
+			Message: fmt.Sprintf("Failed to unsubscribe. err: %s", err),
 			Error:   err,
 		}
 	}

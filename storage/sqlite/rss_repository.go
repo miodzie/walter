@@ -56,7 +56,7 @@ func (r *RssRepository) FeedByName(name string) (*rss.Feed, error) {
 	row := r.db.QueryRow("SELECT rowid, * FROM feeds WHERE name = ?", name)
 	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 		if err == sql.ErrNoRows {
-			return &feed, fmt.Errorf("GetByName %s: no such feed", name)
+			return &feed, fmt.Errorf("unable to locate feed with name: %s", name)
 		}
 		return &feed, err
 	}
@@ -65,6 +65,7 @@ func (r *RssRepository) FeedByName(name string) (*rss.Feed, error) {
 }
 
 func (r *RssRepository) AddSub(sub *rss.Subscription) error {
+	// TODO: Check for duplicate for better error response.
 	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords, seen) VALUES(?,?,?,?,?)"
 	result, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen)
 	if err != nil {
@@ -103,7 +104,7 @@ func (r *RssRepository) SubByUserFeedNameChannel(user, feedName, channel string)
 	var sub rss.Subscription
 
 	row := r.db.QueryRow(q, feed.Id, user, channel)
-	if err := row.Scan(&sub.Id, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen); err != nil {
+	if err := row.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen); err != nil {
 		if err == sql.ErrNoRows {
 			return &sub, fmt.Errorf("subscription not found")
 		}

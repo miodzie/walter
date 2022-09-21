@@ -25,13 +25,17 @@ type SubscribeResponse struct {
 	Message string
 }
 
+// Handle TODO: Should the error be returned as a second argument,
+// or within the Response struct?
+// It's more idiomatic Go as a second return argument, however,
+// it implies to me that it's more of a nonrecoverable system error.
+// Where as the Response.Message would still have a message for the user..
 func (s *Subscribe) Handle(req SubscribeRequest) (SubscribeResponse, error) {
-	var resp SubscribeResponse
-
 	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {
-		resp.Message = "Unknown feed."
-		return resp, err
+		return SubscribeResponse{
+			Message: fmt.Sprintf("Failed to locate feed. err: %s", err),
+		}, err
 	}
 
 	sub := &rss.Subscription{
@@ -40,11 +44,13 @@ func (s *Subscribe) Handle(req SubscribeRequest) (SubscribeResponse, error) {
 		Keywords: req.Keywords,
 		User:     req.User,
 	}
-	resp.Message = fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
 	if err = s.repository.AddSub(sub); err != nil {
-		resp.Message = "Failed to save feed, likely one already exists for this channel and feed."
-		return resp, err
+		return SubscribeResponse{
+			Message: fmt.Sprintf("Failed to save feed. err: %s", err),
+		}, err
 	}
 
-	return resp, nil
+	return SubscribeResponse{
+		Message: fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords),
+	}, nil
 }

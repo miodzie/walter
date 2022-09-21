@@ -36,6 +36,7 @@ func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
 		msg.Command("feeds", mod.showFeeds)
 		msg.Command("add_feed", mod.addFeed)
 		msg.Command("subscribe", mod.subscribe)
+		msg.Command("unsubscribe", mod.unsubscribe)
 	}
 
 	return nil

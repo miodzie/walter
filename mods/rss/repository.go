@@ -6,6 +6,8 @@ import (
 	"math/rand"
 )
 
+// Repository
+// TODO: Add defined errors here for Repositories to use.
 type Repository interface {
 	Feeds() ([]*Feed, error)
 	AddFeed(*Feed) error

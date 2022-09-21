@@ -20,8 +20,12 @@ type Message struct {
 }
 
 type Author struct {
-	Id      string // Host in IRC, User ID in Discord.
-	Nick    string
+	Id   string // Host in IRC, User ID in Discord.
+	Nick string
+
+	// Mention is starting to turn into an important thing for plugins,
+	// Refactor the name.
+	// Maybe UniqueMention?
 	Mention string // TODO: Refactor?, this is quick fix to get mentions working in Discord.
 }
 

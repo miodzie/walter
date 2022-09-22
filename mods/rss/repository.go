@@ -30,7 +30,7 @@ type InMemRepository struct {
 	subs  map[uint64]*Subscription
 }
 
-func (m *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
+func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 	var subs []*Subscription
 	var constraints = []func(sub *Subscription) bool{
 		func(sub *Subscription) bool {
@@ -53,7 +53,7 @@ func (m *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 		},
 		func(sub *Subscription) bool {
 			if search.FeedName != "" {
-				feed, err := m.FeedByName(search.FeedName)
+				feed, err := r.FeedByName(search.FeedName)
 				if err != nil {
 					return false
 				}
@@ -71,8 +71,15 @@ func (m *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 		}
 		return true
 	}
-	for _, sub := range m.subs {
+	for _, sub := range r.subs {
 		if matches(sub) {
+			feeds, _ := r.Feeds()
+			for _, feed := range feeds {
+				if feed.Id == sub.FeedId {
+					sub.Feed = feed
+					break
+				}
+			}
 			subs = append(subs, sub)
 		}
 	}
@@ -84,17 +91,17 @@ func NewInMemRepo() *InMemRepository {
 	return &InMemRepository{subs: make(map[uint64]*Subscription)}
 }
 
-func (m *InMemRepository) Feeds() ([]*Feed, error) {
-	return m.feeds, nil
+func (r *InMemRepository) Feeds() ([]*Feed, error) {
+	return r.feeds, nil
 }
 
-func (m *InMemRepository) AddFeed(feed *Feed) error {
-	m.feeds = append(m.feeds, feed)
+func (r *InMemRepository) AddFeed(feed *Feed) error {
+	r.feeds = append(r.feeds, feed)
 	return nil
 }
 
-func (m *InMemRepository) FeedByName(name string) (*Feed, error) {
-	for _, c := range m.feeds {
+func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
+	for _, c := range r.feeds {
 		if c.Name == name {
 			return c, nil
 		}
@@ -102,20 +109,20 @@ func (m *InMemRepository) FeedByName(name string) (*Feed, error) {
 	return &Feed{}, errors.New("feed not found")
 }
 
-func (m *InMemRepository) AddSub(s *Subscription) error {
+func (r *InMemRepository) AddSub(s *Subscription) error {
 	if s.Id == 0 {
 		s.Id = rand.Uint64()
 	}
-	m.subs[s.Id] = s
+	r.subs[s.Id] = s
 	return nil
 }
 
-func (m *InMemRepository) UpdateSub(s *Subscription) error {
-	m.subs[s.Id] = s
+func (r *InMemRepository) UpdateSub(s *Subscription) error {
+	r.subs[s.Id] = s
 	return nil
 }
 
-func (m *InMemRepository) RemoveSub(subscription *Subscription) error {
-	delete(m.subs, subscription.Id)
+func (r *InMemRepository) RemoveSub(subscription *Subscription) error {
+	delete(r.subs, subscription.Id)
 	return nil
 }

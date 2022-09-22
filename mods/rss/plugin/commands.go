@@ -85,6 +85,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	mod.actions.Reply(msg, resp.Message)
 }
 
+// !unsubscribe {feed name}
 func (mod *RssMod) unsubscribe(msg seras.Message) {
 	if len(msg.Arguments) != 2 {
 		mod.actions.Reply(msg, "Invalid amount of arguments. !unsubscribe $feedName")
@@ -100,4 +101,28 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 	uc := usecases.NewUnsubscribeUseCase(mod.Repository)
 	response := uc.Handle(request)
 	mod.actions.Reply(msg, response.Message)
+}
+
+func (mod *RssMod) subs(msg seras.Message) {
+	request := usecases.ListSubscriptionsRequest{
+		User:     msg.Author.Mention,
+		Optional: struct{ Channel string }{msg.Target},
+	}
+
+	useCase := usecases.NewListSubscriptionsUseCase(mod.Repository)
+	response := useCase.Handle(request)
+	if response.Error != nil {
+		mod.actions.Reply(msg, "oh noes i brokededz")
+		return
+	}
+	if len(response.Subscriptions) == 0 {
+		mod.actions.Reply(msg, "No subscriptions in this channel.")
+		return
+	}
+	var feeds []string
+	for _, sub := range response.Subscriptions {
+		feeds = append(feeds, sub.Feed)
+	}
+	reply := fmt.Sprintf("Subscribed to: %s", strings.Join(feeds, ", "))
+	mod.actions.Reply(msg, reply)
 }

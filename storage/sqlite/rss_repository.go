@@ -119,6 +119,7 @@ func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, erro
 		query += " AND feed_id = ?"
 		args = append(args, feed.Id)
 	}
+	fmt.Println(query, args)
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
@@ -126,10 +127,11 @@ func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, erro
 	}
 	defer rows.Close()
 	for rows.Next() {
-		sub, err := scanSub(rows)
+		sub, err := r.scanSub(rows)
 		if err != nil {
-			subs = append(subs, sub)
+			return subs, err
 		}
+		subs = append(subs, sub)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -138,11 +140,19 @@ func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, erro
 	return subs, nil
 }
 
-func scanSub(rows *sql.Rows) (*rss.Subscription, error) {
+func (r *RssRepository) scanSub(rows *sql.Rows) (*rss.Subscription, error) {
 	var sub rss.Subscription
 	err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen)
 	if err != nil {
 		return nil, err
+	}
+
+	feeds, _ := r.Feeds()
+	for _, f := range feeds {
+		if f.Id == sub.FeedId {
+			sub.Feed = f
+			break
+		}
 	}
 
 	return &sub, nil

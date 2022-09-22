@@ -52,12 +52,12 @@ func (m *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 			return true
 		},
 		func(sub *Subscription) bool {
-			if search.FeedId != 0 {
+			if search.FeedName != "" {
 				feed, err := m.FeedByName(search.FeedName)
 				if err != nil {
 					return false
 				}
-				return feed.Name == search.FeedName
+				return sub.FeedId == feed.Id
 			}
 			return true
 		},

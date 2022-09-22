@@ -16,7 +16,6 @@ func NewProcessor(repo Repository, parser Parser) *Processor {
 
 func (p *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
-
 	feeds, _ := p.repo.Feeds()
 	for _, feed := range feeds {
 		fmt.Println("feed: " + feed.Name)
@@ -24,7 +23,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 		if err != nil {
 			return notifications, err
 		}
-		subs, err := p.repo.SubsByFeedId(feed.Id)
+		subs, err := p.repo.Subs(SubSearchOpt{FeedId: feed.Id})
 		if err != nil {
 			return notifications, err
 		}

@@ -25,17 +25,20 @@ type UnsubscribeResponse struct {
 }
 
 func (useCase Unsubscribe) Handle(request UnsubscribeRequest) UnsubscribeResponse {
-	sub, err := useCase.repository.SubByUserFeedNameChannel(
-		request.User, request.FeedName, request.Channel,
-	)
-	if err != nil || sub == nil {
+	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
+		User:     request.User,
+		FeedName: request.FeedName,
+		Channel:  request.Channel,
+	})
+
+	fmt.Println(len(subs))
+	if err != nil || len(subs) != 1 {
 		return UnsubscribeResponse{
 			Message: fmt.Sprintf("Failed to locate user subscription. err: %s", err),
 			Error:   err,
 		}
 	}
-
-	err = useCase.repository.RemoveSub(sub)
+	err = useCase.repository.RemoveSub(subs[0])
 	if err != nil {
 		return UnsubscribeResponse{
 			Message: fmt.Sprintf("Failed to unsubscribe. err: %s", err),

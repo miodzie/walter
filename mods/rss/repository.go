@@ -2,7 +2,6 @@ package rss
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 )
 
@@ -16,18 +15,69 @@ type Repository interface {
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
 	RemoveSub(*Subscription) error
-	SubByUserFeedNameChannel(user, feedName, channel string) (*Subscription, error)
-	// TODO: Refactor to use Feed Name, Id is a database concept.
-	// Separate the all mighty database from the domain!
-	// e.g. SubsByFeed(*Feed) .. Let the repository accept the whole feed,
-	//and let them figure it out, or,
-	//just use the Feed.Name since it should be unique anyways.
-	SubsByFeedId(id uint64) ([]*Subscription, error)
+	Subs(search SubSearchOpt) ([]*Subscription, error)
+}
+
+type SubSearchOpt struct {
+	FeedId   uint64
+	User     string
+	FeedName string
+	Channel  string
 }
 
 type InMemRepository struct {
 	feeds []*Feed
 	subs  map[uint64]*Subscription
+}
+
+func (m *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
+	var subs []*Subscription
+	var constraints = []func(sub *Subscription) bool{
+		func(sub *Subscription) bool {
+			if search.User != "" {
+				return sub.User == search.User
+			}
+			return true
+		},
+		func(sub *Subscription) bool {
+			if search.Channel != "" {
+				return sub.Channel == search.Channel
+			}
+			return true
+		},
+		func(sub *Subscription) bool {
+			if search.FeedId != 0 {
+				return sub.FeedId == search.FeedId
+			}
+			return true
+		},
+		func(sub *Subscription) bool {
+			if search.FeedId != 0 {
+				feed, err := m.FeedByName(search.FeedName)
+				if err != nil {
+					return false
+				}
+				return feed.Name == search.FeedName
+			}
+			return true
+		},
+	}
+
+	matches := func(sub *Subscription) bool {
+		for _, check := range constraints {
+			if !check(sub) {
+				return false
+			}
+		}
+		return true
+	}
+	for _, sub := range m.subs {
+		if matches(sub) {
+			subs = append(subs, sub)
+		}
+	}
+
+	return subs, nil
 }
 
 func NewInMemRepo() *InMemRepository {
@@ -68,38 +118,4 @@ func (m *InMemRepository) UpdateSub(s *Subscription) error {
 func (m *InMemRepository) RemoveSub(subscription *Subscription) error {
 	delete(m.subs, subscription.Id)
 	return nil
-}
-
-func (m *InMemRepository) SubByUserFeedNameChannel(user, feedName, channel string) (*Subscription, error) {
-	var feed *Feed
-	for _, f := range m.feeds {
-		if f.Name == feedName {
-			feed = f
-		}
-	}
-	if feed == nil {
-		return nil, errors.New(
-			fmt.Sprintf("Could not locate Feed with name: %s",
-				feedName,
-			))
-	}
-
-	for _, sub := range m.subs {
-		if sub.User == user && sub.FeedId == feed.Id && sub.Channel == channel {
-			return sub, nil
-		}
-	}
-	return nil, errors.New("subscription not found")
-}
-
-func (m *InMemRepository) SubsByFeedId(id uint64) ([]*Subscription, error) {
-	var found []*Subscription
-
-	for _, s := range m.subs {
-		if s.FeedId == id {
-			found = append(found, s)
-		}
-	}
-
-	return found, nil
 }

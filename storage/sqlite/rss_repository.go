@@ -95,43 +95,55 @@ func (r *RssRepository) RemoveSub(subscription *rss.Subscription) error {
 	return err
 }
 
-func (r *RssRepository) SubByUserFeedNameChannel(user, feedName, channel string) (*rss.Subscription, error) {
-	feed, err := r.FeedByName(feedName)
-	if feed == nil || err != nil {
-		return nil, fmt.Errorf("failed to locate feed with name: `%s`", feedName)
+func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, error) {
+	var subs []*rss.Subscription
+	var args []interface{}
+	query := "SELECT rowid, * from feed_subscriptions WHERE 1 = 1"
+	if search.User != "" {
+		query += " AND user = ?"
+		args = append(args, search.User)
 	}
-	q := "SELECT rowid, * FROM feed_subscriptions WHERE feed_id = ? AND user = ? AND channel = ?"
-	var sub rss.Subscription
-
-	row := r.db.QueryRow(q, feed.Id, user, channel)
-	if err := row.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen); err != nil {
-		if err == sql.ErrNoRows {
-			return &sub, fmt.Errorf("subscription not found")
+	if search.Channel != "" {
+		query += " AND channel = ?"
+		args = append(args, search.Channel)
+	}
+	if search.FeedId != 0 {
+		query += " AND feed_id = ?"
+		args = append(args, search.FeedId)
+	}
+	if search.FeedName != "" {
+		feed, err := r.FeedByName(search.FeedName)
+		if err != nil {
+			return subs, err
 		}
-		return &sub, err
+		query += " AND feed_id = ?"
+		args = append(args, feed.Id)
 	}
 
-	return &sub, nil
-}
-
-func (r *RssRepository) SubsByFeedId(id uint64) ([]*rss.Subscription, error) {
-	rows, err := r.db.Query("SELECT rowid, * FROM feed_subscriptions WHERE feed_id = ?", id)
+	rows, err := r.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-
-	var subs []*rss.Subscription
 	for rows.Next() {
-		var sub rss.Subscription
-		if err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen); err != nil {
-			return nil, err
+		sub, err := scanSub(rows)
+		if err != nil {
+			subs = append(subs, sub)
 		}
-		subs = append(subs, &sub)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
 	return subs, nil
+}
+
+func scanSub(rows *sql.Rows) (*rss.Subscription, error) {
+	var sub rss.Subscription
+	err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen)
+	if err != nil {
+		return nil, err
+	}
+
+	return &sub, nil
 }

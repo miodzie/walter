@@ -1,4 +1,4 @@
-package fake
+package test
 
 import (
 	"github.com/miodzie/seras"
@@ -18,8 +18,15 @@ func NewConnection() *Connection {
 	return con
 }
 
+func (con *Connection) Name() string {
+	return "test"
+}
+
+func (con *Connection) SetName(s string) {
+}
+
 func (con *Connection) Server() string {
-	return "fake"
+	return "test"
 }
 
 func (con *Connection) Connect() (seras.Stream, error) {

@@ -4,7 +4,7 @@
 // This package should not be confused with the logger module,
 // which is specifically meant to log all Connections seras.Messages.
 //
-// log is a global state package, all Connections use the same logger.
+// log is a global state package, all Connections and Modules use the same logger.
 // Likely each Connection will get their own Logger in the future.
 package log
 
@@ -24,7 +24,8 @@ const (
 )
 
 // Logger is a minimal abstraction for generic log levels.
-// You can implement different third party log libraries that you prefer.
+// You can implement different third party log libraries that you prefer,
+// or a combination of them with MultiLogger.
 type Logger interface {
 	Trace(args ...interface{})
 	Debug(args ...interface{})

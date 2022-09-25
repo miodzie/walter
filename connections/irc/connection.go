@@ -3,8 +3,8 @@ package irc
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"github.com/miodzie/seras/connections/irc/plugin"
+	"github.com/miodzie/seras/log"
 	"strings"
 	"time"
 
@@ -95,7 +95,7 @@ func (con *Connection) Close() error {
 
 func (con *Connection) Send(msg seras.Message) error {
 	con.irc.Privmsg(msg.Target, msg.Content)
-	fmt.Printf("OUT: %+v\n", msg)
+	log.Debugf("OUT: %+v\n", msg)
 	return nil
 }
 func (con *Connection) Reply(msg seras.Message, content string) error {

@@ -26,20 +26,16 @@ type GetSubSubscription struct {
 type GetSubscriptionResponse struct {
 	Message       string
 	Subscriptions []GetSubSubscription
-	Error         error
 }
 
-func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) GetSubscriptionResponse {
+func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) (GetSubscriptionResponse, error) {
 	var lsubs []GetSubSubscription
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:    request.User,
 		Channel: request.Optional.Channel,
 	})
 	if err != nil {
-		return GetSubscriptionResponse{
-			Message: "Failed to retrieve subscriptions.",
-			Error:   err,
-		}
+		return GetSubscriptionResponse{Message: "Failed to retrieve subscriptions."}, err
 	}
 
 	for _, sub := range subs {
@@ -50,9 +46,5 @@ func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) GetSubscrip
 		})
 	}
 
-	return GetSubscriptionResponse{
-		Message:       "Success.",
-		Subscriptions: lsubs,
-		Error:         nil,
-	}
+	return GetSubscriptionResponse{Message: "Success.", Subscriptions: lsubs}, nil
 }

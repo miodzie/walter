@@ -11,7 +11,8 @@ func NewGetFeeds(repository rss.Repository) *GetFeeds {
 }
 
 type GetFeedsResponse struct {
-	Feeds   []*rss.Feed // NOTE: Using the domain model is crossing a boundary, violates DIP.
+	// NOTE: Using the domain model is crossing a boundary, violates DIP.
+	Feeds   []*rss.Feed
 	Message string
 }
 

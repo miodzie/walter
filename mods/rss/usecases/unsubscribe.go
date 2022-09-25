@@ -21,10 +21,10 @@ type UnsubscribeRequest struct {
 
 type UnsubscribeResponse struct {
 	Message string
-	Error   error
 }
 
-func (useCase Unsubscribe) Unsubscribe(request UnsubscribeRequest) UnsubscribeResponse {
+func (useCase Unsubscribe) Unsubscribe(
+	request UnsubscribeRequest) (UnsubscribeResponse, error) {
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:     request.User,
 		FeedName: request.FeedName,
@@ -32,21 +32,14 @@ func (useCase Unsubscribe) Unsubscribe(request UnsubscribeRequest) UnsubscribeRe
 	})
 
 	if err != nil || len(subs) != 1 {
-		return UnsubscribeResponse{
-			Message: fmt.Sprintf("Failed to locate user subscription. err: %s", err),
-			Error:   err,
-		}
+		return UnsubscribeResponse{Message: "Failed to locate user subscription."}, err
 	}
 	err = useCase.repository.RemoveSub(subs[0])
 	if err != nil {
-		return UnsubscribeResponse{
-			Message: fmt.Sprintf("Failed to unsubscribe. err: %s", err),
-			Error:   err,
-		}
+		return UnsubscribeResponse{Message: "Failed to unsubscribe."}, err
 	}
 
 	return UnsubscribeResponse{
 		Message: fmt.Sprintf("Successfully unsubscribed from `%s` feed.", request.FeedName),
-		Error:   nil,
-	}
+	}, nil
 }

@@ -17,10 +17,9 @@ type AddFeedRequest struct {
 
 type AddFeedResponse struct {
 	Message string
-	Error   error
 }
 
-func (a *AddFeed) AddFeed(req AddFeedRequest) AddFeedResponse {
+func (a *AddFeed) AddFeed(req AddFeedRequest) (AddFeedResponse, error) {
 	var resp AddFeedResponse
 
 	var feed rss.Feed
@@ -32,8 +31,7 @@ func (a *AddFeed) AddFeed(req AddFeedRequest) AddFeedResponse {
 	resp.Message = "Feed saved."
 	if err != nil {
 		resp.Message = "Failed to save feed."
-		resp.Error = err
 	}
 
-	return resp
+	return resp, err
 }

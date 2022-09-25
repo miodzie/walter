@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"errors"
 	"github.com/miodzie/seras/mods/rss"
 	"testing"
 )
@@ -25,12 +26,11 @@ func TestGetSubscriptions_Get(t *testing.T) {
 	}
 
 	// Act
-	response := getSubs.Get(request)
+	response, err := getSubs.Get(request)
 
 	// Assert
-	if response.Error != nil {
-		t.Log(response.Error)
-		t.Fail()
+	if err != nil {
+		t.Error(err)
 	}
 	if len(response.Subscriptions) == 0 {
 		t.Log("no subscriptions returned")
@@ -40,5 +40,23 @@ func TestGetSubscriptions_Get(t *testing.T) {
 		if sub.Channel != "#general" {
 			t.Fail()
 		}
+	}
+}
+
+func TestGetSubscriptions_Get_error(t *testing.T) {
+	repo := rss.NewInMemRepo()
+	expectedErr := errors.New("testing")
+	repo.ForceError(expectedErr)
+	getSubs := NewGetSubscriptions(repo)
+
+	// Act
+	resp, err := getSubs.Get(GetSubscriptionsRequest{User: "Bob"})
+
+	// Assert
+	if err != expectedErr {
+		t.Error(err)
+	}
+	if resp.Message != "Failed to retrieve subscriptions." {
+		t.Fail()
 	}
 }

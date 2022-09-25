@@ -26,8 +26,60 @@ type SubSearchOpt struct {
 }
 
 type InMemRepository struct {
-	feeds []*Feed
-	subs  map[uint64]*Subscription
+	feeds   []*Feed
+	subs    map[uint64]*Subscription
+	nextErr error
+}
+
+func NewInMemRepo() *InMemRepository {
+	return &InMemRepository{subs: make(map[uint64]*Subscription)}
+}
+
+// ForceError sets an error to be returned on the next called method.
+// Used for forcing errors in testing.
+func (r *InMemRepository) ForceError(err error) {
+	r.nextErr = err
+}
+
+func (r *InMemRepository) popError() error {
+	defer func() { r.nextErr = nil }()
+	return r.nextErr
+}
+
+func (r *InMemRepository) Feeds() ([]*Feed, error) {
+	return r.feeds, r.popError()
+}
+
+func (r *InMemRepository) AddFeed(feed *Feed) error {
+	r.feeds = append(r.feeds, feed)
+	return r.popError()
+}
+
+func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
+	for _, c := range r.feeds {
+		if c.Name == name {
+			return c, r.popError()
+		}
+	}
+	return &Feed{}, errors.New("feed not found")
+}
+
+func (r *InMemRepository) AddSub(s *Subscription) error {
+	if s.Id == 0 {
+		s.Id = rand.Uint64()
+	}
+	r.subs[s.Id] = s
+	return r.popError()
+}
+
+func (r *InMemRepository) UpdateSub(s *Subscription) error {
+	r.subs[s.Id] = s
+	return r.popError()
+}
+
+func (r *InMemRepository) RemoveSub(subscription *Subscription) error {
+	delete(r.subs, subscription.Id)
+	return r.popError()
 }
 
 func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
@@ -84,45 +136,5 @@ func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 		}
 	}
 
-	return subs, nil
-}
-
-func NewInMemRepo() *InMemRepository {
-	return &InMemRepository{subs: make(map[uint64]*Subscription)}
-}
-
-func (r *InMemRepository) Feeds() ([]*Feed, error) {
-	return r.feeds, nil
-}
-
-func (r *InMemRepository) AddFeed(feed *Feed) error {
-	r.feeds = append(r.feeds, feed)
-	return nil
-}
-
-func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
-	for _, c := range r.feeds {
-		if c.Name == name {
-			return c, nil
-		}
-	}
-	return &Feed{}, errors.New("feed not found")
-}
-
-func (r *InMemRepository) AddSub(s *Subscription) error {
-	if s.Id == 0 {
-		s.Id = rand.Uint64()
-	}
-	r.subs[s.Id] = s
-	return nil
-}
-
-func (r *InMemRepository) UpdateSub(s *Subscription) error {
-	r.subs[s.Id] = s
-	return nil
-}
-
-func (r *InMemRepository) RemoveSub(subscription *Subscription) error {
-	delete(r.subs, subscription.Id)
-	return nil
+	return subs, r.popError()
 }

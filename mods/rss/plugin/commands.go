@@ -27,10 +27,10 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		Url:  msg.Arguments[2],
 	}
 
-	resp := useCase.AddFeed(request)
+	resp, err := useCase.AddFeed(request)
 
-	if resp.Error != nil {
-		fmt.Println(resp.Error)
+	if err != nil {
+		log.Error(err)
 	}
 
 	mod.actions.Reply(msg, resp.Message)
@@ -97,8 +97,11 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 		FeedName: feedName,
 	}
 	fmt.Printf("%+v\n", request)
-	uc := usecases.NewUnsubscribe(mod.Repository)
-	response := uc.Unsubscribe(request)
+	unsubscribe := usecases.NewUnsubscribe(mod.Repository)
+	response, err := unsubscribe.Unsubscribe(request)
+	if err != nil {
+		log.Error(err)
+	}
 	mod.actions.Reply(msg, response.Message)
 }
 
@@ -108,9 +111,10 @@ func (mod *RssMod) subs(msg seras.Message) {
 		Optional: struct{ Channel string }{msg.Target},
 	}
 
-	useCase := usecases.NewGetSubscriptions(mod.Repository)
-	response := useCase.Get(request)
-	if response.Error != nil {
+	getSubs := usecases.NewGetSubscriptions(mod.Repository)
+	response, err := getSubs.Get(request)
+	if err != nil {
+		log.Error(err)
 		mod.actions.Reply(msg, "oh noes i brokededz")
 		return
 	}

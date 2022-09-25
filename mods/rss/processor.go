@@ -1,6 +1,8 @@
 package rss
 
-import "fmt"
+import (
+	"github.com/miodzie/seras/log"
+)
 
 type Processor struct {
 	repo   Repository
@@ -18,7 +20,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 	var notifications []*Notification
 	feeds, _ := p.repo.Feeds()
 	for _, feed := range feeds {
-		fmt.Println("feed: " + feed.Name)
+		log.Debug("feed: " + feed.Name)
 		parsed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
 			return notifications, err
@@ -50,8 +52,7 @@ func (p *Processor) Handle() ([]*Notification, error) {
 			}
 			err := p.repo.UpdateSub(sub)
 			if err != nil {
-				// TODO: remove?
-				fmt.Println(err)
+				log.Error(err)
 			}
 		}
 	}

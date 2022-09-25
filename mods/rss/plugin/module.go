@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"fmt"
 	"github.com/miodzie/seras/log"
 	"time"
 
@@ -51,15 +50,15 @@ func (mod *RssMod) checkFeeds() {
 		log.Info("Processing feed subscriptions...")
 		notifs, err := p.Handle()
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 		}
-		log.Info("%d notifications found.", len(notifs))
+		log.Infof("%d notifications found", len(notifs))
 		for _, notif := range notifs {
 			msg := seras.Message{
 				Target:  notif.Channel,
 				Content: mod.Format(*notif),
 			}
-			fmt.Println(notif)
+			log.Debug(notif)
 			mod.actions.Send(msg)
 		}
 		time.Sleep(time.Minute * 30)

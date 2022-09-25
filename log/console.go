@@ -34,21 +34,60 @@ type ConsoleLogger struct {
 }
 
 func (l ConsoleLogger) Trace(args ...interface{}) {
-	fmt.Println(Gray+"[TRACE] "+Reset, args)
+	fmt.Println(gray(), args)
 }
 
 func (l ConsoleLogger) Debug(args ...interface{}) {
-	fmt.Println(White+"[DEBUG] "+Reset, args)
+	fmt.Println(white(), args)
 }
 
 func (l ConsoleLogger) Info(args ...interface{}) {
-	fmt.Println(Green+"[INFO] "+Reset, args)
+	fmt.Println(green(), args)
 }
 
 func (l ConsoleLogger) Warn(args ...interface{}) {
-	fmt.Println(Yellow+"[WARN] "+Reset, args)
+	fmt.Println(yellow(), args)
 }
 
 func (l ConsoleLogger) Error(args ...interface{}) {
-	fmt.Println(Red+"[ERR] "+Reset, args)
+	fmt.Println(red(), args)
+}
+
+func (l ConsoleLogger) Tracef(format string, args ...interface{}) {
+	fmt.Printf(gray()+format, args)
+}
+
+func (l ConsoleLogger) Debugf(format string, args ...interface{}) {
+	fmt.Printf(white()+format, args)
+}
+
+func (l ConsoleLogger) Infof(format string, args ...interface{}) {
+	fmt.Printf(green()+format, args)
+}
+
+func (l ConsoleLogger) Warnf(format string, args ...interface{}) {
+	fmt.Printf(yellow()+format, args)
+}
+
+func (l ConsoleLogger) Errorf(format string, args ...interface{}) {
+	fmt.Printf(red()+format, args)
+}
+
+func gray() string {
+	return Gray + "[TRACE] " + Reset
+}
+func white() string {
+	return White + "[DEBUG] " + Reset
+}
+
+func green() string {
+	return Green + "[INFO] " + Reset
+}
+
+func yellow() string {
+	return Yellow + "[WARN] " + Reset
+}
+
+func red() string {
+	return Red + "[ERR] " + Reset
 }

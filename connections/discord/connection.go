@@ -16,6 +16,15 @@ type Connection struct {
 	config  *Config
 	mods    []seras.Module
 	sync.Mutex
+	name string
+}
+
+func (con *Connection) Name() string {
+	return con.name
+}
+
+func (con *Connection) SetName(s string) {
+	con.name = s
 }
 
 func New(config Config) (*Connection, error) {
@@ -70,8 +79,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 			Nick:    e.Author.Username,
 			Mention: "<@" + e.Author.ID + ">",
 		},
-		// TODO: Change to config name.
-		ConnectionName: "discord",
+		ConnectionName: con.Name(),
 		Raw:            e.Content,
 	}
 	con.stream <- msg

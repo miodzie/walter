@@ -18,6 +18,16 @@ type Connection struct {
 	config *Config
 	mods   []seras.Module
 	sync.Mutex
+	// TODO: Remove me.
+	name string
+}
+
+func (con *Connection) Name() string {
+	return con.name
+}
+
+func (con *Connection) SetName(s string) {
+	con.name = s
 }
 
 func New(conf Config) (*Connection, error) {
@@ -61,9 +71,8 @@ func (con *Connection) Connect() (seras.Stream, error) {
 				Nick:    event.Nick,
 				Mention: event.Nick,
 			},
-			Code: event.Code,
-			// TODO: Change to config name.
-			ConnectionName: "irc",
+			Code:           event.Code,
+			ConnectionName: con.Name(),
 			Raw:            event.Raw,
 		}
 	})

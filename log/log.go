@@ -47,35 +47,35 @@ func SetLevel(l Level) {
 }
 
 func Trace(args ...interface{}) {
-	logger.Trace(args)
+	logger.Trace(args...)
 }
 func Debug(args ...interface{}) {
-	logger.Debug(args)
+	logger.Debug(args...)
 }
 func Info(args ...interface{}) {
-	logger.Info(args)
+	logger.Info(args...)
 }
 func Warn(args ...interface{}) {
-	logger.Warn(args)
+	logger.Warn(args...)
 }
 func Error(args ...interface{}) {
-	logger.Error(args)
+	logger.Error(args...)
 }
 
 func Tracef(format string, args ...interface{}) {
-	logger.Tracef(format, args)
+	logger.Tracef(format, args...)
 }
 func Debugf(format string, args ...interface{}) {
-	logger.Debugf(format, args)
+	logger.Debugf(format, args...)
 }
 func Infof(format string, args ...interface{}) {
-	logger.Infof(format, args)
+	logger.Infof(format, args...)
 }
 func Warnf(format string, args ...interface{}) {
-	logger.Warnf(format, args)
+	logger.Warnf(format, args...)
 }
 func Errorf(format string, args ...interface{}) {
-	logger.Errorf(format, args)
+	logger.Errorf(format, args...)
 }
 
 type NullLogger struct {

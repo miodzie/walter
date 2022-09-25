@@ -52,7 +52,7 @@ func (mod *RssMod) checkFeeds() {
 		if err != nil {
 			log.Error(err)
 		}
-		log.Infof("%d notifications found", len(notifs))
+		log.Infof("%d notifications found\n", len(notifs))
 		for _, notif := range notifs {
 			msg := seras.Message{
 				Target:  notif.Channel,

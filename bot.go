@@ -3,6 +3,7 @@ package seras
 import (
 	"fmt"
 	"github.com/miodzie/seras/log"
+	"strings"
 )
 
 type Bot interface {
@@ -29,6 +30,8 @@ func ParseBots(cfg *Config) error {
 		}
 		var err error
 		Bots[name], err = parser.Parse(con)
+		// TODO: Refactor.
+		Bots[name].SetName(name)
 		if err != nil {
 			return err
 		}
@@ -39,6 +42,12 @@ func ParseBots(cfg *Config) error {
 
 func RunBot(bot Bot) error {
 	stream, _ := bot.Connect()
+
+	var modList []string
+	for _, mod := range bot.Mods() {
+		modList = append(modList, mod.Name())
+	}
+	log.Infof("[%s] Modules: %s\n", bot.Name(), strings.Join(modList, ", "))
 	manager, err := NewModManager(bot.Mods(), bot)
 	if err != nil {
 		return err
@@ -50,7 +59,7 @@ func RunBot(bot Bot) error {
 func RunAll(addMods func(string) []Module) error {
 	errc := make(chan error)
 	for name, bot := range Bots {
-		log.Info("Starting connection: ", name)
+		log.Infof("Starting connection: %s\n", name)
 		bot.AddMods(addMods(name))
 		go func(bot Bot) {
 			errc <- RunBot(bot)

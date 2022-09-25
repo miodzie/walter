@@ -1,11 +1,5 @@
 package seras
 
-import (
-	"fmt"
-	"github.com/miodzie/seras/log"
-	"strings"
-)
-
 type Module interface {
 	Name() string
 	Start(Stream, Actions) error
@@ -30,11 +24,6 @@ func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 		actions: actions,
 		streams: make(map[string]chan Message),
 	}
-	var list []string
-	for _, mod := range mods {
-		list = append(list, mod.Name())
-	}
-	log.Info(fmt.Sprintf("Modules: %s\n", strings.Join(list, ", ")))
 
 	return manager, nil
 }

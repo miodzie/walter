@@ -53,7 +53,7 @@ func initConfig() (*seras.Config, error) {
 		if err != nil {
 			return nil, err
 		}
-		log.Warn(fmt.Sprintf("Config was not found, created.\nPlease update the config located at: %s\nAnd restart.", file))
+		log.Warnf("Config was not found, created.\nPlease update the config located at: %s\nAnd restart.", file)
 		os.Exit(0)
 	}
 	cfg, err := seras.ParseToml(file)

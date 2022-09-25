@@ -5,6 +5,8 @@ import (
 	"runtime"
 )
 
+// TODO: Extract to color package.
+
 var Reset = "\033[0m"
 var Red = "\033[31m"
 var Green = "\033[32m"
@@ -34,43 +36,48 @@ type ConsoleLogger struct {
 }
 
 func (l ConsoleLogger) Trace(args ...interface{}) {
-	fmt.Println(gray(), args)
+	fmt.Printf(gray())
+	fmt.Println(args...)
 }
 
 func (l ConsoleLogger) Debug(args ...interface{}) {
-	fmt.Println(white(), args)
+	fmt.Printf(white())
+	fmt.Println(args...)
 }
 
 func (l ConsoleLogger) Info(args ...interface{}) {
-	fmt.Println(green(), args)
+	fmt.Printf(green())
+	fmt.Println(args...)
 }
 
 func (l ConsoleLogger) Warn(args ...interface{}) {
-	fmt.Println(yellow(), args)
+	fmt.Printf(yellow())
+	fmt.Println(args...)
 }
 
 func (l ConsoleLogger) Error(args ...interface{}) {
-	fmt.Println(red(), args)
+	fmt.Printf(red())
+	fmt.Println(args...)
 }
 
 func (l ConsoleLogger) Tracef(format string, args ...interface{}) {
-	fmt.Printf(gray()+format, args)
+	fmt.Printf(gray()+format, args...)
 }
 
 func (l ConsoleLogger) Debugf(format string, args ...interface{}) {
-	fmt.Printf(white()+format, args)
+	fmt.Printf(white()+format, args...)
 }
 
 func (l ConsoleLogger) Infof(format string, args ...interface{}) {
-	fmt.Printf(green()+format, args)
+	fmt.Printf(green()+format, args...)
 }
 
 func (l ConsoleLogger) Warnf(format string, args ...interface{}) {
-	fmt.Printf(yellow()+format, args)
+	fmt.Printf(yellow()+format, args...)
 }
 
 func (l ConsoleLogger) Errorf(format string, args ...interface{}) {
-	fmt.Printf(red()+format, args)
+	fmt.Printf(red()+format, args...)
 }
 
 func gray() string {

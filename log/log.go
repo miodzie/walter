@@ -7,42 +7,44 @@
 // log is a global state package, all Connections use the same logger.
 package log
 
-var logger Logger
+var logger Logger = NullLogger{}
 
-type any interface{}
-
-// Logger is an abstraction for generic log levels.
+// Logger is a minimal abstraction for generic log levels.
 // You can implement different third party log libraries that you prefer.
 type Logger interface {
-	Info(msg string, args ...any)
-	Debug(msg string, args ...any)
-	Error(err error, args ...any)
-	Warn(msg string, args ...any)
+	Trace(args ...interface{})
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Warn(args ...interface{})
+	Error(args ...interface{})
 }
 
 func SetLogger(logg Logger) {
 	logger = logg
 }
 
-func Debug(msg string, args ...any) {
-	logger.Debug(msg, args)
+func Debug(args ...any) {
+	logger.Debug(args)
 }
 
-func Error(err error, args ...any) {
-	logger.Error(err, args)
+func Error(args ...any) {
+	logger.Error(args)
 }
 
 type NullLogger struct {
 }
 
-func (n NullLogger) Info(msg string, args ...any) {
+func (n NullLogger) Trace(args ...interface{}) {
 }
 
-func (n NullLogger) Debug(msg string, args ...any) {
+func (n NullLogger) Debug(args ...interface{}) {
 }
 
-func (n NullLogger) Error(err error, args ...any) {
+func (n NullLogger) Info(args ...interface{}) {
 }
 
-func (n NullLogger) Warn(msg string, args ...any) {
+func (n NullLogger) Warn(args ...interface{}) {
+}
+
+func (n NullLogger) Error(args ...interface{}) {
 }

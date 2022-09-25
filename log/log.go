@@ -7,10 +7,11 @@
 // log is a global state package, all Connections use the same logger.
 package log
 
-var logger Logger = NullLogger{}
+var logger Logger = ConsoleLogger{}
 
 // Logger is a minimal abstraction for generic log levels.
 // You can implement different third party log libraries that you prefer.
+// TODO: Impl format versions.
 type Logger interface {
 	Trace(args ...interface{})
 	Debug(args ...interface{})
@@ -23,8 +24,20 @@ func SetLogger(logg Logger) {
 	logger = logg
 }
 
+func Trace(args ...interface{}) {
+	logger.Trace(args)
+}
+
 func Debug(args ...interface{}) {
 	logger.Debug(args)
+}
+
+func Info(args ...interface{}) {
+	logger.Info(args)
+}
+
+func Warn(args ...interface{}) {
+	logger.Warn(args)
 }
 
 func Error(args ...interface{}) {

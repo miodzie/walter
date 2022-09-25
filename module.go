@@ -2,6 +2,7 @@ package seras
 
 import (
 	"fmt"
+	"github.com/miodzie/seras/log"
 	"strings"
 )
 
@@ -33,7 +34,7 @@ func NewModManager(mods []Module, actions Actions) (*ModuleManager, error) {
 	for _, mod := range mods {
 		list = append(list, mod.Name())
 	}
-	fmt.Printf("Modules: %s\n", strings.Join(list, ", "))
+	log.Info(fmt.Sprintf("Modules: %s\n", strings.Join(list, ", ")))
 
 	return manager, nil
 }

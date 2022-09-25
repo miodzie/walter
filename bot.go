@@ -2,6 +2,7 @@ package seras
 
 import (
 	"fmt"
+	"github.com/miodzie/seras/log"
 )
 
 type Bot interface {
@@ -49,7 +50,7 @@ func RunBot(bot Bot) error {
 func RunAll(addMods func(string) []Module) error {
 	errc := make(chan error)
 	for name, bot := range Bots {
-		fmt.Printf("Starting %s\n", name)
+		log.Info("Starting connection: ", name)
 		bot.AddMods(addMods(name))
 		go func(bot Bot) {
 			errc <- RunBot(bot)

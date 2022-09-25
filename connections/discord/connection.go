@@ -72,6 +72,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		},
 		// TODO: Change to config name.
 		ConnectionName: "discord",
+		Raw:            e.Content,
 	}
 	con.stream <- msg
 }

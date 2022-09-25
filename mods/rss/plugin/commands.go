@@ -77,8 +77,9 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	}
 	var subscribe = usecases.NewSubscribe(mod.Repository)
 	resp, err := subscribe.Subscribe(req)
-	// TODO: Probably remove err return argument.
-	fmt.Println(err)
+	if err != nil {
+		log.Error(err)
+	}
 
 	mod.actions.Reply(msg, resp.Message)
 }
@@ -95,7 +96,6 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 		Channel:  msg.Target,
 		FeedName: feedName,
 	}
-	fmt.Printf("%+v\n", request)
 	unsubscribe := usecases.NewUnsubscribe(mod.Repository)
 	response, err := unsubscribe.Unsubscribe(request)
 	if err != nil {

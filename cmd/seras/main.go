@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/miodzie/seras/connections/irc"
+	"github.com/miodzie/seras/log"
 	"github.com/miodzie/seras/mods"
 	"os"
 	"os/signal"
@@ -52,7 +53,7 @@ func initConfig() (*seras.Config, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("Config was not found, created.\nPlease update the config located at: %s\nAnd restart.", file)
+		log.Warn(fmt.Sprintf("Config was not found, created.\nPlease update the config located at: %s\nAnd restart.", file))
 		os.Exit(0)
 	}
 	cfg, err := seras.ParseToml(file)

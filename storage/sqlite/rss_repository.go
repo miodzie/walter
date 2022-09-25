@@ -119,7 +119,6 @@ func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, erro
 		query += " AND feed_id = ?"
 		args = append(args, feed.Id)
 	}
-	fmt.Println(query, args)
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {

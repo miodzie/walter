@@ -1,12 +1,12 @@
 package dong
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/miodzie/dong"
 	"github.com/miodzie/dong/impl"
 	"github.com/miodzie/dong/interactors"
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/log"
 	"os"
 	"os/user"
 	"path"
@@ -74,7 +74,7 @@ func createWorkDir() {
 func initDatabase() *impl.GormRepository {
 	db, err := gorm.Open("sqlite3", path.Join(workDir, "dongs.db"))
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		panic("failed to connect database")
 	}
 

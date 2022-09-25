@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"fmt"
+	"github.com/miodzie/seras/log"
 	"strings"
 
 	"github.com/miodzie/seras"
@@ -37,14 +38,12 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 
 // !feeds
 func (mod *RssMod) showFeeds(msg seras.Message) {
-	var showFeeds usecases.ShowFeeds
+	getFeeds := usecases.NewGetFeeds(mod.Repository)
+	resp, err := getFeeds.Get()
 
-	resp := showFeeds.Handle(mod.Repository)
-
-	if resp.Error != nil {
+	if err != nil {
 		mod.actions.Reply(msg, resp.Message)
-		fmt.Println("WHAT" + resp.Message)
-		fmt.Println(resp.Error)
+		log.Error(err)
 		return
 	}
 
@@ -104,13 +103,13 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 }
 
 func (mod *RssMod) subs(msg seras.Message) {
-	request := usecases.ListSubscriptionsRequest{
+	request := usecases.GetSubscriptionsRequest{
 		User:     msg.Author.Mention,
 		Optional: struct{ Channel string }{msg.Target},
 	}
 
-	useCase := usecases.NewListSubscriptions(mod.Repository)
-	response := useCase.ListSubscriptions(request)
+	useCase := usecases.NewGetSubscriptions(mod.Repository)
+	response := useCase.Get(request)
 	if response.Error != nil {
 		mod.actions.Reply(msg, "oh noes i brokededz")
 		return

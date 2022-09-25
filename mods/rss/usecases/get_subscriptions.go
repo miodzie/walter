@@ -4,53 +4,53 @@ import (
 	"github.com/miodzie/seras/mods/rss"
 )
 
-type ListSubscriptions struct {
+type GetSubscriptions struct {
 	repository rss.Repository
 }
 
-func NewListSubscriptions(repository rss.Repository) *ListSubscriptions {
-	return &ListSubscriptions{repository: repository}
+func NewGetSubscriptions(repository rss.Repository) *GetSubscriptions {
+	return &GetSubscriptions{repository: repository}
 }
 
-type ListSubscriptionsRequest struct {
+type GetSubscriptionsRequest struct {
 	User     string
 	Optional struct{ Channel string }
 }
 
-type ListSubSubscription struct {
+type GetSubSubscription struct {
 	Feed     string
 	Channel  string
 	Keywords []string
 }
 
-type ListSubscriptionsResponse struct {
+type GetSubscriptionResponse struct {
 	Message       string
-	Subscriptions []ListSubSubscription
+	Subscriptions []GetSubSubscription
 	Error         error
 }
 
-func (useCase ListSubscriptions) ListSubscriptions(request ListSubscriptionsRequest) ListSubscriptionsResponse {
-	var lsubs []ListSubSubscription
+func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) GetSubscriptionResponse {
+	var lsubs []GetSubSubscription
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:    request.User,
 		Channel: request.Optional.Channel,
 	})
 	if err != nil {
-		return ListSubscriptionsResponse{
+		return GetSubscriptionResponse{
 			Message: "Failed to retrieve subscriptions.",
 			Error:   err,
 		}
 	}
 
 	for _, sub := range subs {
-		lsubs = append(lsubs, ListSubSubscription{
+		lsubs = append(lsubs, GetSubSubscription{
 			Feed:     sub.Feed.Name,
 			Channel:  sub.Channel,
 			Keywords: sub.KeywordsSlice(),
 		})
 	}
 
-	return ListSubscriptionsResponse{
+	return GetSubscriptionResponse{
 		Message:       "Success.",
 		Subscriptions: lsubs,
 		Error:         nil,

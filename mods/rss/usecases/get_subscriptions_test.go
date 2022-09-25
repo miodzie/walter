@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-func TestListSubscriptions_ListSubscriptions(t *testing.T) {
+func TestGetSubscriptions_Get(t *testing.T) {
 	repo := rss.NewInMemRepo()
-	useCase := NewListSubscriptions(repo)
+	getSubs := NewGetSubscriptions(repo)
 
 	feed := &rss.Feed{Id: 1, Name: "news"}
 	_ = repo.AddFeed(feed)
@@ -17,7 +17,7 @@ func TestListSubscriptions_ListSubscriptions(t *testing.T) {
 		Channel: "#general",
 	}
 	_ = repo.AddSub(subscription)
-	request := ListSubscriptionsRequest{
+	request := GetSubscriptionsRequest{
 		User: "Bob",
 		Optional: struct{ Channel string }{
 			Channel: "#general",
@@ -25,7 +25,7 @@ func TestListSubscriptions_ListSubscriptions(t *testing.T) {
 	}
 
 	// Act
-	response := useCase.ListSubscriptions(request)
+	response := getSubs.Get(request)
 
 	// Assert
 	if response.Error != nil {

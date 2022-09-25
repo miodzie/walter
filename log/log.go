@@ -5,6 +5,7 @@
 // which is specifically meant to log all Connections seras.Messages.
 //
 // log is a global state package, all Connections use the same logger.
+// Likely each Connection will get their own Logger in the future.
 package log
 
 var logger Logger = ConsoleLogger{}

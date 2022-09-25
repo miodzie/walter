@@ -1,4 +1,4 @@
-package policing
+package moderator
 
 import (
 	"regexp"

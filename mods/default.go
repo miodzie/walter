@@ -6,7 +6,7 @@ import (
 	"github.com/miodzie/seras/mods/dong"
 	"github.com/miodzie/seras/mods/logger"
 	"github.com/miodzie/seras/mods/logger/drivers"
-	"github.com/miodzie/seras/mods/policing"
+	"github.com/miodzie/seras/mods/moderator"
 	rss2 "github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
@@ -25,7 +25,7 @@ func Default(dbPath string) []seras.Module {
 		sed.New(),
 		dong.New(),
 		bestbot.New(),
-		policing.New(),
+		moderator.New(),
 		logger.New(drivers.NewMultiLogger(drivers.ConsoleLogger{})),
 		rss.New(
 			rss.Context{

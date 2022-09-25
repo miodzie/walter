@@ -1,7 +1,7 @@
-package policing
+package moderator
 
 import (
-	"fmt"
+	"github.com/miodzie/seras/log"
 	"time"
 
 	"github.com/miodzie/seras"
@@ -16,7 +16,7 @@ func New() *Mod {
 }
 
 func (mod *Mod) Name() string {
-	return "police"
+	return "moderator"
 }
 
 func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
@@ -26,7 +26,7 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 		if IsSpam(msg) {
 			err := actions.TimeoutUser(msg.Target, msg.Author.Id, time.Now().Add(time.Minute*1))
 			if err != nil {
-				fmt.Printf("Failed to TimeoutUser: \"%s\"\n", err)
+				log.Error(err)
 			}
 		}
 	}

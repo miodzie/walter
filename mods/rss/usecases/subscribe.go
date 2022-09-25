@@ -36,7 +36,7 @@ func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {
 		return SubscribeResponse{
-			Message: fmt.Sprintf("Failed to locate feed. err: %s", err),
+			Message: "Failed to find feed.",
 		}, err
 	}
 
@@ -47,9 +47,7 @@ func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 		User:     req.User,
 	}
 	if err = s.repository.AddSub(sub); err != nil {
-		return SubscribeResponse{
-			Message: fmt.Sprintf("Failed to save feed. err: %s", err),
-		}, err
+		return SubscribeResponse{Message: "Failed to subscribe."}, err
 	}
 
 	return SubscribeResponse{

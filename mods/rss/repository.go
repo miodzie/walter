@@ -26,9 +26,11 @@ type SubSearchOpt struct {
 }
 
 type InMemRepository struct {
-	feeds   []*Feed
-	subs    map[uint64]*Subscription
-	nextErr error
+	feeds            []*Feed
+	subs             map[uint64]*Subscription
+	delayForcedErrBy int
+	forcedErr        error
+	tmpIgnoreErr     bool
 }
 
 func NewInMemRepo() *InMemRepository {
@@ -37,28 +39,41 @@ func NewInMemRepo() *InMemRepository {
 
 // ForceError sets an error to be returned on the next called method.
 // Used for forcing errors in testing.
-func (r *InMemRepository) ForceError(err error) {
-	r.nextErr = err
+func (r *InMemRepository) ForceError(err error, delay int) {
+	r.forcedErr = err
+	r.delayForcedErrBy = delay
 }
 
-func (r *InMemRepository) popError() error {
-	defer func() { r.nextErr = nil }()
-	return r.nextErr
+func (r *InMemRepository) ignoreErr() {
+	r.tmpIgnoreErr = true
+}
+
+func (r *InMemRepository) popForcedErr() error {
+	if r.tmpIgnoreErr {
+		r.tmpIgnoreErr = false
+		return nil
+	}
+	if r.delayForcedErrBy != 0 {
+		r.delayForcedErrBy -= 1
+		return nil
+	}
+	defer func() { r.forcedErr = nil }()
+	return r.forcedErr
 }
 
 func (r *InMemRepository) Feeds() ([]*Feed, error) {
-	return r.feeds, r.popError()
+	return r.feeds, r.popForcedErr()
 }
 
 func (r *InMemRepository) AddFeed(feed *Feed) error {
 	r.feeds = append(r.feeds, feed)
-	return r.popError()
+	return r.popForcedErr()
 }
 
 func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
 	for _, c := range r.feeds {
 		if c.Name == name {
-			return c, r.popError()
+			return c, r.popForcedErr()
 		}
 	}
 	return &Feed{}, errors.New("feed not found")
@@ -69,17 +84,17 @@ func (r *InMemRepository) AddSub(s *Subscription) error {
 		s.Id = rand.Uint64()
 	}
 	r.subs[s.Id] = s
-	return r.popError()
+	return r.popForcedErr()
 }
 
 func (r *InMemRepository) UpdateSub(s *Subscription) error {
 	r.subs[s.Id] = s
-	return r.popError()
+	return r.popForcedErr()
 }
 
 func (r *InMemRepository) RemoveSub(subscription *Subscription) error {
 	delete(r.subs, subscription.Id)
-	return r.popError()
+	return r.popForcedErr()
 }
 
 func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
@@ -105,6 +120,7 @@ func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 		},
 		func(sub *Subscription) bool {
 			if search.FeedName != "" {
+				r.ignoreErr()
 				feed, err := r.FeedByName(search.FeedName)
 				if err != nil {
 					return false
@@ -125,6 +141,7 @@ func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 	}
 	for _, sub := range r.subs {
 		if matches(sub) {
+			r.ignoreErr()
 			feeds, _ := r.Feeds()
 			for _, feed := range feeds {
 				if feed.Id == sub.FeedId {
@@ -136,5 +153,5 @@ func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
 		}
 	}
 
-	return subs, r.popError()
+	return subs, r.popForcedErr()
 }

@@ -46,7 +46,7 @@ func TestGetSubscriptions_Get(t *testing.T) {
 func TestGetSubscriptions_Get_error(t *testing.T) {
 	repo := rss.NewInMemRepo()
 	expectedErr := errors.New("testing")
-	repo.ForceError(expectedErr)
+	repo.ForceError(expectedErr, 0)
 	getSubs := NewGetSubscriptions(repo)
 
 	// Act

@@ -25,7 +25,7 @@ func TestAddFeed_AddFeed(t *testing.T) {
 func TestAddFeed_AddFeed_fails(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	expectedErr := errors.New("test")
-	repository.ForceError(expectedErr)
+	repository.ForceError(expectedErr, 0)
 	useCase := NewAddFeed(repository)
 
 	// Act

@@ -17,7 +17,7 @@ type GetSubscriptionsRequest struct {
 	Optional struct{ Channel string }
 }
 
-type GetSubSubscription struct {
+type GetSubscriptionsSub struct {
 	Feed     string
 	Channel  string
 	Keywords []string
@@ -25,11 +25,11 @@ type GetSubSubscription struct {
 
 type GetSubscriptionResponse struct {
 	Message       string
-	Subscriptions []GetSubSubscription
+	Subscriptions []GetSubscriptionsSub
 }
 
 func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) (GetSubscriptionResponse, error) {
-	var lsubs []GetSubSubscription
+	var lsubs []GetSubscriptionsSub
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:    request.User,
 		Channel: request.Optional.Channel,
@@ -39,7 +39,7 @@ func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) (GetSubscri
 	}
 
 	for _, sub := range subs {
-		lsubs = append(lsubs, GetSubSubscription{
+		lsubs = append(lsubs, GetSubscriptionsSub{
 			Feed:     sub.Feed.Name,
 			Channel:  sub.Channel,
 			Keywords: sub.KeywordsSlice(),

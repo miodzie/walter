@@ -35,6 +35,8 @@ func New(conf Config) (*Connection, error) {
 	ircCon.UseTLS = true
 	ircCon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	ircCon.UseSASL = conf.SASL
+	// TODO: Update logger to use something else?
+	ircCon.Log = nil
 	ircCon.SASLLogin = conf.SASLUsername
 	ircCon.SASLPassword = conf.SASLPassword
 	con := &Connection{
@@ -95,9 +97,10 @@ func (con *Connection) Close() error {
 
 func (con *Connection) Send(msg seras.Message) error {
 	con.irc.Privmsg(msg.Target, msg.Content)
-	log.Debugf("OUT: %+v\n", msg)
+	log.Debugf("[%s]: %+v\n", con.Name(), msg)
 	return nil
 }
+
 func (con *Connection) Reply(msg seras.Message, content string) error {
 	reply := seras.Message{Content: content, Target: msg.Target}
 	if isPM(msg) {

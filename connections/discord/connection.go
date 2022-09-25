@@ -88,7 +88,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 
 func (con *Connection) Send(msg seras.Message) error {
 	_, err := con.session.ChannelMessageSend(msg.Target, msg.Content)
-	log.Debugf("OUT: %+v\n", msg)
+	log.Debugf("[%s]: %+v\n", con.Name(), msg)
 	return err
 }
 

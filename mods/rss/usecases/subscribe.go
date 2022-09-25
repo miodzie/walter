@@ -26,12 +26,6 @@ type SubscribeResponse struct {
 }
 
 // Subscribe subscribes a user to a Feed.
-//
-// TODO: Should the error be returned as a second argument,
-// or within the Response struct?
-// It's more idiomatic Go as a second return argument, however,
-// it implies to me that it's more of a nonrecoverable system error.
-// Whereas the Response.Message would still have a message for the user..
 func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {

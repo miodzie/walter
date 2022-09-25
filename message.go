@@ -1,5 +1,7 @@
 package seras
 
+import "time"
+
 var token = "!"
 
 func Token() string {
@@ -20,7 +22,8 @@ type Message struct {
 	// Name of the Connection it came from.
 	ConnectionName string
 	// JSON for Discord, Raw for IRC.
-	Raw string
+	Raw       string
+	Timestamp time.Time
 }
 
 type Author struct {

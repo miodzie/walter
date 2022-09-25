@@ -35,8 +35,8 @@ func New(conf Config) (*Connection, error) {
 	ircCon.UseTLS = true
 	ircCon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	ircCon.UseSASL = conf.SASL
-	// TODO: Update logger to use something else?
-	ircCon.Log = nil
+	// TODO: Update to use internal logger or NilLogger
+	//ircCon.Log = nil
 	ircCon.SASLLogin = conf.SASLUsername
 	ircCon.SASLPassword = conf.SASLPassword
 	con := &Connection{
@@ -76,6 +76,7 @@ func (con *Connection) Connect() (seras.Stream, error) {
 			Code:           event.Code,
 			ConnectionName: con.Name(),
 			Raw:            event.Raw,
+			Timestamp:      time.Now(),
 		}
 	})
 

@@ -82,6 +82,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 		},
 		ConnectionName: con.Name(),
 		Raw:            e.Content,
+		Timestamp:      e.Timestamp,
 	}
 	con.stream <- msg
 }

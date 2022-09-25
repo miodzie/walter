@@ -48,7 +48,7 @@ func (mod *Mod) Stop() {
 	mod.running = false
 }
 
-func (mod Mod) logMsg(msg seras.Message) {
+func (mod *Mod) logMsg(msg seras.Message) {
 	mod.log[msg.Target] = append(mod.log[msg.Target], msg)
 	if len(mod.log[msg.Target]) > 20 {
 		mod.log[msg.Target] = mod.log[msg.Target][1:]

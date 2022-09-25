@@ -47,7 +47,6 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 		return
 	}
 
-	// TODO: Presenter layer.
 	var reply = seras.Message{Target: msg.Target}
 	var parsed []string
 	for _, feed := range resp.Feeds {

@@ -11,16 +11,21 @@ func NewGetFeeds(repository rss.Repository) *GetFeeds {
 }
 
 type GetFeedsResponse struct {
-	// NOTE: Using the domain model is crossing a boundary, violates DIP.
-	Feeds   []*rss.Feed
+	Feeds   []*GetFeedsFeed
 	Message string
 }
 
-func (g *GetFeeds) Get() (GetFeedsResponse, error) {
-	var err error
-	var resp GetFeedsResponse
+type GetFeedsFeed struct {
+	Name string
+	Url  string
+}
 
-	resp.Feeds, err = g.repository.Feeds()
+func (g *GetFeeds) Get() (GetFeedsResponse, error) {
+	var resp GetFeedsResponse
+	feeds, err := g.repository.Feeds()
+	for _, f := range feeds {
+		resp.Feeds = append(resp.Feeds, &GetFeedsFeed{Name: f.Name, Url: f.Url})
+	}
 
 	if len(resp.Feeds) == 0 {
 		resp.Message = "No feeds available."

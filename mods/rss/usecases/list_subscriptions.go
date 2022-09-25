@@ -8,7 +8,7 @@ type ListSubscriptions struct {
 	repository rss.Repository
 }
 
-func NewListSubscriptionsUseCase(repository rss.Repository) *ListSubscriptions {
+func NewListSubscriptions(repository rss.Repository) *ListSubscriptions {
 	return &ListSubscriptions{repository: repository}
 }
 
@@ -29,7 +29,7 @@ type ListSubscriptionsResponse struct {
 	Error         error
 }
 
-func (useCase ListSubscriptions) Handle(request ListSubscriptionsRequest) ListSubscriptionsResponse {
+func (useCase ListSubscriptions) ListSubscriptions(request ListSubscriptionsRequest) ListSubscriptionsResponse {
 	var lsubs []ListSubSubscription
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:    request.User,

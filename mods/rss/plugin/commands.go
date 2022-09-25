@@ -19,14 +19,14 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 		return
 	}
 
-	var addFeed = &usecases.AddFeed{Repo: mod.Repository}
+	var useCase = usecases.NewAddFeed(mod.Repository)
 	// TODO: validate.
-	req := usecases.AddFeedRequest{
+	request := usecases.AddFeedRequest{
 		Name: msg.Arguments[1],
 		Url:  msg.Arguments[2],
 	}
 
-	resp := addFeed.Handle(req)
+	resp := useCase.AddFeed(request)
 
 	if resp.Error != nil {
 		fmt.Println(resp.Error)
@@ -77,8 +77,8 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 		Channel:  msg.Target,
 		User:     msg.Author.Mention,
 	}
-	var subscribe = usecases.NewSubscribeUseCase(mod.Repository)
-	resp, err := subscribe.Handle(req)
+	var subscribe = usecases.NewSubscribe(mod.Repository)
+	resp, err := subscribe.Subscribe(req)
 	// TODO: Probably remove err return argument.
 	fmt.Println(err)
 
@@ -98,8 +98,8 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 		FeedName: feedName,
 	}
 	fmt.Printf("%+v\n", request)
-	uc := usecases.NewUnsubscribeUseCase(mod.Repository)
-	response := uc.Handle(request)
+	uc := usecases.NewUnsubscribe(mod.Repository)
+	response := uc.Unsubscribe(request)
 	mod.actions.Reply(msg, response.Message)
 }
 
@@ -109,8 +109,8 @@ func (mod *RssMod) subs(msg seras.Message) {
 		Optional: struct{ Channel string }{msg.Target},
 	}
 
-	useCase := usecases.NewListSubscriptionsUseCase(mod.Repository)
-	response := useCase.Handle(request)
+	useCase := usecases.NewListSubscriptions(mod.Repository)
+	response := useCase.ListSubscriptions(request)
 	if response.Error != nil {
 		mod.actions.Reply(msg, "oh noes i brokededz")
 		return

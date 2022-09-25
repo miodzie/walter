@@ -9,7 +9,7 @@ type Unsubscribe struct {
 	repository rss.Repository
 }
 
-func NewUnsubscribeUseCase(repo rss.Repository) *Unsubscribe {
+func NewUnsubscribe(repo rss.Repository) *Unsubscribe {
 	return &Unsubscribe{repository: repo}
 }
 
@@ -24,14 +24,13 @@ type UnsubscribeResponse struct {
 	Error   error
 }
 
-func (useCase Unsubscribe) Handle(request UnsubscribeRequest) UnsubscribeResponse {
+func (useCase Unsubscribe) Unsubscribe(request UnsubscribeRequest) UnsubscribeResponse {
 	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
 		User:     request.User,
 		FeedName: request.FeedName,
 		Channel:  request.Channel,
 	})
 
-	fmt.Println(len(subs))
 	if err != nil || len(subs) != 1 {
 		return UnsubscribeResponse{
 			Message: fmt.Sprintf("Failed to locate user subscription. err: %s", err),

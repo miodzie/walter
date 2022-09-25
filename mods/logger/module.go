@@ -1,9 +1,6 @@
-package policing
+package logger
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/miodzie/seras"
 )
 
@@ -16,20 +13,16 @@ func New() *Mod {
 }
 
 func (mod *Mod) Name() string {
-	return "police"
+	return "logger"
 }
 
 func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	for mod.running {
-		msg := <-stream
-		if IsSpam(msg) {
-			err := actions.TimeoutUser(msg.Target, msg.Author.Id, time.Now().Add(time.Minute*1))
-			if err != nil {
-				fmt.Printf("Failed to TimeoutUser: \"%s\"\n", err)
-			}
-		}
+		// TODO: impl me
+		//_ := <-stream
 	}
+
 	return nil
 }
 

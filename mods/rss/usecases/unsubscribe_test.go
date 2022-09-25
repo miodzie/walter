@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestNewUnsubscribeUseCase_Handle_unsubs_a_user(t *testing.T) {
+func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	feed := rss.Feed{Id: 1, Name: "news", Url: ""}
 	if err := repository.AddFeed(&feed); err != nil {
@@ -22,12 +22,13 @@ func TestNewUnsubscribeUseCase_Handle_unsubs_a_user(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
-
-	useCase := NewUnsubscribeUseCase(repository)
-
+	useCase := NewUnsubscribe(repository)
 	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
-	response := useCase.Handle(request)
 
+	// Act
+	response := useCase.Unsubscribe(request)
+
+	// Assert
 	subs, err := repository.Subs(rss.SubSearchOpt{FeedId: feed.Id})
 	if err != nil {
 		t.Log(err)
@@ -37,7 +38,6 @@ func TestNewUnsubscribeUseCase_Handle_unsubs_a_user(t *testing.T) {
 		fmt.Println("There should be no subscriptions after a user unsubscribed.")
 		t.Fail()
 	}
-
 	if response.Message != "Successfully unsubscribed from `news` feed." {
 		fmt.Println("Unexpected message.")
 		t.Fail()

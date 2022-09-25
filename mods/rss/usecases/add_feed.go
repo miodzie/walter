@@ -3,7 +3,11 @@ package usecases
 import "github.com/miodzie/seras/mods/rss"
 
 type AddFeed struct {
-	Repo rss.Repository
+	repository rss.Repository
+}
+
+func NewAddFeed(repository rss.Repository) *AddFeed {
+	return &AddFeed{repository: repository}
 }
 
 type AddFeedRequest struct {
@@ -16,14 +20,14 @@ type AddFeedResponse struct {
 	Error   error
 }
 
-func (a *AddFeed) Handle(req AddFeedRequest) AddFeedResponse {
+func (a *AddFeed) AddFeed(req AddFeedRequest) AddFeedResponse {
 	var resp AddFeedResponse
 
 	var feed rss.Feed
 	feed.Name = req.Name
 	feed.Url = req.Url
 
-	err := a.Repo.AddFeed(&feed)
+	err := a.repository.AddFeed(&feed)
 
 	resp.Message = "Feed saved."
 	if err != nil {

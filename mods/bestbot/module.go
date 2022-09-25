@@ -6,19 +6,19 @@ import (
 	"github.com/miodzie/seras"
 )
 
-type BestBotMod struct {
+type Mod struct {
 	running bool
 }
 
-func New() *BestBotMod {
-	return &BestBotMod{}
+func New() *Mod {
+	return &Mod{}
 }
 
-func (mod *BestBotMod) Name() string {
+func (mod *Mod) Name() string {
 	return "best_bot"
 }
 
-func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -43,6 +43,6 @@ func (mod *BestBotMod) Start(stream seras.Stream, actions seras.Actions) error {
 	return nil
 }
 
-func (mod *BestBotMod) Stop() {
+func (mod *Mod) Stop() {
 	mod.running = false
 }

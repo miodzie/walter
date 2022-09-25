@@ -43,7 +43,7 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 				request.Category = msg.Arguments[1]
 			}
 			response := rando.Handle(request)
-			// TODO: Handle error.
+			// TODO: ListSubscriptions error.
 			actions.Reply(msg, response.Emoji)
 		}
 

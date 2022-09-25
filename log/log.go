@@ -1,9 +1,18 @@
+// Package log is meant to be used by modules to log any important information
+// or errors to be reviewed by the bot owner.
+//
+// This package should not be confused with the logger module,
+// which is specifically meant to log all Connections seras.Messages.
+//
+// log is a global state package, all Connections use the same logger.
 package log
 
 var logger Logger
 
 type any interface{}
 
+// Logger is an abstraction for generic log levels.
+// You can implement different third party log libraries that you prefer.
 type Logger interface {
 	Info(msg string, args ...any)
 	Debug(msg string, args ...any)

@@ -2,14 +2,16 @@ package logger
 
 import (
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/log"
 )
 
 type Mod struct {
 	running bool
+	logger  Logger
 }
 
-func New() *Mod {
-	return &Mod{}
+func New(logger Logger) *Mod {
+	return &Mod{logger: logger}
 }
 
 func (mod *Mod) Name() string {
@@ -19,8 +21,11 @@ func (mod *Mod) Name() string {
 func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	for mod.running {
-		// TODO: impl me
-		//_ := <-stream
+		msg := <-stream
+		err := mod.logger.Log(msg)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	return nil

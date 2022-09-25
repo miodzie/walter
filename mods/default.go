@@ -4,6 +4,7 @@ import (
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/bestbot"
 	"github.com/miodzie/seras/mods/dong"
+	"github.com/miodzie/seras/mods/logger"
 	"github.com/miodzie/seras/mods/policing"
 	rss2 "github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
@@ -24,6 +25,7 @@ func Default(dbPath string) []seras.Module {
 		dong.New(),
 		bestbot.New(),
 		policing.New(),
+		logger.New(logger.NullLogger{}),
 		rss.New(
 			rss.Context{
 				Repository: sqlite.NewRssRepository(db),

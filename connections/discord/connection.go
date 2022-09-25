@@ -70,8 +70,9 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 			Nick:    e.Author.Username,
 			Mention: "<@" + e.Author.ID + ">",
 		},
+		// TODO: Change to config name.
+		ConnectionName: "discord",
 	}
-	fmt.Printf("Discord:  [%s]: %s\n", msg.Author.Nick, msg.Content)
 	con.stream <- msg
 }
 

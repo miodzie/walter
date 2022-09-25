@@ -23,11 +23,11 @@ func SetLogger(logg Logger) {
 	logger = logg
 }
 
-func Debug(args ...any) {
+func Debug(args ...interface{}) {
 	logger.Debug(args)
 }
 
-func Error(args ...any) {
+func Error(args ...interface{}) {
 	logger.Error(args)
 }
 

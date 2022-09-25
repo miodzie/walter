@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"fmt"
 	"github.com/miodzie/seras"
 	irc "github.com/thoj/go-ircevent"
 )
@@ -23,10 +22,9 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
-		if msg.Code == "INVITE" {
+		if msg.Code == "INVITE" && actions.IsAdmin(msg.Author.Id) {
 			mod.irc.Join(msg.Arguments[1])
 		}
-		fmt.Printf("%+v\n", msg)
 	}
 	return nil
 }

@@ -12,6 +12,7 @@ type Connection interface {
 }
 
 type Admin interface {
+	// TODO: Refactor to accept just an Author struct.
 	IsAdmin(userId string) bool
 	TimeoutUser(channel string, user string, until time.Time) error
 }

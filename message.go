@@ -17,6 +17,10 @@ type Message struct {
 	Target    string
 	Author    Author
 	Code      string
+	// Name of the Connection it came from.
+	ConnectionName string
+	// JSON for Discord, Raw for IRC.
+	Raw string
 }
 
 type Author struct {

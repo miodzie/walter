@@ -62,6 +62,8 @@ func (con *Connection) Connect() (seras.Stream, error) {
 				Mention: event.Nick,
 			},
 			Code: event.Code,
+			// TODO: Change to config name.
+			ConnectionName: "irc",
 		}
 	})
 

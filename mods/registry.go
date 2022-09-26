@@ -3,10 +3,13 @@ package mods
 import (
 	"fmt"
 	"github.com/miodzie/seras"
-	"net/http"
 )
 
 type ModConfig interface{}
+type any interface{}
+type Factory interface {
+	Create(any) (seras.Module, error)
+}
 
 // [name]createMod
 var factories map[string]func(ModConfig) (seras.Module, error)
@@ -17,7 +20,6 @@ func init() {
 
 func Register(name string, creator func(ModConfig) (seras.Module, error)) {
 	factories[name] = creator
-	http.Client{}
 }
 
 func Make(name string, config ModConfig) (seras.Module, error) {

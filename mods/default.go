@@ -27,12 +27,10 @@ func Default(dbPath string) []seras.Module {
 		bestbot.New(),
 		moderator.New(),
 		logger.New(drivers.NewMultiLogger(drivers.ConsoleLogger{})),
-		rss.New(
-			rss.Context{
-				Repository: sqlite.NewRssRepository(db),
-				Parser:     decorators.StripHtml(gofeed.New()),
-				Formatter:  rss2.MinimalFormatter{},
-			},
-		),
+		rss.New(rss.Context{
+			Repository: sqlite.NewRssRepository(db),
+			Parser:     decorators.StripHtml(gofeed.New()),
+			Formatter:  rss2.MinimalFormatter{},
+		}),
 	}
 }

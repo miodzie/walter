@@ -30,6 +30,9 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 		if r.MatchString(msg.Content) {
 			actions.Reply(msg, "yes")
 		}
+		if msg.IsCommand("zoop") {
+			actions.Reply(msg, "👉😎👉")
+		}
 		if msg.IsCommand("gentlemen") || msg.IsCommand("lenny") {
 			actions.Reply(msg, "( ͡° ͜ʖ ͡°)")
 		}

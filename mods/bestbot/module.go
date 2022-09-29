@@ -42,7 +42,7 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉)")
 		}
 		if msg.IsCommand("lads") {
-			actions.Reply(msg, "     🎩 ٩")
+			actions.Reply(msg, "     🎩٩")
 			actions.Reply(msg, "( ͡👁 ͜ʖ ͡👁)")
 		}
 	}

@@ -42,7 +42,6 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉)")
 		}
 	}
-
 	return nil
 }
 

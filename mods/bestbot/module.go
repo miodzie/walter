@@ -36,11 +36,6 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 		if msg.IsCommand("gentlemen") || msg.IsCommand("lenny") {
 			actions.Reply(msg, "( ͡° ͜ʖ ͡°)")
 		}
-		if msg.IsCommand("ladies") {
-			actions.Reply(msg, "( ͡° ͜ʖ ͡°)")
-			actions.Reply(msg, "( ͡⊙ ͜ʖ ͡⊙)")
-			actions.Reply(msg, "( ͡◉ ͜ʖ ͡◉)")
-		}
 		if msg.IsCommand("lads") {
 			actions.Reply(msg, "     🎩٩")
 			actions.Reply(msg, "( ͡👁 ͜ʖ ͡👁)")

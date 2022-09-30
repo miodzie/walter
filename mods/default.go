@@ -7,10 +7,10 @@ import (
 	"github.com/miodzie/seras/mods/logger"
 	"github.com/miodzie/seras/mods/logger/drivers"
 	"github.com/miodzie/seras/mods/moderator"
-	rss2 "github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
-	rss "github.com/miodzie/seras/mods/rss/plugin"
+	rss_plugin "github.com/miodzie/seras/mods/rss/plugin"
 	sed "github.com/miodzie/seras/mods/sed/plugin"
 	"github.com/miodzie/seras/storage/sqlite"
 )
@@ -27,10 +27,10 @@ func Default(dbPath string) []seras.Module {
 		bestbot.New(),
 		moderator.New(),
 		logger.New(drivers.NewMultiLogger(drivers.ConsoleLogger{})),
-		rss.New(rss.Context{
+		rss_plugin.New(rss_plugin.Context{
 			Repository: sqlite.NewRssRepository(db),
 			Parser:     decorators.StripHtml(gofeed.New()),
-			Formatter:  rss2.MinimalFormatter{},
+			Formatter:  rss.MinimalFormatter{},
 		}),
 	}
 }

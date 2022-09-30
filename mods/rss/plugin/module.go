@@ -48,7 +48,7 @@ func (mod *RssMod) checkFeeds() {
 	p := rss.NewProcessor(mod.Repository, mod.Parser)
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
-		notifs, err := p.Handle()
+		notifs, err := p.Process()
 		if err != nil {
 			log.Error(err)
 		}

@@ -1,61 +1,112 @@
 package rss
 
 import (
+	"fmt"
 	"github.com/miodzie/seras/log"
 )
 
 type Processor struct {
-	repo   Repository
-	parser Parser
+	repository Repository
+	parser     Parser
+	// Max notifications sent per channel per process.
+	ChannelLimit int
 }
 
 func NewProcessor(repo Repository, parser Parser) *Processor {
 	return &Processor{
-		repo:   repo,
-		parser: parser,
+		repository:   repo,
+		parser:       parser,
+		ChannelLimit: 3,
 	}
 }
 
-func (p *Processor) Handle() ([]*Notification, error) {
-	var notifications []*Notification
-	feeds, _ := p.repo.Feeds()
+func (p *Processor) Process() ([]*Notification, error) {
+	var newNotifications []*Notification
+	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
 		log.Debug("feed: " + feed.Name)
-		parsed, err := p.parser.ParseURL(feed.Url)
+		parsedFeed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
-			return notifications, err
+			return newNotifications, err
 		}
-		subs, err := p.repo.Subs(SubSearchOpt{FeedId: feed.Id})
+
+		subs, err := p.repository.Subs(SubSearchOpt{FeedId: feed.Id})
 		if err != nil {
-			return notifications, err
+			return newNotifications, err
 		}
-		seen := make(map[string]*Notification)
-		for _, sub := range subs {
-			for _, item := range parsed.ItemsWithKeywords(sub.KeywordsSlice()) {
-				if sub.HasSeen(*item) {
+
+		cache := newCache()
+		for _, subscription := range subs {
+			for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
+				if subscription.HasSeen(*item) {
 					continue
 				}
-				key := item.GUID + sub.Channel
-
-				if noti, ok := seen[key]; ok {
-					noti.Users = append(noti.Users, sub.User)
-				} else {
-					notifications = append(notifications, &Notification{
-						Channel: sub.Channel,
-						Users:   []string{sub.User},
+				key := cache.makeKey(item, subscription)
+				if cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
+					// Save it for next time, bucko.
+					continue
+				}
+				notification := cache.GetNotification(key)
+				if !cache.HasNotification(key) {
+					notification = &Notification{
+						Channel: subscription.Channel,
 						Feed:    *feed,
 						Item:    *item,
-					})
-					seen[key] = notifications[len(notifications)-1]
+					}
+					newNotifications = append(newNotifications, notification)
+					cache.PutNotification(key, notification)
 				}
-				sub.See(*item)
+
+				notification.Users = append(notification.Users, subscription.User)
+				subscription.See(*item)
 			}
-			err := p.repo.UpdateSub(sub)
+			err := p.repository.UpdateSub(subscription)
 			if err != nil {
 				log.Error(err)
 			}
 		}
 	}
 
-	return notifications, nil
+	return newNotifications, nil
+}
+
+func newCache() *cache {
+	return &cache{
+		channelAmount:     make(map[string]int),
+		seenNotifications: map[string]*Notification{},
+	}
+}
+
+type cache struct {
+	channelAmount     map[string]int
+	seenNotifications map[string]*Notification
+}
+
+func (c *cache) HasNotification(key string) bool {
+	_, exists := c.seenNotifications[key]
+	return exists
+}
+
+func (c *cache) GetNotification(key string) *Notification {
+	return c.seenNotifications[key]
+}
+
+func (c *cache) PutNotification(key string, notification *Notification) {
+	if _, ok := c.channelAmount[notification.Channel]; !ok {
+		c.channelAmount[notification.Channel] = 0
+	}
+	c.channelAmount[notification.Channel] += 1
+	c.seenNotifications[key] = notification
+}
+
+func (c *cache) makeKey(item *Item, sub *Subscription) string {
+	return item.GUID + sub.Channel
+}
+
+func (c *cache) ChannelLimitReached(channelId string, limit int) bool {
+	if amt, ok := c.channelAmount[channelId]; ok {
+		fmt.Println(amt)
+		return amt >= limit
+	}
+	return false
 }

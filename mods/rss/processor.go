@@ -1,7 +1,6 @@
 package rss
 
 import (
-	"fmt"
 	"github.com/miodzie/seras/log"
 )
 
@@ -105,7 +104,6 @@ func (c *cache) makeKey(item *Item, sub *Subscription) string {
 
 func (c *cache) ChannelLimitReached(channelId string, limit int) bool {
 	if amt, ok := c.channelAmount[channelId]; ok {
-		fmt.Println(amt)
 		return amt >= limit
 	}
 	return false

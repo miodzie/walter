@@ -97,6 +97,20 @@ func (con *Connection) Close() error {
 }
 
 func (con *Connection) Send(msg seras.Message) error {
+	// An \n cuts off an IRC message, therefor split and send it as multiple messages.
+	if strings.Contains(msg.Content, "\n") {
+		split := strings.Split(msg.Content, "\n")
+		var anyErr error
+		for _, s := range split {
+			newMsg := msg
+			newMsg.Content = s
+			if err := con.Send(newMsg); err != nil {
+				anyErr = err
+			}
+		}
+		// Leave early.
+		return anyErr
+	}
 	con.irc.Privmsg(msg.Target, msg.Content)
 	log.Debugf("[%s]: %+v\n", con.Name(), msg)
 	return nil

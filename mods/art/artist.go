@@ -3,7 +3,6 @@ package art
 import (
 	"errors"
 	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
 )
 
 type ArtistFactory struct {
@@ -32,19 +31,16 @@ func (mod *Artist) Name() string {
 
 func (mod *Artist) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
+	for mod.running {
+		msg := <-mod.instructions
+		actions.Send(msg)
+	}
 	go func() {
+		// might as well drain the queue for memory leaks.
 		for mod.running {
-			log.Info("TALLY HO!")
-			msg := <-mod.instructions
-			log.Info("BAAAAAA!!!")
-			log.Info(msg)
-			actions.Send(msg)
+			_ = <-stream
 		}
 	}()
-	// might as well drain the queue for memory leaks.
-	for mod.running {
-		_ = <-stream
-	}
 	return nil
 }
 

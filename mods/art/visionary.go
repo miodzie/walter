@@ -3,7 +3,10 @@ package art
 import (
 	"errors"
 	"github.com/miodzie/seras"
+	"time"
 )
+
+const MaxLines = 4
 
 var visionary *Visionary
 
@@ -43,10 +46,21 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 	for mod.running {
 		msg := <-stream
 		if msg.IsCommand("gm") {
-			msg.Content = "g'mrn frens"
-			for _, a := range mod.artists {
-				// Blocking, ofc.
-				a <- msg
+			art := &Picture{Art: gm}
+			for !art.Completed() {
+				for _, artist := range mod.artists {
+					if art.Completed() {
+						break
+					}
+					for i := 0; i < MaxLines; i++ {
+						msg.Content = art.NextLine()
+						artist <- msg
+						time.Sleep(time.Millisecond * 50)
+						if art.Completed() {
+							break
+						}
+					}
+				}
 			}
 		}
 	}

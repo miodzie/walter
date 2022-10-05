@@ -68,3 +68,12 @@ func (mod *RssMod) checkFeeds() {
 func (mod *RssMod) Stop() {
 	mod.running = false
 }
+
+type ModFactory struct {
+	// Just use this for now I'm lazy
+	Context Context
+}
+
+func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+	return New(m.Context), nil
+}

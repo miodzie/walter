@@ -47,3 +47,10 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 func (mod *Mod) Stop() {
 	mod.running = false
 }
+
+type ModFactory struct {
+}
+
+func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+	return New(), nil
+}

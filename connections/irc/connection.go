@@ -135,6 +135,15 @@ func (con *Connection) AddMods(mods []seras.Module) {
 	con.mods = append(con.mods, mods...)
 }
 
+func (con *Connection) ModList() map[string]interface{} {
+	mods := make(map[string]interface{})
+	for _, m := range con.config.Mods {
+		mods[m] = struct{}{}
+	}
+
+	return mods
+}
+
 func (con *Connection) IsAdmin(userId string) bool {
 	for _, a := range con.config.Admins {
 		if a == userId {

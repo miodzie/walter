@@ -80,3 +80,10 @@ func initDatabase() *impl.GormRepository {
 
 	return impl.NewGormRepository(db)
 }
+
+type ModFactory struct {
+}
+
+func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+	return New(), nil
+}

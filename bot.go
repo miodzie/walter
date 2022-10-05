@@ -17,6 +17,8 @@ type Bot interface {
 type Modable interface {
 	Mods() []Module
 	AddMods([]Module)
+	// ModList [name]config
+	ModList() map[string]interface{}
 }
 
 var Bots map[string]Bot
@@ -56,11 +58,11 @@ func RunBot(bot Bot) error {
 	return manager.Run(stream)
 }
 
-func RunAll(addMods func(string) []Module) error {
+func RunAll(createModsFor func(Bot) []Module) error {
 	errc := make(chan error)
 	for name, bot := range Bots {
 		log.Infof("Starting connection: %s\n", name)
-		bot.AddMods(addMods(name))
+		bot.AddMods(createModsFor(bot))
 		go func(bot Bot) {
 			errc <- RunBot(bot)
 		}(bot)

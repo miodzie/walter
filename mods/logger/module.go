@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"errors"
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/log"
 )
@@ -33,4 +34,19 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 
 func (mod *Mod) Stop() {
 	mod.running = false
+}
+
+type ModFactory struct {
+	DefaultLogger Logger
+}
+
+func (m ModFactory) Create(logger interface{}) (seras.Module, error) {
+	if m.DefaultLogger != nil {
+		return New(m.DefaultLogger), nil
+	}
+	l, ok := logger.(Logger)
+	if !ok {
+		return nil, errors.New("passed logger is not of type Logger")
+	}
+	return New(l), nil
 }

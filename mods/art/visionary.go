@@ -61,7 +61,7 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 					for i := 0; i < MaxLines; i++ {
 						msg.Content = art.NextLine()
 						artist <- msg
-						time.Sleep(time.Millisecond * 50)
+						time.Sleep(time.Millisecond * 75)
 						if art.Completed() {
 							break
 						}

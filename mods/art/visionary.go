@@ -9,6 +9,7 @@ import (
 const MaxLines = 4
 
 var visionary *Visionary
+var lastRun time.Time
 
 func newArtistPalette() seras.Stream {
 	stream := make(chan seras.Message)
@@ -46,6 +47,11 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 	for mod.running {
 		msg := <-stream
 		if msg.IsCommand("gm") {
+			// Quick throttle impl
+			if time.Since(lastRun) < time.Second*2 {
+				continue
+			}
+			lastRun = time.Now()
 			art := &Picture{Art: gm}
 			for !art.Completed() {
 				for _, artist := range mod.artists {

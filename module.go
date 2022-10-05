@@ -37,7 +37,7 @@ func (manager *ModuleManager) Run(stream Stream) error {
 
 	for msg := range stream {
 		for _, ch := range manager.streams {
-			ch <- msg
+			go func(ch chan Message) { ch <- msg }(ch)
 		}
 	}
 

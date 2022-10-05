@@ -1,26 +1,38 @@
 package botnet
 
 import (
+	"errors"
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/log"
 )
 
 var shepherd *Shepherd
+
+func newSheepStream() seras.Stream {
+	stream := make(chan seras.Message)
+	shepherd.herd = append(shepherd.herd, stream)
+
+	return stream
+}
 
 type ShepherdFactory struct {
 }
 
 func (b *ShepherdFactory) Create(a interface{}) (seras.Module, error) {
-	return nil, nil
+	if shepherd != nil {
+		return nil, errors.New("there can only be one")
+	}
+	shepherd = &Shepherd{
+		herd:    []chan seras.Message{},
+		running: false,
+	}
+
+	return shepherd, nil
 }
 
 type Shepherd struct {
-	id        int
-	broadcast []chan seras.Message
-	running   bool
-}
-
-func NewController(repeaters []chan seras.Message) *Shepherd {
-	return &Shepherd{broadcast: repeaters}
+	herd    []chan seras.Message
+	running bool
 }
 
 func (mod *Shepherd) Name() string {
@@ -32,10 +44,14 @@ func (mod *Shepherd) Start(stream seras.Stream, actions seras.Actions) error {
 	for mod.running {
 		msg := <-stream
 		if msg.IsCommand("gm") {
+			log.Info("GENTLEMEN! GOOD MORNING!")
 			msg.Content = "g'mrn frens"
-			for _, b := range mod.broadcast {
+			for i, b := range mod.herd {
+				log.Info("Sending her off!")
 				b <- msg
+				log.Info(i)
 			}
+			log.Info("Done!!")
 		}
 	}
 	return nil

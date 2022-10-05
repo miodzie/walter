@@ -17,8 +17,8 @@ import (
 
 func init() {
 	factories = make(map[string]Factory)
-	Register("broadcaster", &botnet.ShepherdFactory{})
-	Register("repeater", &botnet.SheepFactory{})
+	Register("shepherd", &botnet.ShepherdFactory{})
+	Register("sheep", &botnet.SheepFactory{})
 	Register("best_bot", &bestbot.ModFactory{})
 	Register("dong", &dong.ModFactory{})
 	Register("sed", &sed.ModFactory{})

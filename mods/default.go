@@ -11,6 +11,7 @@ import (
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
 	rss_plugin "github.com/miodzie/seras/mods/rss/plugin"
+	sed "github.com/miodzie/seras/mods/sed/plugin"
 	"github.com/miodzie/seras/storage/sqlite"
 )
 
@@ -20,6 +21,7 @@ func init() {
 	Register("repeater", &botnet.SheepFactory{})
 	Register("best_bot", &bestbot.ModFactory{})
 	Register("dong", &dong.ModFactory{})
+	Register("sed", &sed.ModFactory{})
 	Register("logger", &logger.ModFactory{DefaultLogger: drivers.NewMultiLogger(drivers.ConsoleLogger{})})
 	//Register("sed", &rss_plugin.ModFactory{
 	//	Context: rss_plugin.Context{

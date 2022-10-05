@@ -54,3 +54,10 @@ func (mod *Mod) logMsg(msg seras.Message) {
 		mod.log[msg.Target] = mod.log[msg.Target][1:]
 	}
 }
+
+type ModFactory struct {
+}
+
+func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+	return New(), nil
+}

@@ -3,10 +3,10 @@ package mods
 import (
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/bestbot"
-	"github.com/miodzie/seras/mods/botnet"
 	"github.com/miodzie/seras/mods/dong"
 	"github.com/miodzie/seras/mods/logger"
 	"github.com/miodzie/seras/mods/logger/drivers"
+	"github.com/miodzie/seras/mods/repeater"
 	"github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
@@ -17,8 +17,8 @@ import (
 
 func init() {
 	factories = make(map[string]Factory)
-	Register("shepherd", &botnet.ShepherdFactory{})
-	Register("sheep", &botnet.SheepFactory{})
+	Register("shepherd", &repeater.ShepherdFactory{})
+	Register("sheep", &repeater.SheepFactory{})
 	Register("best_bot", &bestbot.ModFactory{})
 	Register("dong", &dong.ModFactory{})
 	Register("sed", &sed.ModFactory{})

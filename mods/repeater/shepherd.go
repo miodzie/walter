@@ -1,4 +1,4 @@
-package botnet
+package repeater
 
 import (
 	"errors"

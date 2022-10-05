@@ -6,31 +6,31 @@ import (
 	"github.com/miodzie/seras/log"
 )
 
-type SheepFactory struct {
+type ArtistFactory struct {
 }
 
-func (r *SheepFactory) Create(a interface{}) (seras.Module, error) {
-	if shepherd == nil {
+func (r *ArtistFactory) Create(a interface{}) (seras.Module, error) {
+	if visionary == nil {
 		return nil, errors.New("help i'm lost")
 	}
-	sheep := &Sheep{
-		instructions: newSheepStream(),
+	sheep := &Artist{
+		instructions: newArtistPalette(),
 		running:      false,
 	}
 
 	return sheep, nil
 }
 
-type Sheep struct {
+type Artist struct {
 	instructions seras.Stream
 	running      bool
 }
 
-func (mod *Sheep) Name() string {
-	return "sheep"
+func (mod *Artist) Name() string {
+	return "artist"
 }
 
-func (mod *Sheep) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Artist) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	go func() {
 		for mod.running {
@@ -48,6 +48,6 @@ func (mod *Sheep) Start(stream seras.Stream, actions seras.Actions) error {
 	return nil
 }
 
-func (mod *Sheep) Stop() {
+func (mod *Artist) Stop() {
 	mod.running = false
 }

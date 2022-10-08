@@ -24,7 +24,7 @@ func init() {
 	formatters["minimal"] = rss.MinimalFormatter{}
 
 	storages = make(map[string]rss.Repository)
-	storages["memory"] = &rss.InMemRepository{}
+	storages["memory"] = rss.NewInMemRepo()
 	storages["sqlite"] = &sqlite.RssRepository{}
 }
 

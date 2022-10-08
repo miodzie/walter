@@ -10,6 +10,7 @@ type ArtistFactory struct {
 
 func (r *ArtistFactory) Create(a interface{}) (seras.Module, error) {
 	if visionary == nil {
+		// TODO: Fix this damn race condition you imbecile.
 		return nil, errors.New("race condition: restart the bot to try again. sorry")
 	}
 	sheep := &Artist{

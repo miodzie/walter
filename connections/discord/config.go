@@ -14,6 +14,12 @@ type Config struct {
 	Token  string
 }
 
+func init() {
+	if err := seras.AddBotParser("discord", &BotParser{}); err != nil {
+		panic(err)
+	}
+}
+
 func ParseConfig(val map[string]interface{}) (Config, error) {
 	var cfg Config
 

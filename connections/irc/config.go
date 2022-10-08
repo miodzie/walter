@@ -19,6 +19,12 @@ type Config struct {
 	SASLPassword string
 }
 
+func init() {
+	if err := seras.AddBotParser("irc", &BotParser{}); err != nil {
+		panic(err)
+	}
+}
+
 func ParseConfig(val map[string]interface{}) (Config, error) {
 	var cfg Config
 

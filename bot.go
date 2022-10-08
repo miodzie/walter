@@ -67,5 +67,6 @@ func RunAll(createModsFor func(Bot) []Module) error {
 			errc <- RunBot(bot)
 		}(bot)
 	}
+
 	return <-errc
 }

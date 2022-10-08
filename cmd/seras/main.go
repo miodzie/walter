@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/miodzie/seras/connections/irc"
 	"github.com/miodzie/seras/log"
 	"github.com/miodzie/seras/mods"
 	"os"
@@ -14,7 +13,8 @@ import (
 	"syscall"
 
 	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/connections/discord"
+	_ "github.com/miodzie/seras/connections/discord"
+	_ "github.com/miodzie/seras/connections/irc"
 )
 
 func main() {
@@ -30,8 +30,6 @@ func run() error {
 		return err
 	}
 	interrupt(func() {})
-	_ = seras.AddBotParser("discord", &discord.BotParser{})
-	_ = seras.AddBotParser("irc", &irc.BotParser{})
 	err = seras.ParseBots(cfg)
 	if err != nil {
 		return err
@@ -43,6 +41,7 @@ func run() error {
 		if err != nil {
 			panic(err)
 		}
+
 		return m
 	})
 }

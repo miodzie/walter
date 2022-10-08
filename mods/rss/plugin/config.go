@@ -50,6 +50,10 @@ func (c *Config) CreateMod() (*RssMod, error) {
 	if !ok {
 		return nil, fmt.Errorf("unknown formatter: `%s`", c.Formatter)
 	}
+	ctx.Repository, ok = storages[c.Storage]
+	if !ok {
+		return nil, fmt.Errorf("unknown storage: `%s`", c.Storage)
+	}
 
 	return New(ctx), nil
 }

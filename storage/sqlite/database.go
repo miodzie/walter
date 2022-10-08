@@ -16,6 +16,12 @@ func Setup(path string) (*sql.DB, error) {
 		return nil, err
 	}
 
+	// Configure sqlite3 to be le dankest.
+	_, err = db.Exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;")
+	if err != nil {
+		return db, err
+	}
+
 	return db, migrate(db)
 }
 

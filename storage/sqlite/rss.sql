@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS feeds (
   name        VARCHAR(255) UNIQUE NOT NULL,
   url         VARCHAR(255) UNIQUE NOT NULL
-);
+) STRICT;
 
 CREATE TABLE IF NOT EXISTS feed_subscriptions (
   feed_id  INT NOT NULL,
@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS feed_subscriptions (
   seen VARCHAR(10000) NOT NULL DEFAULT '',
   UNIQUE(feed_id, channel, user),
   FOREIGN KEY(feed_id) REFERENCES feeds(id)
-);
+) STRICT;

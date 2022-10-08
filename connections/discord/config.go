@@ -12,6 +12,7 @@ type Config struct {
 	Admins []string
 	Mods   []string
 	Token  string
+	seras.ConnectionConfig
 }
 
 func init() {

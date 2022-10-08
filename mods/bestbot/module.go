@@ -1,6 +1,7 @@
 package bestbot
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/miodzie/seras"
@@ -39,6 +40,10 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 		if msg.IsCommand("lads") {
 			actions.Reply(msg, "     🎩")
 			actions.Reply(msg, "( ͡👁 ͜ʖ ͡👁)")
+		}
+		if msg.IsCommand("ladies") {
+			s := fmt.Sprintf("%s is a total babe magnet.", msg.Author.Nick)
+			actions.Reply(msg, s)
 		}
 	}
 	return nil

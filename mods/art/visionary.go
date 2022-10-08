@@ -48,21 +48,23 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 		msg := <-stream
 		if msg.IsCommand("gm") {
 			// Quick throttle impl
-			if time.Since(lastRun) < time.Second*3 {
+			if time.Since(lastRun) < time.Second*2 {
 				continue
 			}
 			lastRun = time.Now()
 			art := &Picture{Art: gm}
-			for _, artist := range mod.artists {
-				if art.Completed() {
-					break
-				}
-				for i := 0; i < MaxLines; i++ {
-					msg.Content = art.NextLine()
-					artist <- msg
-					time.Sleep(time.Millisecond * 100)
+			for !art.Completed() {
+				for _, artist := range mod.artists {
 					if art.Completed() {
 						break
+					}
+					for i := 0; i < MaxLines; i++ {
+						msg.Content = art.NextLine()
+						artist <- msg
+						time.Sleep(time.Millisecond * 100)
+						if art.Completed() {
+							break
+						}
 					}
 				}
 			}

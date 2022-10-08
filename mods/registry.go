@@ -3,22 +3,37 @@ package mods
 import (
 	"fmt"
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/mods/art"
+	"github.com/miodzie/seras/mods/bestbot"
+	"github.com/miodzie/seras/mods/dong"
+	"github.com/miodzie/seras/mods/logger"
+	"github.com/miodzie/seras/mods/logger/drivers"
+	rss_plugin "github.com/miodzie/seras/mods/rss/plugin"
+	sed "github.com/miodzie/seras/mods/sed/plugin"
 )
-
-type Factory interface {
-	Create(config interface{}) (seras.Module, error)
-}
 
 var factories map[string]Factory
 
+type Factory interface {
+	Create(config any) (seras.Module, error)
+}
+
 func init() {
+	factories = make(map[string]Factory)
+	Register("best_bot", &bestbot.ModFactory{})
+	Register("dong", &dong.ModFactory{})
+	Register("sed", &sed.ModFactory{})
+	Register("logger", &logger.ModFactory{DefaultLogger: drivers.NewMultiLogger(drivers.ConsoleLogger{})})
+	Register("rss", &rss_plugin.ModFactory{})
+	Register("visionary", &art.VisionaryFactory{})
+	Register("artist", &art.ArtistFactory{})
 }
 
 func Register(name string, factory Factory) {
 	factories[name] = factory
 }
 
-func Make(name string, config interface{}) (seras.Module, error) {
+func MakeFromConfig(name string, config interface{}) (seras.Module, error) {
 	f, ok := factories[name]
 	if !ok {
 		return nil, fmt.Errorf("unknown module: `%s`", name)

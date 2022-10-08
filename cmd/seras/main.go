@@ -37,7 +37,7 @@ func run() error {
 
 	return seras.RunAll(func(bot seras.Bot) []seras.Module {
 		//m := mods.Default(fmt.Sprintf("%s.sqlite", bot.Name()))
-		m, err := mods.Create(bot.ModList())
+		m, err := mods.CreateFromList(bot.ModList())
 		if err != nil {
 			panic(err)
 		}

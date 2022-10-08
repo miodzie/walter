@@ -14,6 +14,7 @@ type Config struct {
 	Channels     []string
 	Admins       []string
 	Mods         []string
+	ModConfig    map[string]any
 	SASL         bool
 	SASLUsername string
 	SASLPassword string
@@ -25,7 +26,7 @@ func init() {
 	}
 }
 
-func ParseConfig(val map[string]interface{}) (Config, error) {
+func ParseConfig(val map[string]any) (Config, error) {
 	var cfg Config
 
 	if val["type"] != "irc" {
@@ -60,7 +61,7 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	if !ok {
 		return cfg, errors.New("unable to parse server")
 	}
-	admins, ok := val["admins"].([]interface{})
+	admins, ok := val["admins"].([]any)
 	if !ok {
 		return cfg, errors.New("unable to parse admin")
 	}
@@ -68,13 +69,15 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 		cfg.Admins = append(cfg.Admins, a.(string))
 	}
 
-	mods, ok := val["mods"].([]interface{})
+	mods, ok := val["mods"].([]any)
 	if !ok {
 		return cfg, errors.New("unable to parse mods")
 	}
-	for _, a := range mods {
-		cfg.Mods = append(cfg.Mods, a.(string))
+	for _, m := range mods {
+		cfg.Mods = append(cfg.Mods, m.(string))
 	}
+
+	cfg.ModConfig, ok = val["modconfig"].(map[string]any)
 
 	return cfg, nil
 }
@@ -82,7 +85,7 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 type BotParser struct {
 }
 
-func (c *BotParser) Parse(val map[string]interface{}) (seras.Bot, error) {
+func (c *BotParser) Parse(val map[string]any) (seras.Bot, error) {
 	cfg, err := ParseConfig(val)
 	if err != nil {
 		return nil, err

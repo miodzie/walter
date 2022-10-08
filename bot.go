@@ -32,11 +32,11 @@ func ParseBots(cfg *Config) error {
 		}
 		var err error
 		Bots[name], err = parser.Parse(con)
-		// TODO: Refactor.
-		Bots[name].SetName(name)
 		if err != nil {
 			return err
 		}
+		// TODO: Refactor.
+		Bots[name].SetName(name)
 	}
 
 	return nil

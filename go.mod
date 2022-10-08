@@ -1,6 +1,6 @@
 module github.com/miodzie/seras
 
-go 1.17
+go 1.18
 
 require (
 	github.com/bwmarrin/discordgo v0.24.0
@@ -10,11 +10,11 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/miodzie/dong v0.1.0
 	github.com/mmcdole/gofeed v1.1.3
-	github.com/pelletier/go-toml/v2 v2.0.1
 	github.com/thoj/go-ircevent v0.0.0-20210723090443-73e444401d64
 )
 
 require (
+	github.com/BurntSushi/toml v1.2.0 // indirect
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -34,6 +34,7 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.11.1-0.20220212125758-44cd13922739 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
 	golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 // indirect

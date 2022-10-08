@@ -3,9 +3,10 @@ package seras
 import (
 	_ "embed"
 	"errors"
+	"fmt"
+	"github.com/BurntSushi/toml"
 	"os"
-
-	toml "github.com/pelletier/go-toml/v2"
+	"reflect"
 )
 
 var connectors map[string]BotParser
@@ -40,6 +41,32 @@ func ParseToml(file string) (*Config, error) {
 	if err != nil {
 		return &c, err
 	}
+	err = toml.Unmarshal(f, &c)
+	if err != nil {
+		return &c, err
+	}
 
-	return &c, toml.Unmarshal(f, &c)
+	return &c, nil
+}
+
+func SetField(obj interface{}, name string, value interface{}) error {
+	structValue := reflect.ValueOf(obj).Elem()
+	structFieldValue := structValue.FieldByName(name)
+
+	if !structFieldValue.IsValid() {
+		return fmt.Errorf("No such field: %s in obj", name)
+	}
+
+	if !structFieldValue.CanSet() {
+		return fmt.Errorf("Cannot set %s field value", name)
+	}
+
+	structFieldType := structFieldValue.Type()
+	val := reflect.ValueOf(value)
+	if structFieldType != val.Type() {
+		return errors.New("Provided value type didn't match obj field type")
+	}
+
+	structFieldValue.Set(val)
+	return nil
 }

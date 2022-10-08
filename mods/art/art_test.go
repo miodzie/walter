@@ -11,5 +11,5 @@ func TestArt_gm(t *testing.T) {
 	for !art.Completed() {
 		t.Log(art.NextLine())
 	}
-	t.Fail()
+	//t.Fail()
 }

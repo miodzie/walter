@@ -36,13 +36,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case tea.KeyRight, tea.KeyCtrlL, tea.KeyTab:
 			m.tabs.NextTab()
+			m.viewport.SetContent(m.tabs.ActiveContent())
 			return m, nil
 		case tea.KeyLeft, tea.KeyCtrlH, tea.KeyShiftTab:
 			m.tabs.PreviousTab()
+			m.viewport.SetContent(m.tabs.ActiveContent())
 			return m, nil
 		case tea.KeyEnter:
-			m.messages = append(m.messages, lipgloss.NewStyle().Foreground(lipgloss.Color("5")).Render("You: ")+m.textarea.Value())
-			m.viewport.SetContent(strings.Join(m.messages, "\n"))
+			m.messages = append(m.messages, m.textarea.Value())
 			m.textarea.Reset()
 			m.viewport.GotoBottom()
 		}
@@ -54,10 +55,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 var (
 	windowStyle = lipgloss.NewStyle().BorderForeground(highlightColor).
 			Padding(0, 0, 0, 1).
-		//Align(lipgloss.Left).
-		Border(lipgloss.NormalBorder()).UnsetBorderTop()
-	//docStyle    = lipgloss.NewStyle().Padding(1, 2, 1, 2)
-	docStyle = lipgloss.NewStyle()
+			Border(lipgloss.NormalBorder()).UnsetBorderTop()
+	docStyle = lipgloss.NewStyle().Padding(1, 2, 1, 2)
 )
 
 func (m model) View() string {
@@ -90,22 +89,9 @@ func main() {
 		{"IRC", "IRC sucks too"},
 	}
 	tabGroup := &TabGroup{tabs: tabs}
-	ta := textarea.New()
-	ta.Placeholder = "Send a message..."
-	ta.Focus()
-	ta.Prompt = "┃ "
-	ta.CharLimit = 280
-	ta.SetWidth(getTermWidth())
-	ta.SetHeight(1)
-	// Remove cursor line styling
-	ta.FocusedStyle.CursorLine = lipgloss.NewStyle()
-	ta.ShowLineNumbers = false
-	ta.KeyMap.InsertNewline.SetEnabled(false)
-
 	vp := viewport.New(100, 5)
-	vp.SetContent(`Welcome to the chat room!
-Type a message and press Enter to send.`)
-
+	vp.SetContent(tabGroup.ActiveContent())
+	ta := NewTextInput()
 	m := model{tabs: tabGroup, textarea: ta, viewport: vp}
 
 	p := tea.NewProgram(m)

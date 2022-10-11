@@ -1,6 +1,9 @@
 package main
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"github.com/charmbracelet/lipgloss"
+	"strings"
+)
 
 type Tab struct {
 	Title   string
@@ -33,7 +36,7 @@ func (tg *TabGroup) Render() string {
 
 	for i, t := range tg.tabs {
 		var style lipgloss.Style
-		isFirst, isLast, isActive := i == 0, i == len(tg.tabs)-1, i == tg.activeTab
+		isFirst, isActive := i == 0, i == tg.activeTab
 		if isActive {
 			style = activeTabStyle.Copy()
 		} else {
@@ -44,16 +47,16 @@ func (tg *TabGroup) Render() string {
 			border.BottomLeft = "│"
 		} else if isFirst && !isActive {
 			border.BottomLeft = "├"
-		} else if isLast && isActive {
-			border.BottomRight = "│"
-		} else if isLast && !isActive {
-			border.BottomRight = "┤"
 		}
 		style = style.Border(border)
 		renderedTabs = append(renderedTabs, style.Render(t.Title))
 	}
 
-	return lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
+	rendered := lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
+	gap := tabGap.Render(strings.Repeat(" ", max(0, getTermWidth()-lipgloss.Width(rendered)-1)))
+	gap += lipgloss.NewStyle().Foreground(highlightColor).Render("╮")
+
+	return lipgloss.JoinHorizontal(lipgloss.Bottom, rendered, gap)
 }
 
 // Styling
@@ -72,4 +75,8 @@ var (
 	highlightColor    = lipgloss.AdaptiveColor{Light: "#E53935", Dark: "#F07178"}
 	inactiveTabStyle  = lipgloss.NewStyle().Border(inactiveTabBorder, true).BorderForeground(highlightColor).Padding(0, 1)
 	activeTabStyle    = inactiveTabStyle.Copy().Border(activeTabBorder, true)
+	tabGap            = inactiveTabStyle.Copy().
+				BorderTop(false).
+				BorderLeft(false).
+				BorderRight(false)
 )

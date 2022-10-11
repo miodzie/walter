@@ -12,6 +12,10 @@ type TabGroup struct {
 	activeTab int
 }
 
+func (tg *TabGroup) ActiveContent() string {
+	return tg.ActiveTab().Content
+}
+
 func (tg *TabGroup) ActiveTab() *Tab {
 	return tg.tabs[tg.activeTab]
 }
@@ -51,3 +55,21 @@ func (tg *TabGroup) Render() string {
 
 	return lipgloss.JoinHorizontal(lipgloss.Top, renderedTabs...)
 }
+
+// Styling
+
+func tabBorderWithBottom(left, middle, right string) lipgloss.Border {
+	border := lipgloss.RoundedBorder()
+	border.BottomLeft = left
+	border.Bottom = middle
+	border.BottomRight = right
+	return border
+}
+
+var (
+	inactiveTabBorder = tabBorderWithBottom("┴", "─", "┴")
+	activeTabBorder   = tabBorderWithBottom("┘", " ", "└")
+	highlightColor    = lipgloss.AdaptiveColor{Light: "#E53935", Dark: "#F07178"}
+	inactiveTabStyle  = lipgloss.NewStyle().Border(inactiveTabBorder, true).BorderForeground(highlightColor).Padding(0, 1)
+	activeTabStyle    = inactiveTabStyle.Copy().Border(activeTabBorder, true)
+)

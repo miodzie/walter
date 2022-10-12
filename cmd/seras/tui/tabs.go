@@ -66,6 +66,7 @@ func tabBorderWithBottom(left, middle, right string) lipgloss.Border {
 	border.BottomLeft = left
 	border.Bottom = middle
 	border.BottomRight = right
+
 	return border
 }
 

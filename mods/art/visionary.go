@@ -1,7 +1,6 @@
 package art
 
 import (
-	"errors"
 	"github.com/miodzie/seras"
 	"time"
 )
@@ -22,12 +21,11 @@ type VisionaryFactory struct {
 }
 
 func (b *VisionaryFactory) Create(a interface{}) (seras.Module, error) {
-	if visionary != nil {
-		return nil, errors.New("there can only be one")
-	}
-	visionary = &Visionary{
-		artists: []chan seras.Message{},
-		running: false,
+	if visionary == nil {
+		visionary = &Visionary{
+			artists: []chan seras.Message{},
+			running: false,
+		}
 	}
 
 	return visionary, nil

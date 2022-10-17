@@ -2,21 +2,12 @@ package art
 
 import (
 	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
-	"time"
 )
 
 type ArtistFactory struct {
 }
 
 func (r *ArtistFactory) Create(a interface{}) (seras.Module, error) {
-	// We need a visionary to paint his vision!
-	// Wait until one is available.
-	for visionary == nil {
-		log.Warn("No visionary, " +
-			"waiting and trying again until they're created.")
-		time.Sleep(1 * time.Second)
-	}
 	sheep := &Artist{
 		instructions: newArtistPalette(),
 		running:      false,

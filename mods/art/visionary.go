@@ -2,6 +2,7 @@ package art
 
 import (
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/log"
 	"time"
 )
 
@@ -12,7 +13,17 @@ var lastRun time.Time
 
 func newArtistPalette() seras.Stream {
 	stream := make(chan seras.Message)
-	visionary.artists = append(visionary.artists, stream)
+
+	// We need a visionary to paint his vision!
+	// Wait until one is available, asynchronously!?!
+	go func() {
+		for visionary == nil {
+			log.Warn("No visionary, " +
+				"waiting and trying again until they're created.")
+			time.Sleep(1 * time.Second)
+		}
+		visionary.artists = append(visionary.artists, stream)
+	}()
 
 	return stream
 }

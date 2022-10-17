@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS messages
-(
-    channel VARCHAR(255)   NOT NULL,
-    user    VARCHAR(255)   NOT NULL,
-    content VARCHAR(255)   NOT NULL,
-    raw     VARCHAR(10000) NOT NULL,
-    created VARCHAR(30)    NOT NULL
-) STRICT;
+-- CREATE TABLE IF NOT EXISTS messages
+-- (
+--     channel TEXT   NOT NULL,
+--     user    TEXT   NOT NULL,
+--     content TEXT   NOT NULL,
+--     raw     TEXT NOT NULL,
+--     created TEXT    NOT NULL
+-- ) STRICT;

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/miodzie/seras/log"
 	"github.com/miodzie/seras/mods"
+	"github.com/miodzie/seras/storage"
 	"os"
 	"os/signal"
 	"runtime"
@@ -65,6 +66,12 @@ Please update the config located at: %s And restart.`, file)
 	if err != nil {
 		return cfg, err
 	}
+
+	err = storage.InitFromConfig(file)
+	if err != nil {
+		return nil, err
+	}
+
 	return cfg, nil
 }
 

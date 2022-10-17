@@ -16,13 +16,13 @@ var DefaultConfig string
 
 type Config struct {
 	Mods    []string
-	Bots    map[string]map[string]interface{}
+	Bots    map[string]map[string]any
 	Storage map[string]map[string]string
 }
 
 // BotParser intakes a map of config settings for a particular bot type.
 type BotParser interface {
-	Parse(map[string]interface{}) (Bot, error)
+	Parse(map[string]any) (Bot, error)
 }
 
 func AddBotParser(name string, parser BotParser) error {

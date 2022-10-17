@@ -3,6 +3,8 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"github.com/BurntSushi/toml"
+	"github.com/miodzie/seras/storage/sqlite"
 )
 
 var storages map[string]*sql.DB
@@ -11,8 +13,32 @@ type Repository interface {
 	setDB(db *sql.DB)
 }
 
-func InitFromConfig() {
+type Config struct {
+	Storage map[string]Storage
+}
 
+type Storage struct {
+	Type string
+	File string
+}
+
+func InitFromConfig(path string) error {
+	storages = make(map[string]*sql.DB)
+	var config Config
+	_, err := toml.DecodeFile(path, &config)
+
+	for name, strg := range config.Storage {
+		// Factories are dumb, just switch it.
+		if strg.Type == "sqlite" {
+			db, err := sqlite.Setup(strg.File)
+			if err != nil {
+				return err
+			}
+			Register(name, db)
+		}
+	}
+
+	return err
 }
 
 func Register(name string, db *sql.DB) {

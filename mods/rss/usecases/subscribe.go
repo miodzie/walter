@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"fmt"
-
 	"github.com/miodzie/seras/mods/rss"
 )
 

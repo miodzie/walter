@@ -16,7 +16,7 @@ func NewRssRepository(db *sql.DB) *RssRepository {
 }
 
 func (r *RssRepository) Feeds() ([]*rss.Feed, error) {
-	rows, err := r.db.Query("SELECT rowid, * FROM feeds")
+	rows, err := r.db.Query("SELECT * FROM feeds")
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (r *RssRepository) AddFeed(feed *rss.Feed) error {
 
 func (r *RssRepository) FeedByName(name string) (*rss.Feed, error) {
 	var feed rss.Feed
-	row := r.db.QueryRow("SELECT rowid, * FROM feeds WHERE name = ?", name)
+	row := r.db.QueryRow("SELECT * FROM feeds WHERE name = ?", name)
 	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 		if err == sql.ErrNoRows {
 			return &feed, fmt.Errorf("unable to locate feed with name: %s", name)
@@ -81,7 +81,9 @@ func (r *RssRepository) AddSub(sub *rss.Subscription) error {
 }
 
 func (r *RssRepository) UpdateSub(sub *rss.Subscription) error {
-	q := "UPDATE feed_subscriptions SET feed_id = ?, channel = ?, user = ?, keywords = ?, seen = ? WHERE rowid = ?"
+	q := `UPDATE feed_subscriptions 
+	      SET feed_id = ?, channel = ?, user = ?, keywords = ?, 
+	      seen = ? WHERE id = ?`
 	_, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen, sub.Id)
 	if err != nil {
 		return fmt.Errorf("SubscriptionRepository.Update: %v", err)
@@ -91,14 +93,16 @@ func (r *RssRepository) UpdateSub(sub *rss.Subscription) error {
 }
 
 func (r *RssRepository) RemoveSub(subscription *rss.Subscription) error {
-	_, err := r.db.Exec("DELETE FROM feed_subscriptions WHERE rowid = ?", subscription.Id)
+	_, err := r.db.Exec(
+		"DELETE FROM feed_subscriptions WHERE id = ?",
+		subscription.Id)
 	return err
 }
 
 func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, error) {
 	var subs []*rss.Subscription
 	var args []interface{}
-	query := "SELECT rowid, * from feed_subscriptions WHERE 1 = 1"
+	query := "SELECT * from feed_subscriptions WHERE 1 = 1"
 	if search.User != "" {
 		query += " AND user = ?"
 		args = append(args, search.User)

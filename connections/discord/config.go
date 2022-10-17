@@ -22,6 +22,8 @@ func init() {
 	}
 }
 
+// ParseConfig
+// TODO: I seriously need like an internal lib to map this automatically.
 func ParseConfig(val map[string]interface{}) (Config, error) {
 	var cfg Config
 
@@ -48,6 +50,8 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	for _, a := range mods {
 		cfg.Mods = append(cfg.Mods, a.(string))
 	}
+
+	cfg.ModConfig, ok = val["modconfig"].(map[string]any)
 
 	return cfg, nil
 }

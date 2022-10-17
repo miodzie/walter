@@ -15,8 +15,9 @@ var connectors map[string]BotParser
 var DefaultConfig string
 
 type Config struct {
-	Mods []string
-	Bots map[string]map[string]interface{}
+	Mods    []string
+	Bots    map[string]map[string]interface{}
+	Storage map[string]map[string]string
 }
 
 // BotParser intakes a map of config settings for a particular bot type.

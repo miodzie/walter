@@ -1,8 +1,8 @@
 package art
 
 import (
-	"errors"
 	"github.com/miodzie/seras"
+	"github.com/miodzie/seras/log"
 	"time"
 )
 
@@ -13,7 +13,17 @@ var lastRun time.Time
 
 func newArtistPalette() seras.Stream {
 	stream := make(chan seras.Message)
-	visionary.artists = append(visionary.artists, stream)
+
+	// We need a visionary to paint his vision!
+	// Wait until one is available, asynchronously!?!
+	go func() {
+		for visionary == nil {
+			log.Warn("No visionary, " +
+				"waiting and trying again until they're created.")
+			time.Sleep(1 * time.Second)
+		}
+		visionary.artists = append(visionary.artists, stream)
+	}()
 
 	return stream
 }
@@ -22,12 +32,11 @@ type VisionaryFactory struct {
 }
 
 func (b *VisionaryFactory) Create(a interface{}) (seras.Module, error) {
-	if visionary != nil {
-		return nil, errors.New("there can only be one")
-	}
-	visionary = &Visionary{
-		artists: []chan seras.Message{},
-		running: false,
+	if visionary == nil {
+		visionary = &Visionary{
+			artists: []chan seras.Message{},
+			running: false,
+		}
 	}
 
 	return visionary, nil
@@ -46,31 +55,32 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
-		if msg.IsCommand("gm") {
-			// Quick throttle impl
-			if time.Since(lastRun) < time.Second*2 {
-				continue
-			}
-			lastRun = time.Now()
-			art := &Picture{Art: gm}
-			for !art.Completed() {
-				for _, artist := range mod.artists {
-					if art.Completed() {
-						break
-					}
-					for i := 0; i < MaxLines; i++ {
-						msg.Content = art.NextLine()
-						artist <- msg
-						time.Sleep(time.Millisecond * 100)
-						if art.Completed() {
-							break
-						}
-					}
-				}
-			}
-		}
+		// !gm
+		msg.Command("gm", mod.gmCommand)
 	}
 	return nil
+}
+
+func (mod *Visionary) gmCommand(msg seras.Message) {
+	// Quick throttle impl
+	if time.Since(lastRun) < time.Second*2 {
+		return
+	}
+	lastRun = time.Now()
+	art := &Picture{Art: gm}
+	for !art.Completed() {
+		for _, artist := range mod.artists {
+			draw(msg, art, artist)
+		}
+	}
+}
+
+func draw(msg seras.Message, art *Picture, artist chan seras.Message) {
+	for i := 0; i < MaxLines || art.Completed(); i++ {
+		msg.Content = art.NextLine()
+		artist <- msg
+		time.Sleep(time.Millisecond * 100)
+	}
 }
 
 func (mod *Visionary) Stop() {

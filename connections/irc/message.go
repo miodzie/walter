@@ -39,6 +39,7 @@ func isPM(msg seras.Message) bool {
 }
 
 // seras.MessageFormatter
+
 func (con *Connection) Bold(msg string) string {
 	return msg
 }

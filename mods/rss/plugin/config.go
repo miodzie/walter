@@ -7,13 +7,14 @@ import (
 	"github.com/miodzie/seras/mods/rss"
 	"github.com/miodzie/seras/mods/rss/parsers/decorators"
 	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
+	"github.com/miodzie/seras/storage"
 	"github.com/miodzie/seras/storage/sqlite"
 	"strings"
 )
 
 var parsers map[string]rss.Parser
 var formatters map[string]rss.Formatter
-var storages map[string]rss.Repository
+var storages map[string]func(database string) (rss.Repository, error)
 
 func init() {
 	parsers = make(map[string]rss.Parser)
@@ -23,9 +24,17 @@ func init() {
 	formatters["default"] = rss.DefaultFormatter{}
 	formatters["minimal"] = rss.MinimalFormatter{}
 
-	storages = make(map[string]rss.Repository)
-	storages["memory"] = rss.NewInMemRepo()
-	storages["sqlite"] = &sqlite.RssRepository{}
+	storages = make(map[string]func(database string) (rss.Repository, error))
+	storages["memory"] = func(database string) (rss.Repository, error) {
+		return rss.NewInMemRepo(), nil
+	}
+	storages["sqlite"] = func(database string) (rss.Repository, error) {
+		db, err := storage.Get(database)
+		if err != nil {
+			return nil, err
+		}
+		return sqlite.NewRssRepository(db), nil
+	}
 }
 
 type Config struct {
@@ -33,7 +42,7 @@ type Config struct {
 	Striphtml bool
 	Formatter string
 	Storage   string
-	Filepath  string
+	Database  string
 }
 
 func (c *Config) CreateMod() (*RssMod, error) {
@@ -50,9 +59,14 @@ func (c *Config) CreateMod() (*RssMod, error) {
 	if !ok {
 		return nil, fmt.Errorf("unknown formatter: `%s`", c.Formatter)
 	}
-	ctx.Repository, ok = storages[c.Storage]
+	createRepository, ok := storages[c.Storage]
 	if !ok {
 		return nil, fmt.Errorf("unknown storage: `%s`", c.Storage)
+	}
+	var err error
+	ctx.Repository, err = createRepository(c.Database)
+	if err != nil {
+		return nil, err
 	}
 
 	return New(ctx), nil

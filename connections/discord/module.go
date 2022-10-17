@@ -1,4 +1,4 @@
-package irc
+package discord
 
 import "github.com/miodzie/seras"
 

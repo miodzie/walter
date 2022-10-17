@@ -1,14 +1,9 @@
 package discord
 
 import (
-	"fmt"
-	"github.com/miodzie/seras/log"
-	"strings"
-	"sync"
-	"time"
-
 	"github.com/bwmarrin/discordgo"
 	"github.com/miodzie/seras"
+	"sync"
 )
 
 type Connection struct {
@@ -57,72 +52,4 @@ func (con *Connection) Close() error {
 	close(con.stream)
 
 	return con.session.Close()
-}
-
-func (con *Connection) Mods() []seras.Module {
-	return con.mods
-}
-
-func (con *Connection) AddMods(mods []seras.Module) {
-	con.mods = append(con.mods, mods...)
-}
-
-func (con *Connection) ModList() map[string]interface{} {
-	mods := make(map[string]interface{})
-	for _, m := range con.config.Mods {
-		mods[m] = struct{}{}
-	}
-
-	return mods
-}
-
-func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.MessageCreate) {
-	if e.Author.Bot {
-		return
-	}
-	msg := seras.Message{
-		Content:   e.Content,
-		Target:    e.ChannelID,
-		Arguments: strings.Split(e.Content, " "),
-		Author: seras.Author{
-			Id:      e.Author.ID,
-			Nick:    e.Author.Username,
-			Mention: "<@" + e.Author.ID + ">",
-		},
-		ConnectionName: con.Name(),
-		Raw:            e.Content,
-		Timestamp:      e.Timestamp,
-	}
-	con.stream <- msg
-}
-
-func (con *Connection) Send(msg seras.Message) error {
-	_, err := con.session.ChannelMessageSend(msg.Target, msg.Content)
-	log.Debugf("[%s]: %+v\n", con.Name(), msg)
-	return err
-}
-
-func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Target: msg.Target}
-	return con.Send(reply)
-}
-func (con *Connection) IsAdmin(userId string) bool {
-	for _, a := range con.config.Admins {
-		if a == userId {
-			return true
-		}
-	}
-	return false
-}
-
-func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
-	return con.session.GuildMemberTimeout(channel, user, &until)
-}
-
-func (r *Connection) Bold(str string) string {
-	return fmt.Sprintf("**%s**", str)
-}
-
-func (r *Connection) Italicize(str string) string {
-	return fmt.Sprintf("**%s**", str)
 }

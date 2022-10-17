@@ -2,7 +2,6 @@ package irc
 
 import (
 	"crypto/tls"
-	"errors"
 	"github.com/miodzie/seras/connections/irc/plugin"
 	"strings"
 	"time"
@@ -34,7 +33,7 @@ func New(conf Config) (*Connection, error) {
 	ircCon.UseTLS = true
 	ircCon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	ircCon.UseSASL = conf.SASL
-	// TODO: Update to use internal logger or NilLogger
+	// TODO: Update to use internal logger or NilledLogger
 	//ircCon.Log = nil
 	ircCon.SASLLogin = conf.SASLUsername
 	ircCon.SASLPassword = conf.SASLPassword
@@ -93,17 +92,4 @@ func (con *Connection) Close() error {
 	con.irc.ClearCallback("*")
 
 	return nil
-}
-
-func (con *Connection) IsAdmin(userId string) bool {
-	for _, a := range con.config.Admins {
-		if a == userId {
-			return true
-		}
-	}
-	return false
-}
-
-func (con *Connection) TimeoutUser(channel string, user string, until time.Time) error {
-	return errors.New("not implemented")
 }

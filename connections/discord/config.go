@@ -9,9 +9,10 @@ import (
 var ErrIncorrectType = errors.New("config is not of type: 'discord'")
 
 type Config struct {
-	Admins []string
-	Mods   []string
-	Token  string
+	Admins    []string
+	Token     string
+	Mods      []string
+	ModConfig map[string]any
 	seras.ConnectionConfig
 }
 

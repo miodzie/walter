@@ -1,21 +1,35 @@
-# Mods to load on all Bots.
-mods = ["best_bot", "rss", "policing"]
-
 [bots]
-  [bots.libera]
-  type = "irc"
-  admins = ["nick@user/nick"]
-  server = "irc.libera.chat:6667"
-  nick = "Guest1"
+ [bots.libera]
+ type = "irc"
+ server = "irc.libera.chat:6697"
+ nick = "irc_bot_2"
+ username = "thecoolest"
+ modconfig = { logger={}, sed={} }
+ admins = ["user/mycloakorhostname"]
+ sasl = true
+ sasl_username = "sasl_username"
+ sasl_password = "hunter2"
+ modconfig.rss = { parser="gofeed", striphtml=true,formatter="minimal",storage="sqlite", database="libera" }
 
-  [bots.discord]
-  type = "discord"
-  admins = ["1234"]
-  mods = ["meme_police"]
-  token = "$DISCORD_TOKEN"
-  storage = "discord"
+[bots.discord]
+type = "discord"
+admins = ["12356", "7890"]
+modconfig = { logger={}, best_bot={}, sed={}, dong={} } # modconfig is what actually enables them
+token = "your super secret discord app token"
+storage = "discord"
+# a normal table instead of an inline if you want.
+[bots.discord.modconfig.rss]
+parser = "gofeed"
+striphtml = true
+formatter = "default"
+storage = "sqlite"
+database = "discord"
 
-[storage]
-  [storage.discord]
-  type = "sqlite"
-  file = "discord.sqlite"
+[Storage]
+[storage.discord]
+type = "sqlite"
+file = "storage/discord.db"
+
+[storage.libera]
+type = "sqlite"
+file = "storage/libera.db"

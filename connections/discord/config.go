@@ -9,11 +9,8 @@ import (
 var ErrIncorrectType = errors.New("config is not of type: 'discord'")
 
 type Config struct {
-	Admins    []string
-	Token     string
-	Mods      []string
-	ModConfig map[string]any
-	seras.ConnectionConfig
+	Token string
+	seras.BaseConnection
 }
 
 func init() {
@@ -43,15 +40,8 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 	for _, a := range admins {
 		cfg.Admins = append(cfg.Admins, a.(string))
 	}
-	mods, ok := val["mods"].([]interface{})
-	if !ok {
-		return cfg, errors.New("unable to parse mods")
-	}
-	for _, a := range mods {
-		cfg.Mods = append(cfg.Mods, a.(string))
-	}
 
-	cfg.ModConfig, ok = val["modconfig"].(map[string]any)
+	cfg.Mods, ok = val["mods"].(map[string]any)
 
 	return cfg, nil
 }

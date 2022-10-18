@@ -9,22 +9,13 @@ import (
 type Connection struct {
 	session *discordgo.Session
 	stream  chan seras.Message
-	config  *Config
 	mods    []seras.Module
+	Config
 	sync.Mutex
-	name string
-}
-
-func (con *Connection) Name() string {
-	return con.name
-}
-
-func (con *Connection) SetName(s string) {
-	con.name = s
 }
 
 func New(config Config) (*Connection, error) {
-	disc := &Connection{config: &config}
+	disc := &Connection{Config: config}
 	session, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
 		return disc, err

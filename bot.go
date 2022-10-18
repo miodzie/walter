@@ -15,7 +15,7 @@ type Bot interface {
 }
 
 type Modable interface {
-	Mods() []Module
+	Modules() []Module
 	AddMods([]Module)
 	// ModList [name]config
 	ModList() map[string]interface{}
@@ -46,11 +46,11 @@ func RunBot(bot Bot) error {
 	stream, _ := bot.Connect()
 
 	var modList []string
-	for _, mod := range bot.Mods() {
+	for _, mod := range bot.Modules() {
 		modList = append(modList, mod.Name())
 	}
 	log.Infof("[%s] Modules: %s\n", bot.Name(), strings.Join(modList, ", "))
-	manager, err := NewModManager(bot.Mods(), bot)
+	manager, err := NewModManager(bot.Modules(), bot)
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,7 @@ package discord
 import "time"
 
 func (con *Connection) IsAdmin(userId string) bool {
-	for _, a := range con.config.Admins {
+	for _, a := range con.Admins {
 		if a == userId {
 			return true
 		}

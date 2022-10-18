@@ -12,20 +12,10 @@ import (
 )
 
 type Connection struct {
-	irc    *irc.Connection
-	config *Config
-	mods   []seras.Module
+	irc  *irc.Connection
+	mods []seras.Module
+	Config
 	sync.Mutex
-	// TODO: Remove me.
-	name string
-}
-
-func (con *Connection) Name() string {
-	return con.name
-}
-
-func (con *Connection) SetName(s string) {
-	con.name = s
 }
 
 func New(conf Config) (*Connection, error) {
@@ -39,7 +29,7 @@ func New(conf Config) (*Connection, error) {
 	ircCon.SASLPassword = conf.SASLPassword
 	con := &Connection{
 		irc:    ircCon,
-		config: &conf,
+		Config: conf,
 		mods:   []seras.Module{plugin.New(ircCon)},
 	}
 
@@ -49,7 +39,7 @@ func New(conf Config) (*Connection, error) {
 func (con *Connection) Connect() (seras.Stream, error) {
 	con.Lock()
 	defer con.Unlock()
-	err := con.irc.Connect(con.config.Server)
+	err := con.irc.Connect(con.Server)
 	if err != nil {
 		return nil, err
 	}

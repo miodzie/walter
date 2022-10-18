@@ -6,7 +6,7 @@ import (
 
 // seras.Modable
 
-func (con *Connection) Mods() []seras.Module {
+func (con *Connection) Modules() []seras.Module {
 	return con.mods
 }
 func (con *Connection) AddMods(mods []seras.Module) {
@@ -14,5 +14,5 @@ func (con *Connection) AddMods(mods []seras.Module) {
 }
 
 func (con *Connection) ModList() map[string]interface{} {
-	return con.config.ModConfig
+	return con.Mods
 }

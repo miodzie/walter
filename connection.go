@@ -14,19 +14,19 @@ type Connection interface {
 	Close() error
 }
 
-// ConnectionConfig is a base template for Connections to use.
-type ConnectionConfig struct {
+// BaseConnection is a base template for Connections to use.
+type BaseConnection struct {
 	NAME   string `toml:"name"`
 	Type   string
 	Admins []string
 	Mods   map[string]any
 }
 
-func (c *ConnectionConfig) Name() string {
+func (c *BaseConnection) Name() string {
 	return c.NAME
 }
 
-func (c *ConnectionConfig) SetName(name string) {
+func (c *BaseConnection) SetName(name string) {
 	c.NAME = name
 }
 

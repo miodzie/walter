@@ -12,12 +12,10 @@ type Config struct {
 	Nick         string
 	Username     string
 	Channels     []string
-	Admins       []string
-	Mods         []string
-	ModConfig    map[string]any
 	SASL         bool
 	SASLUsername string
 	SASLPassword string
+	seras.BaseConnection
 }
 
 func init() {
@@ -69,15 +67,7 @@ func ParseConfig(val map[string]any) (Config, error) {
 		cfg.Admins = append(cfg.Admins, a.(string))
 	}
 
-	mods, ok := val["mods"].([]any)
-	if !ok {
-		return cfg, errors.New("unable to parse mods")
-	}
-	for _, m := range mods {
-		cfg.Mods = append(cfg.Mods, m.(string))
-	}
-
-	cfg.ModConfig, ok = val["modconfig"].(map[string]any)
+	cfg.Mods, ok = val["mods"].(map[string]any)
 
 	return cfg, nil
 }

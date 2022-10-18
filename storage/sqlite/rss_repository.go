@@ -66,8 +66,9 @@ func (r *RssRepository) FeedByName(name string) (*rss.Feed, error) {
 
 func (r *RssRepository) AddSub(sub *rss.Subscription) error {
 	// TODO: Check for duplicate for better error response.
-	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords, seen) VALUES(?,?,?,?,?)"
-	result, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen)
+	q := "INSERT INTO feed_subscriptions (feed_id, channel, user, keywords, ignore, seen) VALUES(?,?,?,?,?,?)"
+	result, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User,
+		sub.Keywords, sub.Ignore, sub.Seen)
 	if err != nil {
 		return fmt.Errorf("SubscriptionRepository.add: %v", err)
 	}
@@ -83,8 +84,9 @@ func (r *RssRepository) AddSub(sub *rss.Subscription) error {
 func (r *RssRepository) UpdateSub(sub *rss.Subscription) error {
 	q := `UPDATE feed_subscriptions 
 	      SET feed_id = ?, channel = ?, user = ?, keywords = ?, 
-	      seen = ? WHERE id = ?`
-	_, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User, sub.Keywords, sub.Seen, sub.Id)
+		ignore = ?, seen = ? WHERE id = ?`
+	_, err := r.db.Exec(q, sub.FeedId, sub.Channel, sub.User,
+		sub.Keywords, sub.Ignore, sub.Seen, sub.Id)
 	if err != nil {
 		return fmt.Errorf("SubscriptionRepository.Update: %v", err)
 	}
@@ -145,7 +147,8 @@ func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, erro
 
 func (r *RssRepository) scanSub(rows *sql.Rows) (*rss.Subscription, error) {
 	var sub rss.Subscription
-	err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User, &sub.Keywords, &sub.Seen)
+	err := rows.Scan(&sub.Id, &sub.FeedId, &sub.Channel, &sub.User,
+		&sub.Keywords, &sub.Ignore, &sub.Seen)
 	if err != nil {
 		return nil, err
 	}

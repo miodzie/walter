@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS feed_subscriptions
     channel  TEXT NOT NULL,
     user     TEXT NOT NULL,
     keywords TEXT NOT NULL,
+    ignore   TEXT NOT NULL DEFAULT '',
     seen     TEXT NOT NULL DEFAULT '',
     UNIQUE (feed_id, channel, user),
     FOREIGN KEY (feed_id) REFERENCES feeds (id)

@@ -11,7 +11,7 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
 
-	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id}
+	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id, Ignore: "dub"}
 	processor.repository.AddSub(alice)
 	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
 	processor.repository.AddSub(james)

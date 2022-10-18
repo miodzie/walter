@@ -15,6 +15,7 @@ type Subscription struct {
 	FeedId    uint64
 	User      string
 	Keywords  string
+	Ignore    string
 	Channel   string
 	Feed      *Feed
 	Seen      string          // Item.GUID comma separated
@@ -40,8 +41,12 @@ func (s *Subscription) HasSeen(item Item) bool {
 	return seen
 }
 
-func (sub *Subscription) KeywordsSlice() []string {
-	return strings.Split(sub.Keywords, ",")
+func (s *Subscription) KeywordsSlice() []string {
+	return strings.Split(s.Keywords, ",")
+}
+
+func (s *Subscription) IgnoreSlice() []string {
+	return strings.Split(s.Ignore, ",")
 }
 
 func (s *Subscription) makeSeenMap() {

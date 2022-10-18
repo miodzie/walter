@@ -66,9 +66,9 @@ func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 	processor.repository.AddFeed(feed)
 	processor.repository.AddSub(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})
 
-	notifs, _ := processor.Process()
+	notes, _ := processor.Process()
 
-	if len(notifs) != 0 {
+	if len(notes) != 0 {
 		t.Fail()
 	}
 }
@@ -114,6 +114,24 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 	if len(results) != 3 {
 		t.Logf("len(results)=%d, expected 3", len(results))
 		t.Error("limiter should have only allowed 3 notifications")
+	}
+}
+
+func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_words(t *testing.T) {
+	p := &ParsedFeed{Items: []*Item{{Title: "foo bar", GUID: "1"}}}
+	processor := NewProcessor(NewInMemRepo(), &NullParser{Parsed: p})
+	feed := &Feed{Id: 1}
+	processor.repository.AddFeed(feed)
+	processor.repository.AddSub(&Subscription{
+		User: "james", Channel: "#chat",
+		Keywords: "foo",
+		Ignore:   "bar",
+		FeedId:   feed.Id})
+
+	notes, _ := processor.Process()
+
+	if len(notes) != 0 {
+		t.Error("notifications should be empty")
 	}
 }
 

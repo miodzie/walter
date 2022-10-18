@@ -69,11 +69,18 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 	}
 	// TODO: validate & parse?
 	keywords := strings.Join(msg.Arguments[2:], " ")
+	var ignore string
+	if strings.Contains(keywords, "ignore:") {
+		split := strings.Split(keywords, "ignore:")
+		keywords = split[0]
+		ignore = split[1]
+	}
 	req := usecases.SubscribeRequest{
-		FeedName: msg.Arguments[1],
-		Keywords: keywords,
-		Channel:  msg.Target,
-		User:     msg.Author.Mention,
+		FeedName:    msg.Arguments[1],
+		Keywords:    keywords,
+		Channel:     msg.Target,
+		User:        msg.Author.Mention,
+		IgnoreWords: ignore,
 	}
 	var subscribe = usecases.NewSubscribe(mod.Repository)
 	resp, err := subscribe.Subscribe(req)

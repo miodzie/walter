@@ -14,10 +14,11 @@ func NewSubscribe(repo rss.Repository) *Subscribe {
 }
 
 type SubscribeRequest struct {
-	FeedName string
-	Channel  string
-	Keywords string
-	User     string
+	FeedName    string
+	Channel     string
+	Keywords    string
+	User        string
+	IgnoreWords string
 }
 
 type SubscribeResponse struct {
@@ -38,12 +39,17 @@ func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 		Channel:  req.Channel,
 		Keywords: req.Keywords,
 		User:     req.User,
+		Ignore:   req.IgnoreWords,
 	}
 	if err = s.repository.AddSub(sub); err != nil {
 		return SubscribeResponse{Message: "Failed to subscribe."}, err
 	}
 
+	reply := fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
+	if sub.Ignore != "" {
+		reply += fmt.Sprintf(". ignore: %s", sub.Ignore)
+	}
 	return SubscribeResponse{
-		Message: fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords),
+		Message: reply,
 	}, nil
 }

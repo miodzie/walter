@@ -20,53 +20,65 @@ func NewProcessor(repo Repository, parser Parser) *Processor {
 }
 
 func (p *Processor) Process() ([]*Notification, error) {
-	var newNotifications []*Notification
+	var notifications []*Notification
 	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
 		log.Debug("feed: " + feed.Name)
 		parsedFeed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
-			return newNotifications, err
+			return notifications, err
 		}
 
 		subs, err := p.repository.Subs(SubSearchOpt{FeedId: feed.Id})
 		if err != nil {
-			return newNotifications, err
+			return notifications, err
 		}
 
 		cache := newCache()
 		for _, subscription := range subs {
-			for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
-				if subscription.HasSeen(*item) {
-					continue
-				}
-				key := cache.makeKey(item, subscription)
-				if cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
-					// Save it for next time, bucko.
-					continue
-				}
-				notification := cache.GetNotification(key)
-				if !cache.HasNotification(key) {
-					notification = &Notification{
-						Channel: subscription.Channel,
-						Feed:    *feed,
-						Item:    *item,
-					}
-					newNotifications = append(newNotifications, notification)
-					cache.PutNotification(key, notification)
-				}
-
-				notification.Users = append(notification.Users, subscription.User)
-				subscription.See(*item)
-			}
-			err := p.repository.UpdateSub(subscription)
-			if err != nil {
-				log.Error(err)
-			}
+			newNotes := p.processSub(parsedFeed, subscription, cache, feed)
+			notifications = append(notifications, newNotes...)
 		}
 	}
 
-	return newNotifications, nil
+	return notifications, nil
+}
+
+func (p *Processor) processSub(parsedFeed *ParsedFeed, subscription *Subscription, cache *cache, feed *Feed) []*Notification {
+	var notifications []*Notification
+	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
+		if cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
+			// Save it for next time, bucko.
+			continue
+		}
+		if subscription.HasSeen(*item) {
+			continue
+		}
+		if subscription.Ignore != "" &&
+			item.HasKeywords(subscription.IgnoreSlice()) {
+			continue
+		}
+		key := cache.makeKey(item, subscription)
+		notification := cache.GetNotification(key)
+		if !cache.HasNotification(key) {
+			notification = &Notification{
+				Channel: subscription.Channel,
+				Feed:    *feed,
+				Item:    *item,
+			}
+			notifications = append(notifications, notification)
+			cache.PutNotification(key, notification)
+		}
+
+		notification.Users = append(notification.Users, subscription.User)
+		subscription.See(*item)
+	}
+	err := p.repository.UpdateSub(subscription)
+	if err != nil {
+		log.Error(err)
+	}
+
+	return notifications
 }
 
 func newCache() *cache {

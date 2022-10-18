@@ -34,6 +34,41 @@ func TestSubscribe_Subscribe(t *testing.T) {
 	}
 }
 
+func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
+	repository := rss.NewInMemRepo()
+	useCase := NewSubscribe(repository)
+	feed := &rss.Feed{Id: 1, Name: "news"}
+	repository.AddFeed(feed)
+	request := SubscribeRequest{
+		FeedName:    "news",
+		Channel:     "#news",
+		Keywords:    "fire",
+		User:        "adam",
+		IgnoreWords: "potato,salad",
+	}
+
+	// Act
+	response, err := useCase.Subscribe(request)
+
+	// Assert
+	if err != nil {
+		t.Error(err)
+	}
+	if response.Message != "Subscribed to news with keywords: fire. "+
+		"ignore: potato,salad" {
+		t.Fail()
+	}
+	subs, _ := repository.Subs(rss.SubSearchOpt{User: "adam"})
+	if len(subs) != 1 {
+		t.Fail()
+	}
+	sub := subs[0]
+	if sub.Ignore != request.IgnoreWords {
+		t.Fail()
+	}
+
+}
+
 func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	useCase := NewSubscribe(repository)

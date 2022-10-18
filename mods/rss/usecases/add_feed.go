@@ -19,7 +19,7 @@ type AddFeedResponse struct {
 	Message string
 }
 
-func (a *AddFeed) AddFeed(req AddFeedRequest) (AddFeedResponse, error) {
+func (a *AddFeed) Exec(req AddFeedRequest) (AddFeedResponse, error) {
 	var resp AddFeedResponse
 
 	var feed rss.Feed

@@ -21,11 +21,11 @@ func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
 	if err := repository.AddSub(&subscription); err != nil {
 		t.Error(err)
 	}
-	useCase := NewUnsubscribe(repository)
+	unsub := NewUnsubscribe(repository)
 	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
 
 	// Act
-	response, err := useCase.Unsubscribe(request)
+	response, err := unsub.Exec(request)
 
 	// Assert
 	if err != nil {
@@ -48,10 +48,10 @@ func TestNewUnsubscribeUseCase_Unsubscribe_failed_to_find_sub(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	expectedErr := errors.New("expected")
 	repository.ForceError(expectedErr, 0)
-	useCase := NewUnsubscribe(repository)
+	unsub := NewUnsubscribe(repository)
 
 	// Act
-	resp, err := useCase.Unsubscribe(UnsubscribeRequest{})
+	resp, err := unsub.Exec(UnsubscribeRequest{})
 
 	// Assert
 	if err != expectedErr {
@@ -79,11 +79,11 @@ func TestNewUnsubscribeUseCase_Unsubscribe_failed_unsub(t *testing.T) {
 
 	expectedErr := errors.New("expected")
 	repository.ForceError(expectedErr, 1)
-	useCase := NewUnsubscribe(repository)
+	unsub := NewUnsubscribe(repository)
 	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
 
 	// Act
-	resp, err := useCase.Unsubscribe(request)
+	resp, err := unsub.Exec(request)
 
 	// Assert
 	if err != expectedErr {

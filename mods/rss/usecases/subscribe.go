@@ -25,8 +25,8 @@ type SubscribeResponse struct {
 	Message string
 }
 
-// Subscribe subscribes a user to a Feed.
-func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
+// Exec Subscribes a user to a Feed.
+func (s *Subscribe) Exec(req SubscribeRequest) (SubscribeResponse, error) {
 	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {
 		return SubscribeResponse{

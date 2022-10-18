@@ -8,10 +8,10 @@ import (
 
 func TestAddFeed_AddFeed(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	useCase := NewAddFeed(repository)
+	addFeed := NewAddFeed(repository)
 
 	// Act
-	response, err := useCase.AddFeed(AddFeedRequest{})
+	response, err := addFeed.Exec(AddFeedRequest{})
 
 	// Assert
 	if err != nil {
@@ -26,10 +26,10 @@ func TestAddFeed_AddFeed_fails(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	expectedErr := errors.New("test")
 	repository.ForceError(expectedErr, 0)
-	useCase := NewAddFeed(repository)
+	addFeed := NewAddFeed(repository)
 
 	// Act
-	response, err := useCase.AddFeed(AddFeedRequest{})
+	response, err := addFeed.Exec(AddFeedRequest{})
 
 	// Assert
 	if err != expectedErr {

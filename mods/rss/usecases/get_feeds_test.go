@@ -8,10 +8,10 @@ import (
 func TestGetFeeds_Get(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	repository.AddFeed(&rss.Feed{Name: "news"})
-	useCase := NewGetFeeds(repository)
+	getFeeds := NewGetFeeds(repository)
 
 	// Act
-	response, err := useCase.Get()
+	response, err := getFeeds.Exec()
 
 	// Assert
 	if err != nil {
@@ -28,10 +28,10 @@ func TestGetFeeds_Get(t *testing.T) {
 
 func TestGetFeeds_Get_returns_empty_when_no_feeds(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	useCase := NewGetFeeds(repository)
+	getFeeds := NewGetFeeds(repository)
 
 	// Act
-	response, err := useCase.Get()
+	response, err := getFeeds.Exec()
 
 	// Assert
 	if err != nil {

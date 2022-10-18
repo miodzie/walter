@@ -26,7 +26,7 @@ func TestGetSubscriptions_Get(t *testing.T) {
 	}
 
 	// Act
-	response, err := getSubs.Get(request)
+	response, err := getSubs.Exec(request)
 
 	// Assert
 	if err != nil {
@@ -50,7 +50,7 @@ func TestGetSubscriptions_Get_error(t *testing.T) {
 	getSubs := NewGetSubscriptions(repo)
 
 	// Act
-	resp, err := getSubs.Get(GetSubscriptionsRequest{User: "Bob"})
+	resp, err := getSubs.Exec(GetSubscriptionsRequest{User: "Bob"})
 
 	// Assert
 	if err != expectedErr {

@@ -8,7 +8,7 @@ import (
 
 func TestSubscribe_Subscribe(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	useCase := NewSubscribe(repository)
+	subscribe := NewSubscribe(repository)
 	feed := &rss.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
@@ -19,7 +19,7 @@ func TestSubscribe_Subscribe(t *testing.T) {
 	}
 
 	// Act
-	response, err := useCase.Subscribe(request)
+	response, err := subscribe.Exec(request)
 
 	// Assert
 	if err != nil {
@@ -36,7 +36,7 @@ func TestSubscribe_Subscribe(t *testing.T) {
 
 func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	useCase := NewSubscribe(repository)
+	subscribe := NewSubscribe(repository)
 	feed := &rss.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
@@ -48,7 +48,7 @@ func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
 	}
 
 	// Act
-	response, err := useCase.Subscribe(request)
+	response, err := subscribe.Exec(request)
 
 	// Assert
 	if err != nil {
@@ -74,7 +74,7 @@ func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
 	useCase := NewSubscribe(repository)
 
 	// Act
-	resp, err := useCase.Subscribe(SubscribeRequest{})
+	resp, err := useCase.Exec(SubscribeRequest{})
 
 	// Assert
 	if err.Error() != "feed not found" {
@@ -100,7 +100,7 @@ func TestSubscribe_Subscribe_fails_to_subscribe(t *testing.T) {
 	repository.ForceError(expectedErr, 1)
 
 	// Act
-	resp, err := useCase.Subscribe(request)
+	resp, err := useCase.Exec(request)
 
 	// Assert
 	if resp.Message != "Failed to subscribe." {

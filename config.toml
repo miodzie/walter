@@ -32,4 +32,5 @@ file = "storage/discord.db"
 
 [storage.libera]
 type = "sqlite"
-file = "storage/libera.db"
+# You will probably need to mkdir ~/.seras/storage
+file = "/home/<user>/.seras/storage/discord.db"

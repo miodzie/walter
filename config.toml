@@ -1,20 +1,20 @@
 [bots]
- [bots.libera]
- type = "irc"
- server = "irc.libera.chat:6697"
- nick = "irc_bot_2"
- username = "thecoolest"
- mods = { logger={}, sed={} }
- admins = ["user/mycloakorhostname"]
- sasl = true
- sasl_username = "sasl_username"
- sasl_password = "hunter2"
- mods.rss = { parser="gofeed", striphtml=true,formatter="minimal",storage="sqlite", database="libera" }
+[bots.libera]
+type = "irc"
+server = "irc.libera.chat:6697"
+nick = "irc_bot_2"
+username = "thecoolest"
+mods = { logger = { }, sed = { } }
+admins = ["user/mycloakorhostname"]
+sasl = true
+sasl_username = "sasl_username"
+sasl_password = "hunter2"
+mods.rss = { parser = "gofeed", striphtml = true, formatter = "minimal", storage = "sqlite", database = "libera" }
 
 [bots.discord]
 type = "discord"
-admins = ["12356", "7890"]
-mods = { logger={}, best_bot={}, sed={}, dong={} } # modconfig is what actually enables them
+admins = ["12356", "7890"] # user ids
+mods = { logger = { }, best_bot = { }, sed = { }, dong = { } }
 token = "your super secret discord app token"
 storage = "discord"
 # a normal table instead of an inline if you want.

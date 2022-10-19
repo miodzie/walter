@@ -4,33 +4,33 @@
  server = "irc.libera.chat:6697"
  nick = "irc_bot_2"
  username = "thecoolest"
- modconfig = { logger={}, sed={} }
+ mods = { logger={}, sed={} }
  admins = ["user/mycloakorhostname"]
  sasl = true
  sasl_username = "sasl_username"
  sasl_password = "hunter2"
- modconfig.rss = { parser="gofeed", striphtml=true,formatter="minimal",storage="sqlite", database="libera" }
+ mods.rss = { parser="gofeed", striphtml=true,formatter="minimal",storage="sqlite", database="libera" }
 
 [bots.discord]
 type = "discord"
 admins = ["12356", "7890"]
-modconfig = { logger={}, best_bot={}, sed={}, dong={} } # modconfig is what actually enables them
+mods = { logger={}, best_bot={}, sed={}, dong={} } # modconfig is what actually enables them
 token = "your super secret discord app token"
 storage = "discord"
 # a normal table instead of an inline if you want.
-[bots.discord.modconfig.rss]
+[bots.discord.mods.rss]
 parser = "gofeed"
 striphtml = true
 formatter = "default"
 storage = "sqlite"
 database = "discord"
 
+# You will probably need to mkdir ~/.seras/storage
 [Storage]
 [storage.discord]
 type = "sqlite"
-file = "storage/discord.db"
+file = "/home/<user>/.seras/storage/discord.db"
 
 [storage.libera]
 type = "sqlite"
-# You will probably need to mkdir ~/.seras/storage
-file = "/home/<user>/.seras/storage/discord.db"
+file = "/home/<user>/.seras/storage/libera.db"

@@ -45,6 +45,7 @@ github.com/microcosm-cc/bluemonday v1.0.18 h1:6HcxvXDAi3ARt3slx6nTesbvorIc3QeTzB
 github.com/microcosm-cc/bluemonday v1.0.18/go.mod h1:Z0r70sCuXHig8YpBzCc5eGHAap2K7e/u082ZUpDRRqM=
 github.com/miodzie/dong v0.1.0 h1:uPtJYwQTdoNRTHoFHBTDb9hmZeI7V4JhFGif0T+Qe0w=
 github.com/miodzie/dong v0.1.0/go.mod h1:Hn62eg/whg1UXC9E46AdolRKWKly+OvPSAncprRBDo4=
+github.com/miodzie/dong v0.4.0/go.mod h1:BU8WreHisd6pTS6ss1K86TKY+MUoGPmCOZ/+YjIhGpA=
 github.com/mmcdole/gofeed v1.1.3 h1:pdrvMb18jMSLidGp8j0pLvc9IGziX4vbmvVqmLH6z8o=
 github.com/mmcdole/gofeed v1.1.3/go.mod h1:QQO3maftbOu+hiVOGOZDRLymqGQCos4zxbA4j89gMrE=
 github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf h1:sWGE2v+hO0Nd4yFU/S/mDBM5plIU8v/Qhfz41hkDIAI=

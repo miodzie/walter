@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/mods/art"
-	"github.com/miodzie/seras/mods/bestbot"
 	"github.com/miodzie/seras/mods/dong"
 	"github.com/miodzie/seras/mods/logger"
 	"github.com/miodzie/seras/mods/logger/drivers"
@@ -20,7 +19,6 @@ type Factory interface {
 
 func init() {
 	factories = make(map[string]Factory)
-	Register("best_bot", &bestbot.ModFactory{})
 	Register("dong", &dong.ModFactory{})
 	Register("sed", &sed.ModFactory{})
 	Register("logger", &logger.ModFactory{DefaultLogger: drivers.NewMultiLogger(drivers.ConsoleLogger{})})

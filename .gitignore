@@ -3,3 +3,5 @@
 *-wal
 *-shm
 *.db
+mods/bestbot
+cmd/seras/custom.go

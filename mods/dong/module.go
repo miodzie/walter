@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/miodzie/dong"
 	"github.com/miodzie/dong/impl"
-	"github.com/miodzie/dong/interactors"
+	"github.com/miodzie/dong/usecases"
 	"github.com/miodzie/seras"
 	"github.com/miodzie/seras/log"
 	"os"
@@ -37,14 +37,15 @@ func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
 	for mod.running {
 		msg := <-stream
 		if msg.IsCommand("dong") {
-			rando := interactors.NewRandomDongInteractor(mod.repository)
-			var request interactors.RandomDongReq
+			rando := usecases.NewRandomDongUseCase(mod.repository)
+			var request usecases.RandomDongReq
 			if len(msg.Arguments) > 1 {
 				request.Category = msg.Arguments[1]
 			}
 			response := rando.Handle(request)
-			// TODO: Exec error.
-			actions.Reply(msg, response.Emoji)
+			if err := actions.Reply(msg, response.Emoji); err != nil {
+				log.Error(err)
+			}
 		}
 
 	}

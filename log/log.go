@@ -1,3 +1,7 @@
+// Copyright 2022-present miodzie. All rights reserved.
+// This source code is licensed under the Apache 2.0 license found
+// in the LICENSE file in the root directory of this source tree.
+
 // Package log is meant to be used by modules to log any important information
 // or errors to be reviewed by the bot owner.
 //

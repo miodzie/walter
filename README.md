@@ -80,5 +80,5 @@ Edit it to your liking, and then start the bot again.
 - [ ] Write module README.mds.
 - [ ] Initial README.md
 
-### License
-This software is licensed under the GPL-3 license, see LICENSE for more information.
+## License
+seras is licensed under Apache 2.0 as found in the [LICENSE file](LICENSE).

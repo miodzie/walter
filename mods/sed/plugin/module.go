@@ -6,8 +6,8 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/sed"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/sed"
 )
 
 func New() *Mod {
@@ -15,7 +15,7 @@ func New() *Mod {
 }
 
 type Mod struct {
-	log     map[string][]seras.Message
+	log     map[string][]walter.Message
 	running bool
 }
 
@@ -23,9 +23,9 @@ func (mod *Mod) Name() string {
 	return "sed"
 }
 
-func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
-	mod.log = make(map[string][]seras.Message)
+	mod.log = make(map[string][]walter.Message)
 	for mod.running {
 		msg := <-stream
 		// TODO: holy parse user input better merciful lawd
@@ -52,7 +52,7 @@ func (mod *Mod) Stop() {
 	mod.running = false
 }
 
-func (mod *Mod) logMsg(msg seras.Message) {
+func (mod *Mod) logMsg(msg walter.Message) {
 	mod.log[msg.Target] = append(mod.log[msg.Target], msg)
 	if len(mod.log[msg.Target]) > 20 {
 		mod.log[msg.Target] = mod.log[msg.Target][1:]
@@ -62,6 +62,6 @@ func (mod *Mod) logMsg(msg seras.Message) {
 type ModFactory struct {
 }
 
-func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+func (m ModFactory) Create(config interface{}) (walter.Module, error) {
 	return New(), nil
 }

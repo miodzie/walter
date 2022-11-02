@@ -6,15 +6,15 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter/log"
 	"strings"
 
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/rss/usecases"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/rss/usecases"
 )
 
 // !add_feed {name} {url}
-func (mod *RssMod) addFeed(msg seras.Message) {
+func (mod *RssMod) addFeed(msg walter.Message) {
 	if !mod.actions.IsAdmin(msg.Author.Id) {
 		mod.actions.Reply(msg, "Only admins can add feeds.")
 		return
@@ -41,7 +41,7 @@ func (mod *RssMod) addFeed(msg seras.Message) {
 }
 
 // !feeds
-func (mod *RssMod) showFeeds(msg seras.Message) {
+func (mod *RssMod) showFeeds(msg walter.Message) {
 	getFeeds := usecases.NewGetFeeds(mod.Repository)
 	resp, err := getFeeds.Exec()
 
@@ -51,7 +51,7 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 		return
 	}
 
-	var reply = seras.Message{Target: msg.Target}
+	var reply = walter.Message{Target: msg.Target}
 	var parsed []string
 	for _, feed := range resp.Feeds {
 		parsed = append(parsed, fmt.Sprintf("%s: %s", feed.Name, feed.Url))
@@ -61,14 +61,14 @@ func (mod *RssMod) showFeeds(msg seras.Message) {
 		reply.Content = "No feeds available. Ask an admin to add some."
 	}
 	mod.actions.Send(reply)
-	reply.Content = fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", seras.Token())
+	reply.Content = fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token())
 	mod.actions.Send(reply)
 }
 
 // !subscribe {feed name} {keywords, comma separated}
-func (mod *RssMod) subscribe(msg seras.Message) {
+func (mod *RssMod) subscribe(msg walter.Message) {
 	if len(msg.Arguments) < 3 {
-		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", seras.Token()))
+		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token()))
 		return
 	}
 	// TODO: validate & parse?
@@ -96,7 +96,7 @@ func (mod *RssMod) subscribe(msg seras.Message) {
 }
 
 // !unsubscribe {feed name}
-func (mod *RssMod) unsubscribe(msg seras.Message) {
+func (mod *RssMod) unsubscribe(msg walter.Message) {
 	if len(msg.Arguments) != 2 {
 		mod.actions.Reply(msg, "Invalid amount of arguments. !unsubscribe $feedName")
 		return
@@ -115,7 +115,7 @@ func (mod *RssMod) unsubscribe(msg seras.Message) {
 	mod.actions.Reply(msg, response.Message)
 }
 
-func (mod *RssMod) subs(msg seras.Message) {
+func (mod *RssMod) subs(msg walter.Message) {
 	request := usecases.GetSubscriptionsRequest{
 		User:     msg.Author.Mention,
 		Optional: struct{ Channel string }{msg.Target},

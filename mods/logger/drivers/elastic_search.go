@@ -4,12 +4,12 @@
 
 package drivers
 
-import "github.com/miodzie/seras"
+import "github.com/miodzie/walter"
 
 type ElasticSearchLogger struct {
 }
 
-func (l ElasticSearchLogger) Log(message seras.Message) error {
+func (l ElasticSearchLogger) Log(message walter.Message) error {
 	//TODO implement me
 	panic("implement me")
 }

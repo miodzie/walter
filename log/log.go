@@ -6,7 +6,7 @@
 // or errors to be reviewed by the bot owner.
 //
 // This package should not be confused with the logger module,
-// which is specifically meant to log all Connections seras.Messages.
+// which is specifically meant to log all Connections walter.Messages.
 //
 // log is a global state package, all Connections and Modules use the same logger.
 // Likely each Connection will get their own Logger in the future.

@@ -6,7 +6,7 @@ package gofeed
 
 import (
 	"crypto/tls"
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter/mods/rss"
 	"github.com/mmcdole/gofeed"
 	"net/http"
 )

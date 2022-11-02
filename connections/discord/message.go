@@ -7,19 +7,19 @@ package discord
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/log"
 	"strings"
 )
 
-func (con *Connection) Send(msg seras.Message) error {
+func (con *Connection) Send(msg walter.Message) error {
 	_, err := con.session.ChannelMessageSend(msg.Target, msg.Content)
 	log.Debugf("[%s]: %+v\n", con.Name(), msg)
 	return err
 }
 
-func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Target: msg.Target}
+func (con *Connection) Reply(msg walter.Message, content string) error {
+	reply := walter.Message{Content: content, Target: msg.Target}
 	return con.Send(reply)
 }
 
@@ -27,11 +27,11 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 	if e.Author.Bot {
 		return
 	}
-	msg := seras.Message{
+	msg := walter.Message{
 		Content:   e.Content,
 		Target:    e.ChannelID,
 		Arguments: strings.Split(e.Content, " "),
-		Author: seras.Author{
+		Author: walter.Author{
 			Id:      e.Author.ID,
 			Nick:    e.Author.Username,
 			Mention: "<@" + e.Author.ID + ">",
@@ -43,7 +43,7 @@ func (con *Connection) onMessageCreate(s *discordgo.Session, e *discordgo.Messag
 	con.stream <- msg
 }
 
-// seras.MessageFormatter
+// walter.MessageFormatter
 
 func (con *Connection) Bold(str string) string {
 	return fmt.Sprintf("**%s**", str)

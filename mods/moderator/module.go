@@ -5,10 +5,10 @@
 package moderator
 
 import (
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter/log"
 	"time"
 
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 type Mod struct {
@@ -23,7 +23,7 @@ func (mod *Mod) Name() string {
 	return "moderator"
 }
 
-func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream

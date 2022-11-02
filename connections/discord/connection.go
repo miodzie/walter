@@ -6,14 +6,14 @@ package discord
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 	"sync"
 )
 
 type Connection struct {
 	session *discordgo.Session
-	stream  chan seras.Message
-	mods    []seras.Module
+	stream  chan walter.Message
+	mods    []walter.Module
 	Config
 	sync.Mutex
 }
@@ -29,12 +29,12 @@ func New(config Config) (*Connection, error) {
 	return disc, nil
 }
 
-func (con *Connection) Connect() (seras.Stream, error) {
+func (con *Connection) Connect() (walter.Stream, error) {
 	con.Lock()
 	defer con.Unlock()
 
 	con.session.AddHandler(con.onMessageCreate)
-	con.stream = make(chan seras.Message)
+	con.stream = make(chan walter.Message)
 	con.session.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentGuildMessageTyping | discordgo.IntentsDirectMessages
 
 	return con.stream, con.session.Open()

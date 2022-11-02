@@ -6,19 +6,19 @@ package mods
 
 import (
 	"fmt"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/art"
-	"github.com/miodzie/seras/mods/dong"
-	"github.com/miodzie/seras/mods/logger"
-	"github.com/miodzie/seras/mods/logger/drivers"
-	rss_plugin "github.com/miodzie/seras/mods/rss/plugin"
-	sed "github.com/miodzie/seras/mods/sed/plugin"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/art"
+	"github.com/miodzie/walter/mods/dong"
+	"github.com/miodzie/walter/mods/logger"
+	"github.com/miodzie/walter/mods/logger/drivers"
+	rss_plugin "github.com/miodzie/walter/mods/rss/plugin"
+	sed "github.com/miodzie/walter/mods/sed/plugin"
 )
 
 var factories map[string]Factory
 
 type Factory interface {
-	Create(config any) (seras.Module, error)
+	Create(config any) (walter.Module, error)
 }
 
 func init() {
@@ -35,7 +35,7 @@ func Register(name string, factory Factory) {
 	factories[name] = factory
 }
 
-func MakeFromConfig(name string, config interface{}) (seras.Module, error) {
+func MakeFromConfig(name string, config interface{}) (walter.Module, error) {
 	f, ok := factories[name]
 	if !ok {
 		return nil, fmt.Errorf("unknown module: `%s`", name)

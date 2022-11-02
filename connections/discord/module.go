@@ -5,15 +5,15 @@
 package discord
 
 import (
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
-// seras.Modable
+// walter.Modable
 
-func (con *Connection) Modules() []seras.Module {
+func (con *Connection) Modules() []walter.Module {
 	return con.mods
 }
-func (con *Connection) AddMods(mods []seras.Module) {
+func (con *Connection) AddMods(mods []walter.Module) {
 	con.mods = append(con.mods, mods...)
 }
 

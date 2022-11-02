@@ -9,8 +9,8 @@ import (
 	"github.com/miodzie/dong"
 	"github.com/miodzie/dong/impl"
 	"github.com/miodzie/dong/usecases"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/log"
 	"os"
 	"os/user"
 	"path"
@@ -36,7 +36,7 @@ func (mod *Mod) Name() string {
 	return "dong"
 }
 
-func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -89,6 +89,6 @@ func initDatabase() *impl.GormRepository {
 type ModFactory struct {
 }
 
-func (m ModFactory) Create(config interface{}) (seras.Module, error) {
+func (m ModFactory) Create(config interface{}) (walter.Module, error) {
 	return New(), nil
 }

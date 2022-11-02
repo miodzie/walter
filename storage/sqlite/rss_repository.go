@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 type RssRepository struct {

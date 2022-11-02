@@ -5,7 +5,7 @@
 package rss
 
 import (
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter/log"
 )
 
 type Processor struct {

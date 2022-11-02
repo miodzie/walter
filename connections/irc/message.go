@@ -5,12 +5,12 @@
 package irc
 
 import (
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/log"
 	"strings"
 )
 
-func (con *Connection) Send(msg seras.Message) error {
+func (con *Connection) Send(msg walter.Message) error {
 	// An \n cuts off an IRC message, therefor split and send it as multiple messages.
 	if strings.Contains(msg.Content, "\n") {
 		split := strings.Split(msg.Content, "\n")
@@ -30,19 +30,19 @@ func (con *Connection) Send(msg seras.Message) error {
 	return nil
 }
 
-func (con *Connection) Reply(msg seras.Message, content string) error {
-	reply := seras.Message{Content: content, Target: msg.Target}
+func (con *Connection) Reply(msg walter.Message, content string) error {
+	reply := walter.Message{Content: content, Target: msg.Target}
 	if isPM(msg) {
 		reply.Target = msg.Author.Nick
 	}
 	return con.Send(reply)
 }
 
-func isPM(msg seras.Message) bool {
+func isPM(msg walter.Message) bool {
 	return !strings.Contains(msg.Target, "#")
 }
 
-// seras.MessageFormatter
+// walter.MessageFormatter
 
 func (con *Connection) Bold(msg string) string {
 	return msg

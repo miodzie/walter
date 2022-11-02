@@ -7,12 +7,12 @@ package plugin
 import (
 	"errors"
 	"fmt"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/rss"
-	"github.com/miodzie/seras/mods/rss/parsers/decorators"
-	"github.com/miodzie/seras/mods/rss/parsers/gofeed"
-	"github.com/miodzie/seras/storage"
-	"github.com/miodzie/seras/storage/sqlite"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/rss"
+	"github.com/miodzie/walter/mods/rss/parsers/decorators"
+	"github.com/miodzie/walter/mods/rss/parsers/gofeed"
+	"github.com/miodzie/walter/storage"
+	"github.com/miodzie/walter/storage/sqlite"
 	"strings"
 )
 
@@ -79,7 +79,7 @@ func (c *Config) CreateMod() (*RssMod, error) {
 func (s *Config) FillStruct(m map[string]any) error {
 	for k, v := range m {
 		k = strings.Title(k)
-		err := seras.SetField(s, k, v)
+		err := walter.SetField(s, k, v)
 		if err != nil {
 			return err
 		}
@@ -91,7 +91,7 @@ type ModFactory struct {
 	Context Context
 }
 
-func (m ModFactory) Create(c any) (seras.Module, error) {
+func (m ModFactory) Create(c any) (walter.Module, error) {
 	var conf Config
 	config, ok := c.(map[string]any)
 	if !ok {

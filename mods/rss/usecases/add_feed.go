@@ -4,7 +4,7 @@
 
 package usecases
 
-import "github.com/miodzie/seras/mods/rss"
+import "github.com/miodzie/walter/mods/rss"
 
 type AddFeed struct {
 	repository rss.Repository

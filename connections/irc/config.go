@@ -6,7 +6,7 @@ package irc
 
 import (
 	"errors"
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 var ErrIncorrectType = errors.New("config is not of type: 'irc'")
@@ -19,11 +19,11 @@ type Config struct {
 	SASL         bool
 	SASLUsername string
 	SASLPassword string
-	seras.BaseConnection
+	walter.BaseConnection
 }
 
 func init() {
-	if err := seras.AddBotParser("irc", &BotParser{}); err != nil {
+	if err := walter.AddBotParser("irc", &BotParser{}); err != nil {
 		panic(err)
 	}
 }
@@ -79,7 +79,7 @@ func ParseConfig(val map[string]any) (Config, error) {
 type BotParser struct {
 }
 
-func (c *BotParser) Parse(val map[string]any) (seras.Bot, error) {
+func (c *BotParser) Parse(val map[string]any) (walter.Bot, error) {
 	cfg, err := ParseConfig(val)
 	if err != nil {
 		return nil, err

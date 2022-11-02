@@ -4,8 +4,8 @@
 
 package plugin
 
-import "github.com/miodzie/seras"
+import "github.com/miodzie/walter"
 
-func (mod *TriggerMod) addTrig(msg seras.Message) {
+func (mod *TriggerMod) addTrig(msg walter.Message) {
 	// TODO: Implement me.
 }

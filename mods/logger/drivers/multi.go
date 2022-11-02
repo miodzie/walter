@@ -5,8 +5,8 @@
 package drivers
 
 import (
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/logger"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/logger"
 )
 
 type MultiLogger struct {
@@ -17,7 +17,7 @@ func NewMultiLogger(args ...logger.Logger) *MultiLogger {
 	return &MultiLogger{loggers: args}
 }
 
-func (l MultiLogger) Log(message seras.Message) error {
+func (l MultiLogger) Log(message walter.Message) error {
 	var err error
 	for _, l := range l.loggers {
 		err = l.Log(message)

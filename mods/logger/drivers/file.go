@@ -5,13 +5,13 @@
 package drivers
 
 import (
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 type FileLogger struct {
 }
 
-func (l FileLogger) Log(message seras.Message) error {
+func (l FileLogger) Log(message walter.Message) error {
 	//TODO implement me
 	panic("implement me")
 	return nil

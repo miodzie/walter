@@ -6,8 +6,8 @@ package logger
 
 import (
 	"errors"
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/log"
 )
 
 type Mod struct {
@@ -23,7 +23,7 @@ func (mod *Mod) Name() string {
 	return "logger"
 }
 
-func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -44,7 +44,7 @@ type ModFactory struct {
 	DefaultLogger Logger
 }
 
-func (m ModFactory) Create(logger interface{}) (seras.Module, error) {
+func (m ModFactory) Create(logger interface{}) (walter.Module, error) {
 	if m.DefaultLogger != nil {
 		return New(m.DefaultLogger), nil
 	}

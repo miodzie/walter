@@ -6,18 +6,18 @@ package irc
 
 import (
 	"crypto/tls"
-	"github.com/miodzie/seras/connections/irc/plugin"
+	"github.com/miodzie/walter/connections/irc/plugin"
 	"strings"
 	"time"
 
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 	irc "github.com/thoj/go-ircevent"
 	"sync"
 )
 
 type Connection struct {
 	irc  *irc.Connection
-	mods []seras.Module
+	mods []walter.Module
 	Config
 	sync.Mutex
 }
@@ -34,20 +34,20 @@ func New(conf Config) (*Connection, error) {
 	con := &Connection{
 		irc:    ircCon,
 		Config: conf,
-		mods:   []seras.Module{plugin.New(ircCon)},
+		mods:   []walter.Module{plugin.New(ircCon)},
 	}
 
 	return con, nil
 }
 
-func (con *Connection) Connect() (seras.Stream, error) {
+func (con *Connection) Connect() (walter.Stream, error) {
 	con.Lock()
 	defer con.Unlock()
 	err := con.irc.Connect(con.Server)
 	if err != nil {
 		return nil, err
 	}
-	stream := make(chan seras.Message)
+	stream := make(chan walter.Message)
 
 	con.irc.AddCallback("*", func(event *irc.Event) {
 		var channel string
@@ -56,11 +56,11 @@ func (con *Connection) Connect() (seras.Stream, error) {
 			args = strings.Split(event.Arguments[1], " ")
 			channel = event.Arguments[0]
 		}
-		stream <- seras.Message{
+		stream <- walter.Message{
 			Content:   event.Message(),
 			Arguments: args,
 			Target:    channel,
-			Author: seras.Author{
+			Author: walter.Author{
 				Id:      event.Host,
 				Nick:    event.Nick,
 				Mention: event.Nick,

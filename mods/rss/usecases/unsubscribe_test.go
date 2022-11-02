@@ -7,7 +7,7 @@ package usecases
 import (
 	"errors"
 	"fmt"
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter/mods/rss"
 	"testing"
 )
 

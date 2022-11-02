@@ -5,13 +5,13 @@
 package art
 
 import (
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 type ArtistFactory struct {
 }
 
-func (r *ArtistFactory) Create(a interface{}) (seras.Module, error) {
+func (r *ArtistFactory) Create(a interface{}) (walter.Module, error) {
 	sheep := &Artist{
 		instructions: newArtistPalette(),
 		running:      false,
@@ -21,7 +21,7 @@ func (r *ArtistFactory) Create(a interface{}) (seras.Module, error) {
 }
 
 type Artist struct {
-	instructions seras.Stream
+	instructions walter.Stream
 	running      bool
 }
 
@@ -29,7 +29,7 @@ func (mod *Artist) Name() string {
 	return "artist"
 }
 
-func (mod *Artist) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Artist) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-mod.instructions

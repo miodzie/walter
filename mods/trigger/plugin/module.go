@@ -7,12 +7,12 @@ package plugin
 import (
 	"log"
 
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/trigger"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/trigger"
 )
 
 type TriggerMod struct {
-	actions seras.Actions
+	actions walter.Actions
 	running bool
 	repo    trigger.Repository
 }
@@ -21,7 +21,7 @@ func New(repo trigger.Repository) *TriggerMod {
 	return &TriggerMod{repo: repo}
 }
 
-func (mod *TriggerMod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *TriggerMod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	mod.actions = actions
 	for mod.running {

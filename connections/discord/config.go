@@ -7,18 +7,18 @@ package discord
 import (
 	"errors"
 
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 var ErrIncorrectType = errors.New("config is not of type: 'discord'")
 
 type Config struct {
 	Token string
-	seras.BaseConnection
+	walter.BaseConnection
 }
 
 func init() {
-	if err := seras.AddBotParser("discord", &BotParser{}); err != nil {
+	if err := walter.AddBotParser("discord", &BotParser{}); err != nil {
 		panic(err)
 	}
 }
@@ -53,7 +53,7 @@ func ParseConfig(val map[string]interface{}) (Config, error) {
 type BotParser struct {
 }
 
-func (c *BotParser) Parse(val map[string]interface{}) (seras.Bot, error) {
+func (c *BotParser) Parse(val map[string]interface{}) (walter.Bot, error) {
 	cfg, err := ParseConfig(val)
 	if err != nil {
 		return nil, err

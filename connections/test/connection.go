@@ -5,18 +5,18 @@
 package test
 
 import (
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 )
 
 type Connection struct {
-	messages []seras.Message
-	stream   chan seras.Message
+	messages []walter.Message
+	stream   chan walter.Message
 }
 
 func NewConnection() *Connection {
 	con := &Connection{
-		messages: []seras.Message{},
-		stream:   make(chan seras.Message, 10),
+		messages: []walter.Message{},
+		stream:   make(chan walter.Message, 10),
 	}
 
 	return con
@@ -33,7 +33,7 @@ func (con *Connection) Server() string {
 	return "test"
 }
 
-func (con *Connection) Connect() (seras.Stream, error) {
+func (con *Connection) Connect() (walter.Stream, error) {
 	return con.stream, nil
 }
 
@@ -42,7 +42,7 @@ func (con *Connection) Close() error {
 	return nil
 }
 
-func (con *Connection) Send(msg seras.Message) error {
+func (con *Connection) Send(msg walter.Message) error {
 	con.stream <- msg
 	return nil
 }

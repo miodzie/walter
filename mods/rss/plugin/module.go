@@ -5,15 +5,15 @@
 package plugin
 
 import (
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter/log"
 	"time"
 
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 type RssMod struct {
-	actions seras.Actions
+	actions walter.Actions
 	running bool
 	Context
 }
@@ -31,7 +31,7 @@ func (mod *RssMod) Name() string {
 	return "rss"
 }
 
-func (mod *RssMod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	mod.actions = actions
 	go mod.checkFeeds()
@@ -58,7 +58,7 @@ func (mod *RssMod) checkFeeds() {
 		}
 		log.Infof("%d notifications found\n", len(notifs))
 		for _, notif := range notifs {
-			msg := seras.Message{
+			msg := walter.Message{
 				Target:  notif.Channel,
 				Content: mod.Format(*notif),
 			}

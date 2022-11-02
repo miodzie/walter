@@ -8,18 +8,18 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/miodzie/seras/log"
-	"github.com/miodzie/seras/mods"
-	"github.com/miodzie/seras/storage"
+	"github.com/miodzie/walter/log"
+	"github.com/miodzie/walter/mods"
+	"github.com/miodzie/walter/storage"
 	"os"
 	"os/signal"
 	"runtime"
 	"strings"
 	"syscall"
 
-	"github.com/miodzie/seras"
-	_ "github.com/miodzie/seras/connections/discord"
-	_ "github.com/miodzie/seras/connections/irc"
+	"github.com/miodzie/walter"
+	_ "github.com/miodzie/walter/connections/discord"
+	_ "github.com/miodzie/walter/connections/irc"
 )
 
 func main() {
@@ -35,12 +35,12 @@ func run() error {
 		return err
 	}
 	interrupt(func() {})
-	err = seras.ParseBots(cfg)
+	err = walter.ParseBots(cfg)
 	if err != nil {
 		return err
 	}
 
-	return seras.RunAll(func(bot seras.Bot) []seras.Module {
+	return walter.RunAll(func(bot walter.Bot) []walter.Module {
 		//m := mods.Default(fmt.Sprintf("%s.sqlite", bot.Name()))
 		m, err := mods.CreateFromList(bot.ModList())
 		if err != nil {
@@ -51,14 +51,14 @@ func run() error {
 	})
 }
 
-func initConfig() (*seras.Config, error) {
-	file := homeDir() + "/.seras/config.toml"
+func initConfig() (*walter.Config, error) {
+	file := homeDir() + "/.walter/config.toml"
 	if _, err := os.Stat(file); errors.Is(err, os.ErrNotExist) {
-		err := os.MkdirAll(homeDir()+"/.seras", 0700)
+		err := os.MkdirAll(homeDir()+"/.walter", 0700)
 		if err != nil {
 			return nil, err
 		}
-		err = os.WriteFile(file, []byte(seras.DefaultConfig), 0600)
+		err = os.WriteFile(file, []byte(walter.DefaultConfig), 0600)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +66,7 @@ func initConfig() (*seras.Config, error) {
 Please update the config located at: %s And restart.`, file)
 		os.Exit(0)
 	}
-	cfg, err := seras.ParseToml(file)
+	cfg, err := walter.ParseToml(file)
 	if err != nil {
 		return cfg, err
 	}
@@ -89,13 +89,13 @@ func interrupt(callable func()) {
 	}()
 }
 
-func cli(messenger seras.Messenger) {
+func cli(messenger walter.Messenger) {
 	reader := bufio.NewReader(os.Stdin)
 	go func() {
 		for {
 			text, _ := reader.ReadString('\n')
 			text = strings.TrimSpace(text)
-			err := messenger.Send(seras.Message{Content: text})
+			err := messenger.Send(walter.Message{Content: text})
 			if err != nil {
 				fmt.Println(err)
 			}

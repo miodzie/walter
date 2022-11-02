@@ -7,7 +7,7 @@ package decorators
 import (
 	"testing"
 
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 func TestStripHtml(t *testing.T) {

@@ -5,7 +5,7 @@
 package plugin
 
 import (
-	"github.com/miodzie/seras"
+	"github.com/miodzie/walter"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -22,7 +22,7 @@ func (mod *Mod) Name() string {
 	return "irc"
 }
 
-func (mod *Mod) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream

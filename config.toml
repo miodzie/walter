@@ -25,12 +25,12 @@ formatter = "default"
 storage = "sqlite"
 database = "discord"
 
-# You will probably need to mkdir ~/.seras/storage
+# You will probably need to mkdir ~/.walter/storage
 [Storage]
 [storage.discord]
 type = "sqlite"
-file = "/home/<user>/.seras/storage/discord.db"
+file = "/home/<user>/.walter/storage/discord.db"
 
 [storage.libera]
 type = "sqlite"
-file = "/home/<user>/.seras/storage/libera.db"
+file = "/home/<user>/.walter/storage/libera.db"

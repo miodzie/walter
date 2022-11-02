@@ -1,4 +1,4 @@
-module github.com/miodzie/seras
+module github.com/miodzie/walter
 
 go 1.18
 

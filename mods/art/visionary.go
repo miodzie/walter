@@ -5,8 +5,8 @@
 package art
 
 import (
-	"github.com/miodzie/seras"
-	"github.com/miodzie/seras/log"
+	"github.com/miodzie/walter"
+	"github.com/miodzie/walter/log"
 	"time"
 )
 
@@ -15,8 +15,8 @@ const MaxLines = 4
 var visionary *Visionary
 var lastRun time.Time
 
-func newArtistPalette() seras.Stream {
-	stream := make(chan seras.Message)
+func newArtistPalette() walter.Stream {
+	stream := make(chan walter.Message)
 
 	// We need a visionary to paint his vision!
 	// Wait until one is available, asynchronously!?!
@@ -35,10 +35,10 @@ func newArtistPalette() seras.Stream {
 type VisionaryFactory struct {
 }
 
-func (b *VisionaryFactory) Create(a interface{}) (seras.Module, error) {
+func (b *VisionaryFactory) Create(a interface{}) (walter.Module, error) {
 	if visionary == nil {
 		visionary = &Visionary{
-			artists: []chan seras.Message{},
+			artists: []chan walter.Message{},
 			running: false,
 		}
 	}
@@ -47,7 +47,7 @@ func (b *VisionaryFactory) Create(a interface{}) (seras.Module, error) {
 }
 
 type Visionary struct {
-	artists []chan seras.Message
+	artists []chan walter.Message
 	running bool
 }
 
@@ -55,7 +55,7 @@ func (mod *Visionary) Name() string {
 	return "visionary"
 }
 
-func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
+func (mod *Visionary) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -65,7 +65,7 @@ func (mod *Visionary) Start(stream seras.Stream, actions seras.Actions) error {
 	return nil
 }
 
-func (mod *Visionary) gmCommand(msg seras.Message) {
+func (mod *Visionary) gmCommand(msg walter.Message) {
 	// Quick throttle impl
 	if time.Since(lastRun) < time.Second*2 {
 		return
@@ -79,11 +79,11 @@ func (mod *Visionary) gmCommand(msg seras.Message) {
 	}
 }
 
-func draw(msg seras.Message, art *Picture, artist chan seras.Message) {
+func draw(msg walter.Message, art *Picture, artist chan walter.Message) {
 	for i := 0; i < MaxLines || art.Completed(); i++ {
 		msg.Content = art.NextLine()
 		artist <- msg
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 300)
 	}
 }
 

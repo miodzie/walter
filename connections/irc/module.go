@@ -4,14 +4,14 @@
 
 package irc
 
-import "github.com/miodzie/seras"
+import "github.com/miodzie/walter"
 
-// seras.Modable
+// walter.Modable
 
-func (con *Connection) Modules() []seras.Module {
+func (con *Connection) Modules() []walter.Module {
 	return con.mods
 }
-func (con *Connection) AddMods(mods []seras.Module) {
+func (con *Connection) AddMods(mods []walter.Module) {
 	con.mods = append(con.mods, mods...)
 }
 

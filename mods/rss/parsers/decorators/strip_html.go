@@ -9,7 +9,7 @@ import (
 	"reflect"
 
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/miodzie/seras/mods/rss"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 type cleanHtml struct {

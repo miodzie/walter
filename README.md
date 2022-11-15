@@ -28,53 +28,6 @@ Edit it to your liking, and then start the bot again.
 * [X] Global-level Logging module
 * [ ] Interactive CLI w/ bubbletea [WIP]
 
-### Modules
-
-* **Message Logging**
-  * [X] Console driver
-  * [X] Multi-writer driver
-  * [ ] File driver
-  * [ ] ElasticSearch
-
-
-* **RSS Feed Listener**
-  - [X] MVP
-  - [X] Ignore words.
-  - [X] Item.Description character limit on String()
-  - [X] Better Message formatting (Impl MessageFormatter)
-  - [X] NotificationFormatter for RSS. For IRC, it'd be pretty annoying to have a giant wall of text.
-
-* **sed**
-  - [X] MVP
-
-
-* **dong**
-  - [X] MVP
-  - [ ] Load initial dongs from a web scrape, prepacked sqlite.db, or CSV.
-
-
-* **Art bot** (more fun for IRC)
-  - [X] MVP
-  - [ ] User added art.
-  - [ ] Discord support. (Only one user is needed)
-
-
-* **Word triggers**
-   - [ ] Canned replies that trigger on specific words.
-   - [ ] Percentage change for trigger and cool down timers. 
-
-
-* **Help module**
-  - [ ] Allow other modules to register their available command lists.
-
-
-* Legacy:
-  - [ ] Point system.
-
-
-* **Moderating**
-  * [ ] Profanity list
-  * [ ] Meme Repost bot
 
 ### TODOs
 - [ ] Write module README.mds.

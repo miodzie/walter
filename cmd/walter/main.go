@@ -63,7 +63,7 @@ func initConfig() (*walter.Config, error) {
 			return nil, err
 		}
 		log.Warnf(`Config was not found, created.
-Please update the config located at: %s And restart.`, file)
+Please update the config located at: %s And restart.\n`, file)
 		os.Exit(0)
 	}
 	cfg, err := walter.ParseToml(file)

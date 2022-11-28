@@ -15,5 +15,6 @@ import (
 func init() {
 	// Add any custom, private modules here.
 	// Build/run with -tags custom
+	// go run/build cmd/water/*.go -tags custom
 	mods.Register("best_bot", &bestbot.ModFactory{})
 }

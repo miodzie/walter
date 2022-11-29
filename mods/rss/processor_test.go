@@ -54,7 +54,7 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 
 	// Assert
 	if len(results) != 1 {
-		t.Error("unexpected results")
+		t.Errorf("expected len(results)=1, got %d instead", len(results))
 	}
 
 	checkNotif(t, results[0], alice, feed)

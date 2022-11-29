@@ -6,6 +6,7 @@ package rss
 
 import (
 	"github.com/miodzie/walter/log"
+	"sync"
 )
 
 type Processor struct {
@@ -13,6 +14,8 @@ type Processor struct {
 	parser     Parser
 	// Max notifications sent per channel per process.
 	ChannelLimit int
+	cache        *notificationCache
+	sync.Mutex
 }
 
 func NewProcessor(repo Repository, parser Parser) *Processor {
@@ -24,6 +27,9 @@ func NewProcessor(repo Repository, parser Parser) *Processor {
 }
 
 func (p *Processor) Process() ([]*Notification, error) {
+	p.Lock()
+	defer p.Unlock()
+	p.cache = newCache()
 	var notifications []*Notification
 	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
@@ -38,9 +44,8 @@ func (p *Processor) Process() ([]*Notification, error) {
 			return notifications, err
 		}
 
-		cache := newCache()
 		for _, subscription := range subs {
-			newNotes := p.processSubscription(parsedFeed, subscription, cache, feed)
+			newNotes := p.processSubscription(parsedFeed, subscription)
 			notifications = append(notifications, newNotes...)
 		}
 	}
@@ -48,10 +53,12 @@ func (p *Processor) Process() ([]*Notification, error) {
 	return notifications, nil
 }
 
-func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription, cache *cache, feed *Feed) []*Notification {
+func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
 	var notifications []*Notification
+	// Fetch all items with a subscriptions keywords.
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
-		if cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
+		// Ignore
+		if p.cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
 			continue
 		}
 		if subscription.HasSeen(*item) {
@@ -62,16 +69,16 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 			continue
 		}
 
-		key := cache.makeKey(item, subscription)
-		notification := cache.GetNotification(key)
-		if !cache.HasNotification(key) {
+		key := p.cache.makeKey(item, subscription)
+		notification := p.cache.GetNotification(key)
+		if !p.cache.HasNotification(key) {
 			notification = &Notification{
 				Channel: subscription.Channel,
-				Feed:    *feed,
+				Feed:    *subscription.Feed,
 				Item:    *item,
 			}
 			notifications = append(notifications, notification)
-			cache.PutNotification(key, notification)
+			p.cache.PutNotification(key, notification)
 		}
 
 		notification.Users = append(notification.Users, subscription.User)
@@ -85,28 +92,28 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 	return notifications
 }
 
-func newCache() *cache {
-	return &cache{
+func newCache() *notificationCache {
+	return &notificationCache{
 		channelAmount:     make(map[string]int),
 		seenNotifications: map[string]*Notification{},
 	}
 }
 
-type cache struct {
+type notificationCache struct {
 	channelAmount     map[string]int
 	seenNotifications map[string]*Notification
 }
 
-func (c *cache) HasNotification(key string) bool {
+func (c *notificationCache) HasNotification(key string) bool {
 	_, exists := c.seenNotifications[key]
 	return exists
 }
 
-func (c *cache) GetNotification(key string) *Notification {
+func (c *notificationCache) GetNotification(key string) *Notification {
 	return c.seenNotifications[key]
 }
 
-func (c *cache) PutNotification(key string, notification *Notification) {
+func (c *notificationCache) PutNotification(key string, notification *Notification) {
 	if _, ok := c.channelAmount[notification.Channel]; !ok {
 		c.channelAmount[notification.Channel] = 0
 	}
@@ -114,11 +121,11 @@ func (c *cache) PutNotification(key string, notification *Notification) {
 	c.seenNotifications[key] = notification
 }
 
-func (c *cache) makeKey(item *Item, sub *Subscription) string {
+func (c *notificationCache) makeKey(item *Item, sub *Subscription) string {
 	return item.GUID + sub.Channel
 }
 
-func (c *cache) ChannelLimitReached(channelId string, limit int) bool {
+func (c *notificationCache) ChannelLimitReached(channelId string, limit int) bool {
 	if amt, ok := c.channelAmount[channelId]; ok {
 		return amt >= limit
 	}

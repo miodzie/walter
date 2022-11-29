@@ -61,21 +61,13 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 			continue
 		}
 
-		key := p.cache.makeKey(item, subscription)
-		notification := p.cache.GetNotification(key)
-		if !p.cache.HasNotification(key) {
-			notification = &Notification{
-				Channel: subscription.Channel,
-				Feed:    *subscription.Feed,
-				Item:    *item,
-			}
-			notifications = append(notifications, notification)
-			p.cache.PutNotification(key, notification)
-		}
+		notification := p.getOrCreateNotification(subscription, item)
 
+		notifications = append(notifications, notification)
 		notification.Users = append(notification.Users, subscription.User)
-		subscription.See(*item)
+		subscription.Save(*item)
 	}
+
 	err := p.repository.UpdateSub(subscription)
 	if err != nil {
 		log.Error(err)
@@ -97,6 +89,17 @@ func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
 	}
 
 	return false
+}
+
+func (p *Processor) getOrCreateNotification(subscription *Subscription, item *Item) *Notification {
+	key := p.cache.makeKey(item, subscription)
+	notification := p.cache.GetNotification(key)
+	if !p.cache.HasNotification(key) {
+		notification = &Notification{Channel: subscription.Channel, Feed: *subscription.Feed, Item: *item}
+		p.cache.PutNotification(key, notification)
+	}
+
+	return notification
 }
 
 func newCache() notificationCache {

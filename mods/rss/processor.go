@@ -10,11 +10,11 @@ import (
 )
 
 type Processor struct {
-	repository Repository
-	parser     Parser
 	// Max notifications sent per channel per process.
 	ChannelLimit int
-	cache        *notificationCache
+	repository   Repository
+	parser       Parser
+	cache        notificationCache
 	sync.Mutex
 }
 
@@ -57,15 +57,7 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 	var notifications []*Notification
 	// Fetch all items with a subscriptions keywords.
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
-		// Ignore
-		if p.cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
-			continue
-		}
-		if subscription.HasSeen(*item) {
-			continue
-		}
-		if subscription.Ignore != "" &&
-			item.HasKeywords(subscription.IgnoreSlice()) {
+		if p.shouldIgnore(subscription, item) {
 			continue
 		}
 
@@ -92,8 +84,23 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 	return notifications
 }
 
-func newCache() *notificationCache {
-	return &notificationCache{
+func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
+	if p.cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
+		return true
+	}
+	if subscription.HasSeen(*item) {
+		return true
+	}
+	if subscription.Ignore != "" &&
+		item.HasKeywords(subscription.IgnoreSlice()) {
+		return true
+	}
+
+	return false
+}
+
+func newCache() notificationCache {
+	return notificationCache{
 		channelAmount:     make(map[string]int),
 		seenNotifications: map[string]*Notification{},
 	}

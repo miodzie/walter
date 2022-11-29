@@ -40,7 +40,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 
 		cache := newCache()
 		for _, subscription := range subs {
-			newNotes := p.processSub(parsedFeed, subscription, cache, feed)
+			newNotes := p.processSubscription(parsedFeed, subscription, cache, feed)
 			notifications = append(notifications, newNotes...)
 		}
 	}
@@ -48,11 +48,10 @@ func (p *Processor) Process() ([]*Notification, error) {
 	return notifications, nil
 }
 
-func (p *Processor) processSub(parsedFeed *ParsedFeed, subscription *Subscription, cache *cache, feed *Feed) []*Notification {
+func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription, cache *cache, feed *Feed) []*Notification {
 	var notifications []*Notification
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
 		if cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
-			// Save it for next time, bucko.
 			continue
 		}
 		if subscription.HasSeen(*item) {
@@ -62,6 +61,7 @@ func (p *Processor) processSub(parsedFeed *ParsedFeed, subscription *Subscriptio
 			item.HasKeywords(subscription.IgnoreSlice()) {
 			continue
 		}
+
 		key := cache.makeKey(item, subscription)
 		notification := cache.GetNotification(key)
 		if !cache.HasNotification(key) {

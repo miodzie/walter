@@ -33,7 +33,6 @@ func (p *Processor) Process() ([]*Notification, error) {
 	var notifications []*Notification
 	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
-		log.Debug("feed: " + feed.Name)
 		parsedFeed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {
 			return notifications, err
@@ -55,7 +54,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 
 func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
 	var notifications []*Notification
-	// Fetch all items with a subscriptions keywords.
+	// Fetch all items with a subscription's keywords.
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
 		if p.shouldIgnore(subscription, item) {
 			continue

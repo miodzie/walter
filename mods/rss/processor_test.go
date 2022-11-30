@@ -5,6 +5,7 @@
 package rss
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -24,18 +25,12 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	results, _ := processor.Process()
 
 	// Assert
-	if len(results) != 2 {
-		t.Error("unexpected results")
-	}
+	assert.Len(t, results, 2)
 
-	checkNotif(t, results[0], alice, feed)
-	if !alice.HasSeen(*item) {
-		t.Fail()
-	}
-	checkNotif(t, results[1], james, feed)
-	if !james.HasSeen(*item) {
-		t.Fail()
-	}
+	assertNotificationCorrect(t, results[0], alice, feed)
+	assert.True(t, alice.HasSeen(*item))
+	assertNotificationCorrect(t, results[1], james, feed)
+	assert.True(t, james.HasSeen(*item))
 }
 
 func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
@@ -57,10 +52,8 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 		t.Errorf("expected len(results)=1, got %d instead", len(results))
 	}
 
-	checkNotif(t, results[0], alice, feed)
-	if len(results[0].Users) != 2 {
-		t.Error("notification should have alice and james")
-	}
+	assertNotificationCorrect(t, results[0], alice, feed)
+	assert.Len(t, results[0].Users, 2, "notification should have alice and james")
 }
 
 func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
@@ -72,9 +65,7 @@ func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 
 	notes, _ := processor.Process()
 
-	if len(notes) != 0 {
-		t.Fail()
-	}
+	assert.Empty(t, notes)
 }
 
 func TestProcessor_Process_ignores_seen_items(t *testing.T) {
@@ -88,12 +79,10 @@ func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 	processor.repository.AddSub(sub)
 
 	// Act
-	notifs, _ := processor.Process()
+	notes, _ := processor.Process()
 
 	// Assert
-	if len(notifs) != 0 {
-		t.Fail()
-	}
+	assert.Empty(t, notes)
 }
 
 func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
@@ -115,10 +104,7 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 	results, _ := processor.Process()
 
 	// Assert
-	if len(results) != 3 {
-		t.Logf("len(results)=%d, expected 3", len(results))
-		t.Error("limiter should have only allowed 3 notifications")
-	}
+	assert.Len(t, results, 3, "limiter should have only allowed 3 notifications")
 }
 
 func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_words(t *testing.T) {
@@ -134,19 +120,11 @@ func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_word
 
 	notes, _ := processor.Process()
 
-	if len(notes) != 0 {
-		t.Error("notifications should be empty")
-	}
+	assert.Empty(t, notes)
 }
 
-func checkNotif(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
-	if n.Channel != sub.Channel {
-		t.Error("unexpected notification.Target")
-	}
-	if n.Users[0] != sub.User {
-		t.Error("unexpected notification.Users")
-	}
-	if n.Feed.Id != feed.Id {
-		t.Error("unexpected feed.Id")
-	}
+func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
+	assert.Equal(t, n.Channel, sub.Channel)
+	assert.Equal(t, n.Users[0], sub.User)
+	assert.Equal(t, n.Feed.Id, feed.Id)
 }

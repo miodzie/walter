@@ -40,5 +40,5 @@ func TestAddFeed_Exec_handles_repository_errors(t *testing.T) {
 
 	// Assert
 	assert.ErrorIs(t, expectedErr, err)
-	assert.Equal(t, "Failed to save feed.", response.Message, "")
+	assert.Equal(t, "Failed to save feed.", response.Message)
 }

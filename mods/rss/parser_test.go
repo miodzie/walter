@@ -5,18 +5,15 @@
 package rss
 
 import (
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 )
 
 func TestItem_HasKeywords_Ignores_words_within_a_word(t *testing.T) {
 	item := &Item{Title: "Financially"}
-	if item.HasKeywords([]string{"CIA"}) {
-		t.Fail()
-	}
-	if !item.HasKeywords([]string{"financially"}) {
-		t.Fail()
-	}
+	assert.False(t, item.HasKeywords([]string{"CIA"}))
+	assert.True(t, item.HasKeywords([]string{"financially"}))
 }
 
 func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing.T) {
@@ -25,9 +22,7 @@ func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing
 		item.Description += "A"
 	}
 
-	if item.Description != item.DescTruncated() {
-		t.Fail()
-	}
+	assert.Equal(t, item.Description, item.DescTruncated())
 }
 
 func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *testing.T) {
@@ -38,9 +33,7 @@ func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *test
 	sp := strings.Split(item.Description, "")
 	expected := strings.Join(sp[:100], "") + "..."
 
-	if expected != item.DescTruncated() {
-		t.Fail()
-	}
+	assert.Equal(t, expected, item.DescTruncated())
 }
 
 func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
@@ -51,23 +44,17 @@ func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 
 	result := feed.ItemsWithKeywords(sub.KeywordsSlice())
 
-	if len(result) != 2 {
-		t.Error("should contain 2 result")
-	}
+	assert.Len(t, result, 2)
 }
 
 func TestParsedFeed_HasKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "fOo,bar,baz"}
 	for _, feed := range hasKeywords {
-		if !feed.HasKeywords(sub.KeywordsSlice()) {
-			t.Error("feed should have keyword")
-		}
+		assert.True(t, feed.HasKeywords(sub.KeywordsSlice()))
 	}
 
 	for _, feed := range hasNotKeywords {
-		if feed.HasKeywords(sub.KeywordsSlice()) {
-			t.Error("feed should not have keyword")
-		}
+		assert.False(t, feed.HasKeywords(sub.KeywordsSlice()))
 	}
 }
 

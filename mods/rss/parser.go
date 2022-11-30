@@ -56,7 +56,7 @@ type Item struct {
 	Custom      map[string]string
 }
 
-func (i *Item) DescTruncated() string {
+func (i *Item) DescriptionTruncated() string {
 	if len(i.Description) < 100 {
 		return i.Description
 	}

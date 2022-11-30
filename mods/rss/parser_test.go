@@ -22,7 +22,7 @@ func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing
 		item.Description += "A"
 	}
 
-	assert.Equal(t, item.Description, item.DescTruncated())
+	assert.Equal(t, item.Description, item.DescriptionTruncated())
 }
 
 func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *testing.T) {
@@ -33,7 +33,7 @@ func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *test
 	sp := strings.Split(item.Description, "")
 	expected := strings.Join(sp[:100], "") + "..."
 
-	assert.Equal(t, expected, item.DescTruncated())
+	assert.Equal(t, expected, item.DescriptionTruncated())
 }
 
 func TestParsedFeed_ItemsWithKeywords(t *testing.T) {

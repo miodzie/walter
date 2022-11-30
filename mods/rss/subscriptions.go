@@ -45,11 +45,11 @@ func (s *Subscription) HasSeen(item Item) bool {
 	return seen
 }
 
-func (s *Subscription) KeywordsSlice() []string {
+func (s *Subscription) KeyWords() []string {
 	return strings.Split(s.Keywords, ",")
 }
 
-func (s *Subscription) IgnoreSlice() []string {
+func (s *Subscription) IgnoreWords() []string {
 	return strings.Split(s.Ignore, ",")
 }
 

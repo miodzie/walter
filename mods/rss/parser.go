@@ -72,12 +72,7 @@ func (i *Item) HasKeywords(keywords []string) bool {
 			fmt.Println("Error compiling regex: ", err)
 			continue
 		}
-		checks := []bool{
-			reg.MatchString(i.Title),
-			reg.MatchString(i.Description),
-			reg.MatchString(i.Content),
-		}
-		if anyTrue(checks) {
+		if reg.MatchString(i.Title) || reg.MatchString(i.Description) || reg.MatchString(i.Content) {
 			return true
 		}
 	}
@@ -93,16 +88,6 @@ func createWordBoundaryRegex(word string) (*regexp.Regexp, error) {
 			"$WORD$",
 			regexp.QuoteMeta(word),
 			1))
-}
-
-func anyTrue(checks []bool) bool {
-	for _, found := range checks {
-		if found {
-			return true
-		}
-	}
-
-	return false
 }
 
 type NullParser struct {

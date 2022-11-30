@@ -54,7 +54,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 
 func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
 	var notifications []*Notification
-	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
+	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeyWords()) {
 		if p.shouldIgnore(subscription, item) {
 			continue
 		}
@@ -83,7 +83,7 @@ func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
 		return true
 	}
 	if subscription.Ignore != "" &&
-		item.HasKeywords(subscription.IgnoreSlice()) {
+		item.HasKeywords(subscription.IgnoreWords()) {
 		return true
 	}
 

@@ -41,7 +41,6 @@ func run() error {
 	}
 
 	return walter.RunAll(func(bot walter.Bot) []walter.Module {
-		//m := mods.Default(fmt.Sprintf("%s.sqlite", bot.Name()))
 		m, err := mods.CreateFromList(bot.ModList())
 		if err != nil {
 			panic(err)
@@ -62,8 +61,7 @@ func initConfig() (*walter.Config, error) {
 		if err != nil {
 			return nil, err
 		}
-		log.Warnf(`Config was not found, created.
-Please update the config located at: %s And restart.\n`, file)
+		log.Warnf("Config was not found, created.\nPlease update the config located at: %s And restart.\n", file)
 		os.Exit(0)
 	}
 	cfg, err := walter.ParseToml(file)

@@ -84,7 +84,7 @@ func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
 	sub := &Subscription{User: "james", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
-	sub.Save(*item)
+	sub.MarkItemAsSeen(*item)
 	processor.repository.AddSub(sub)
 
 	// Act

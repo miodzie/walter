@@ -64,9 +64,8 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 		if wasNew {
 			notifications = append(notifications, notification)
 		}
-
 		notification.Users = append(notification.Users, subscription.User)
-		subscription.Save(*item)
+		subscription.MarkItemAsSeen(*item)
 	}
 
 	err := p.repository.UpdateSub(subscription)

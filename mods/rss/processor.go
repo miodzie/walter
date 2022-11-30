@@ -11,10 +11,10 @@ import (
 
 type Processor struct {
 	// Max notifications sent per channel per process.
-	ChannelLimit int
-	repository   Repository
-	parser       Parser
-	cache        notificationCache
+	ChannelLimit      int
+	repository        Repository
+	parser            Parser
+	notificationCache notificationCache
 	sync.Mutex
 }
 
@@ -29,7 +29,7 @@ func NewProcessor(repo Repository, parser Parser) *Processor {
 func (p *Processor) Process() ([]*Notification, error) {
 	p.Lock()
 	defer p.Unlock()
-	p.cache = newCache()
+	p.notificationCache = newNotificationCache()
 	var notifications []*Notification
 	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
@@ -54,7 +54,6 @@ func (p *Processor) Process() ([]*Notification, error) {
 
 func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
 	var notifications []*Notification
-	// Fetch all items with a subscription's keywords.
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeywordsSlice()) {
 		if p.shouldIgnore(subscription, item) {
 			continue
@@ -77,7 +76,7 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 }
 
 func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
-	if p.cache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
+	if p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
 		return true
 	}
 	if subscription.HasSeen(*item) {
@@ -94,17 +93,17 @@ func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
 func (p *Processor) getOrCreateNotification(subscription *Subscription,
 	item *Item) (*Notification, bool) {
 	wasNew := false
-	key := p.cache.makeKey(item, subscription)
-	notification := p.cache.GetNotification(key)
-	if !p.cache.HasNotification(key) {
+	key := p.notificationCache.makeKey(item, subscription)
+	notification := p.notificationCache.get(key)
+	if !p.notificationCache.has(key) {
 		notification = &Notification{Channel: subscription.Channel, Feed: *subscription.Feed, Item: *item}
-		p.cache.PutNotification(key, notification)
+		p.notificationCache.put(key, notification)
 		wasNew = true
 	}
 	return notification, wasNew
 }
 
-func newCache() notificationCache {
+func newNotificationCache() notificationCache {
 	return notificationCache{
 		channelAmount:     make(map[string]int),
 		seenNotifications: map[string]*Notification{},
@@ -116,16 +115,23 @@ type notificationCache struct {
 	seenNotifications map[string]*Notification
 }
 
-func (c *notificationCache) HasNotification(key string) bool {
+func (c *notificationCache) ChannelLimitReached(channelId string, limit int) bool {
+	if amt, ok := c.channelAmount[channelId]; ok {
+		return amt >= limit
+	}
+	return false
+}
+
+func (c *notificationCache) has(key string) bool {
 	_, exists := c.seenNotifications[key]
 	return exists
 }
 
-func (c *notificationCache) GetNotification(key string) *Notification {
+func (c *notificationCache) get(key string) *Notification {
 	return c.seenNotifications[key]
 }
 
-func (c *notificationCache) PutNotification(key string, notification *Notification) {
+func (c *notificationCache) put(key string, notification *Notification) {
 	if _, ok := c.channelAmount[notification.Channel]; !ok {
 		c.channelAmount[notification.Channel] = 0
 	}
@@ -135,11 +141,4 @@ func (c *notificationCache) PutNotification(key string, notification *Notificati
 
 func (c *notificationCache) makeKey(item *Item, sub *Subscription) string {
 	return item.GUID + sub.Channel
-}
-
-func (c *notificationCache) ChannelLimitReached(channelId string, limit int) bool {
-	if amt, ok := c.channelAmount[channelId]; ok {
-		return amt >= limit
-	}
-	return false
 }

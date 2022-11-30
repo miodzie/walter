@@ -59,13 +59,12 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 		if p.shouldIgnore(subscription, item) {
 			continue
 		}
-
+		subscription.Remember(*item)
 		notification, wasNew := p.getOrCreateNotification(subscription, item)
 		notification.Users = append(notification.Users, subscription.User)
 		if wasNew {
 			notifications = append(notifications, notification)
 		}
-		subscription.Remember(*item)
 	}
 
 	err := p.repository.UpdateSub(subscription)
@@ -78,7 +77,7 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 
 func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
 	return subscription.HasSeen(*item) ||
-		(subscription.Ignore != "" && item.HasKeywords(subscription.IgnoreWords())) ||
+		(item.HasKeywords(subscription.IgnoreWords()) && subscription.Ignore != "") ||
 		p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit)
 }
 
@@ -124,7 +123,7 @@ func (c *notificationCache) get(key string) *Notification {
 }
 
 func (c *notificationCache) put(key string, notification *Notification) {
-	if _, ok := c.channelAmount[notification.Channel]; !ok {
+	if _, exists := c.channelAmount[notification.Channel]; !exists {
 		c.channelAmount[notification.Channel] = 0
 	}
 	c.channelAmount[notification.Channel] += 1

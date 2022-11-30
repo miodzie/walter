@@ -5,7 +5,7 @@
 package rss
 
 import (
-	"fmt"
+	"github.com/miodzie/walter/log"
 	"regexp"
 	"strings"
 )
@@ -69,7 +69,7 @@ func (i *Item) HasKeywords(keywords []string) bool {
 	for _, keyword := range keywords {
 		reg, err := createWordBoundaryRegex(keyword)
 		if err != nil {
-			fmt.Println("Error compiling regex: ", err)
+			log.Error(err)
 			continue
 		}
 		if reg.MatchString(i.Title) || reg.MatchString(i.Description) || reg.MatchString(i.Content) {

@@ -48,9 +48,7 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 	results, _ := processor.Process()
 
 	// Assert
-	if len(results) != 1 {
-		t.Errorf("expected len(results)=1, got %d instead", len(results))
-	}
+	assert.Len(t, results, 1)
 
 	assertNotificationCorrect(t, results[0], alice, feed)
 	assert.Len(t, results[0].Users, 2, "notification should have alice and james")
@@ -125,6 +123,6 @@ func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_word
 
 func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
 	assert.Equal(t, n.Channel, sub.Channel)
-	assert.Equal(t, n.Users[0], sub.User)
+	assert.Contains(t, n.Users, sub.User)
 	assert.Equal(t, n.Feed.Id, feed.Id)
 }

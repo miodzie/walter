@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-type Processor struct {
+type FeedProcessor struct {
 	// Max notifications sent per channel per process.
 	ChannelLimit      int
 	repository        Repository
@@ -18,15 +18,15 @@ type Processor struct {
 	sync.Mutex
 }
 
-func NewProcessor(repo Repository, parser Parser) *Processor {
-	return &Processor{
+func NewProcessor(repo Repository, parser Parser) *FeedProcessor {
+	return &FeedProcessor{
 		repository:   repo,
 		parser:       parser,
 		ChannelLimit: 3,
 	}
 }
 
-func (p *Processor) Process() ([]*Notification, error) {
+func (p *FeedProcessor) Process() ([]*Notification, error) {
 	p.Lock()
 	defer p.Unlock()
 	p.notificationCache = newNotificationCache()
@@ -45,7 +45,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 		}
 
 		for _, subscription := range subs {
-			newNotes := p.processSubscription(parsedFeed, subscription)
+			newNotes := p.findNewNotifications(parsedFeed, subscription)
 			notifications = append(notifications, newNotes...)
 		}
 	}
@@ -53,7 +53,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 	return notifications, nil
 }
 
-func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
+func (p *FeedProcessor) findNewNotifications(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
 	var notifications []*Notification
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeyWords()) {
 		if p.shouldIgnore(subscription, item) {
@@ -75,13 +75,13 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 	return notifications
 }
 
-func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
+func (p *FeedProcessor) shouldIgnore(subscription *Subscription, item *Item) bool {
 	return subscription.HasSeen(*item) ||
 		(item.HasKeywords(subscription.IgnoreWords()) && subscription.Ignore != "") ||
 		p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit)
 }
 
-func (p *Processor) getOrCreateNotification(subscription *Subscription,
+func (p *FeedProcessor) getOrCreateNotification(subscription *Subscription,
 	item *Item) (*Notification, bool) {
 	wasNew := false
 	key := p.notificationCache.makeKey(item, subscription)

@@ -7,6 +7,7 @@ package usecases
 import (
 	"errors"
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -21,16 +22,11 @@ func TestAddFeed_Exec_adds_a_new_feed_to_the_repository(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if response.Message != "Feed saved." {
-		t.Fail()
-	}
+
+	assert.Equal(t, "Feed saved.", response.Message)
 	feed, err := repository.FeedByName("foo")
-	if err != nil {
-		t.Error(err)
-	}
-	if feed.Name != "foo" {
-		t.Error("feed was not saved to repository")
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, "foo", feed.Name)
 }
 
 func TestAddFeed_Exec_handles_repository_errors(t *testing.T) {
@@ -43,10 +39,6 @@ func TestAddFeed_Exec_handles_repository_errors(t *testing.T) {
 	response, err := addFeed.Exec(AddFeedRequest{})
 
 	// Assert
-	if err != expectedErr {
-		t.Error(err)
-	}
-	if response.Message != "Failed to save feed." {
-		t.Fail()
-	}
+	assert.ErrorIs(t, expectedErr, err)
+	assert.Equal(t, "Failed to save feed.", response.Message, "")
 }

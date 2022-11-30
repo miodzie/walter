@@ -24,7 +24,7 @@ type AddFeedResponse struct {
 }
 
 func (a *AddFeed) Exec(req AddFeedRequest) (AddFeedResponse, error) {
-	var resp AddFeedResponse
+	resp := AddFeedResponse{Message: "Feed saved."}
 
 	var feed rss.Feed
 	feed.Name = req.Name
@@ -32,7 +32,6 @@ func (a *AddFeed) Exec(req AddFeedRequest) (AddFeedResponse, error) {
 
 	err := a.repository.AddFeed(&feed)
 
-	resp.Message = "Feed saved."
 	if err != nil {
 		resp.Message = "Failed to save feed."
 	}

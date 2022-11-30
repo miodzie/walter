@@ -29,7 +29,7 @@ type UnsubscribeResponse struct {
 
 func (useCase *Unsubscribe) Exec(
 	request UnsubscribeRequest) (UnsubscribeResponse, error) {
-	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
+	subs, err := useCase.repository.Subs(rss.SearchParams{
 		User:     request.User,
 		FeedName: request.FeedName,
 		Channel:  request.Channel,

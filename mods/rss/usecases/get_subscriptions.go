@@ -34,7 +34,7 @@ type GetSubscriptionResponse struct {
 
 func (useCase GetSubscriptions) Exec(request GetSubscriptionsRequest) (GetSubscriptionResponse, error) {
 	var lsubs []GetSubscriptionsSub
-	subs, err := useCase.repository.Subs(rss.SubSearchOpt{
+	subs, err := useCase.repository.Subs(rss.SearchParams{
 		User:    request.User,
 		Channel: request.Optional.Channel,
 	})

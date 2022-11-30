@@ -38,7 +38,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 			return notifications, err
 		}
 
-		subs, err := p.repository.Subs(SubSearchOpt{FeedId: feed.Id})
+		subs, err := p.repository.Subs(SearchParams{FeedId: feed.Id})
 		if err != nil {
 			return notifications, err
 		}

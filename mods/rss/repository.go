@@ -20,10 +20,10 @@ type Repository interface {
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
 	RemoveSub(*Subscription) error
-	Subs(search SubSearchOpt) ([]*Subscription, error)
+	Subs(params SearchParams) ([]*Subscription, error)
 }
 
-type SubSearchOpt struct {
+type SearchParams struct {
 	FeedId   uint64
 	User     string
 	FeedName string
@@ -102,7 +102,7 @@ func (r *InMemRepository) RemoveSub(subscription *Subscription) error {
 	return r.popForcedErr()
 }
 
-func (r *InMemRepository) Subs(search SubSearchOpt) ([]*Subscription, error) {
+func (r *InMemRepository) Subs(search SearchParams) ([]*Subscription, error) {
 	var subs []*Subscription
 	var constraints = []func(sub *Subscription) bool{
 		func(sub *Subscription) bool {

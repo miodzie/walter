@@ -105,7 +105,7 @@ func (r *RssRepository) RemoveSub(subscription *rss.Subscription) error {
 	return err
 }
 
-func (r *RssRepository) Subs(search rss.SubSearchOpt) ([]*rss.Subscription, error) {
+func (r *RssRepository) Subs(search rss.SearchParams) ([]*rss.Subscription, error) {
 	var subs []*rss.Subscription
 	var args []interface{}
 	query := "SELECT * from feed_subscriptions WHERE 1 = 1"

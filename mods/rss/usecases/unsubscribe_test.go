@@ -35,7 +35,7 @@ func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	subs, err := repository.Subs(rss.SubSearchOpt{FeedId: feed.Id})
+	subs, err := repository.Subs(rss.SearchParams{FeedId: feed.Id})
 	if err != nil {
 		t.Error(err)
 	}

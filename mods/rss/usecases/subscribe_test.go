@@ -32,7 +32,7 @@ func TestSubscribe_Subscribe(t *testing.T) {
 	if response.Message != "Subscribed to news with keywords: fire" {
 		t.Fail()
 	}
-	subs, _ := repository.Subs(rss.SubSearchOpt{User: "adam"})
+	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
 	if len(subs) != 1 {
 		t.Fail()
 	}
@@ -62,7 +62,7 @@ func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
 		"ignore: potato,salad" {
 		t.Fail()
 	}
-	subs, _ := repository.Subs(rss.SubSearchOpt{User: "adam"})
+	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
 	if len(subs) != 1 {
 		t.Fail()
 	}

@@ -12,9 +12,9 @@ func TestSubscription_Seen(t *testing.T) {
 	sub := &Subscription{SeenItems: make(map[string]bool)}
 	item := Item{GUID: "1234"}
 
-	sub.MarkItemAsSeen(item)
-	sub.MarkItemAsSeen(Item{GUID: "1"})
-	sub.MarkItemAsSeen(Item{GUID: "1"})
+	sub.Remember(item)
+	sub.Remember(Item{GUID: "1"})
+	sub.Remember(Item{GUID: "1"})
 
 	if _, ok := sub.SeenItems[item.GUID]; !ok {
 		t.Fail()
@@ -32,7 +32,7 @@ func TestSubscription_HasSeen(t *testing.T) {
 		t.Error("sub should not have seen item")
 	}
 
-	sub.MarkItemAsSeen(item)
+	sub.Remember(item)
 
 	if sub.HasSeen(item) == false {
 		t.Error("sub should have seen item")

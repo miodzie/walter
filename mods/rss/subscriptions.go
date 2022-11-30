@@ -26,7 +26,7 @@ type Subscription struct {
 	SeenItems map[string]bool // [guid]bool
 }
 
-func (s *Subscription) MarkItemAsSeen(item Item) {
+func (s *Subscription) Remember(item Item) {
 	s.makeSeenMap()
 	if _, seen := s.SeenItems[item.GUID]; !seen {
 		s.SeenItems[item.GUID] = true

@@ -30,6 +30,7 @@ func (p *Processor) Process() ([]*Notification, error) {
 	p.Lock()
 	defer p.Unlock()
 	p.notificationCache = newNotificationCache()
+
 	var notifications []*Notification
 	feeds, _ := p.repository.Feeds()
 	for _, feed := range feeds {
@@ -76,18 +77,9 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 }
 
 func (p *Processor) shouldIgnore(subscription *Subscription, item *Item) bool {
-	if p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit) {
-		return true
-	}
-	if subscription.HasSeen(*item) {
-		return true
-	}
-	if subscription.Ignore != "" &&
-		item.HasKeywords(subscription.IgnoreWords()) {
-		return true
-	}
-
-	return false
+	return subscription.HasSeen(*item) ||
+		(subscription.Ignore != "" && item.HasKeywords(subscription.IgnoreWords())) ||
+		p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit)
 }
 
 func (p *Processor) getOrCreateNotification(subscription *Subscription,

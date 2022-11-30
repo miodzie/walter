@@ -61,10 +61,10 @@ func (p *Processor) processSubscription(parsedFeed *ParsedFeed, subscription *Su
 		}
 
 		notification, wasNew := p.getOrCreateNotification(subscription, item)
+		notification.Users = append(notification.Users, subscription.User)
 		if wasNew {
 			notifications = append(notifications, notification)
 		}
-		notification.Users = append(notification.Users, subscription.User)
 		subscription.MarkItemAsSeen(*item)
 	}
 

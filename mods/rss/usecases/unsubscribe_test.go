@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
+func TestNewUnsubscribeUseCase_Exec_unsubscribes_a_user(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	feed := rss.Feed{Id: 1, Name: "news", Url: ""}
 	if err := repository.AddFeed(&feed); err != nil {
@@ -39,7 +39,7 @@ func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
 	assert.Equal(t, "Successfully unsubscribed from `news` feed.", response.Message)
 }
 
-func TestNewUnsubscribeUseCase_Unsubscribe_failed_to_find_sub(t *testing.T) {
+func TestNewUnsubscribeUseCase_Exec_failed_to_find_sub(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	expectedErr := errors.New("expected")
 	repository.ForceError(expectedErr, 0)
@@ -53,7 +53,7 @@ func TestNewUnsubscribeUseCase_Unsubscribe_failed_to_find_sub(t *testing.T) {
 	assert.Equal(t, "Failed to locate user subscription.", resp.Message)
 }
 
-func TestNewUnsubscribeUseCase_Unsubscribe_failed_unsub(t *testing.T) {
+func TestNewUnsubscribeUseCase_Exec_handles_repository_errors(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	feed := rss.Feed{Id: 1, Name: "news", Url: ""}
 	if err := repository.AddFeed(&feed); err != nil {

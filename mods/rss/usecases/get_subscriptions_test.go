@@ -11,18 +11,18 @@ import (
 	"testing"
 )
 
-func TestGetSubscriptions_Get(t *testing.T) {
-	repo := rss.NewInMemRepo()
-	getSubs := NewGetSubscriptions(repo)
+func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {
+	repository := rss.NewInMemRepo()
+	getSubs := NewGetSubscriptions(repository)
 
 	feed := &rss.Feed{Id: 1, Name: "news"}
-	_ = repo.AddFeed(feed)
+	_ = repository.AddFeed(feed)
 	subscription := &rss.Subscription{
 		FeedId:  feed.Id,
 		User:    "Bob",
 		Channel: "#general",
 	}
-	_ = repo.AddSub(subscription)
+	_ = repository.AddSub(subscription)
 	request := GetSubscriptionsRequest{
 		User: "Bob",
 		Optional: struct{ Channel string }{
@@ -41,7 +41,7 @@ func TestGetSubscriptions_Get(t *testing.T) {
 	}
 }
 
-func TestGetSubscriptions_Get_error(t *testing.T) {
+func TestGetSubscriptions_Exec_handles_repository_errors(t *testing.T) {
 	repo := rss.NewInMemRepo()
 	expectedErr := errors.New("testing")
 	repo.ForceError(expectedErr, 0)

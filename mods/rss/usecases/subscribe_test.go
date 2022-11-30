@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestSubscribe_Subscribe(t *testing.T) {
+func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)
 	feed := &rss.Feed{Id: 1, Name: "news"}
@@ -33,7 +33,7 @@ func TestSubscribe_Subscribe(t *testing.T) {
 	assert.Len(t, subs, 1)
 }
 
-func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
+func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)
 	feed := &rss.Feed{Id: 1, Name: "news"}
@@ -60,7 +60,7 @@ func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
 	assert.Equal(t, sub.Ignore, request.IgnoreWords)
 }
 
-func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
+func TestSubscribe_Exec_fails_to_find_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	useCase := NewSubscribe(repository)
 
@@ -72,7 +72,7 @@ func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
 	assert.Equal(t, "Failed to find feed.", resp.Message)
 }
 
-func TestSubscribe_Subscribe_fails_to_subscribe(t *testing.T) {
+func TestSubscribe_Exec_handles_repository_errors(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	useCase := NewSubscribe(repository)
 	feed := &rss.Feed{Id: 1, Name: "news"}

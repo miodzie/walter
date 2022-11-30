@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestGetFeeds_Get(t *testing.T) {
+func TestGetFeeds_Exec_gets_all_feeds(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	repository.AddFeed(&rss.Feed{Name: "news"})
 	getFeeds := NewGetFeeds(repository)
@@ -25,7 +25,7 @@ func TestGetFeeds_Get(t *testing.T) {
 	assert.Equal(t, "news", feed.Name)
 }
 
-func TestGetFeeds_Get_returns_empty_when_no_feeds(t *testing.T) {
+func TestGetFeeds_Exec_returns_empty_when_no_feeds(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	getFeeds := NewGetFeeds(repository)
 

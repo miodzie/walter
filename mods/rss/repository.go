@@ -9,8 +9,9 @@ import (
 	"math/rand"
 )
 
-// Repository
-// TODO: AddFeed defined errors here for Repositories to use.
+// TODO: Repository defined errors here for implementations to use.
+// e.g. var FeedNotFound = errors.New("feed not found")
+
 type Repository interface {
 	Feeds() ([]*Feed, error)
 	AddFeed(*Feed) error

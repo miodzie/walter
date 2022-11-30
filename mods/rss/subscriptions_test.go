@@ -5,6 +5,7 @@
 package rss
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -16,25 +17,17 @@ func TestSubscription_Seen(t *testing.T) {
 	sub.Remember(Item{GUID: "1"})
 	sub.Remember(Item{GUID: "1"})
 
-	if _, ok := sub.SeenItems[item.GUID]; !ok {
-		t.Fail()
-	}
-	if sub.Seen != "1234,1" {
-		t.Fail()
-	}
+	_, exists := sub.SeenItems[item.GUID]
+	assert.True(t, exists)
+	assert.Equal(t, "1234,1", sub.Seen)
 }
 
 func TestSubscription_HasSeen(t *testing.T) {
 	sub := &Subscription{SeenItems: make(map[string]bool)}
 	item := Item{GUID: "1234"}
-
-	if sub.HasSeen(item) {
-		t.Error("sub should not have seen item")
-	}
+	assert.False(t, sub.HasSeen(item))
 
 	sub.Remember(item)
 
-	if sub.HasSeen(item) == false {
-		t.Error("sub should have seen item")
-	}
+	assert.True(t, sub.HasSeen(item))
 }

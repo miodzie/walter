@@ -90,10 +90,10 @@ func createWordBoundaryRegex(word string) (*regexp.Regexp, error) {
 			1))
 }
 
-type NullParser struct {
+type StubParser struct {
 	Parsed *ParsedFeed
 }
 
-func (p *NullParser) ParseURL(url string) (*ParsedFeed, error) {
+func (p *StubParser) ParseURL(url string) (*ParsedFeed, error) {
 	return p.Parsed, nil
 }

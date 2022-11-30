@@ -13,7 +13,7 @@ import (
 // finds new Feed Items that haven't been seen by each User's Subscription to said Feed,
 // then turns them into grouped, sendable Notifications.
 type FeedProcessor struct {
-	// Max notifications sent per channel per process.
+	// Max notifications sent per channel per Process() call.
 	ChannelLimit      int
 	repository        Repository
 	parser            Parser

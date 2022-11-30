@@ -6,8 +6,8 @@ package usecases
 
 import (
 	"errors"
-	"fmt"
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -32,20 +32,11 @@ func TestNewUnsubscribeUseCase_Unsubscribe_unsubs_a_user(t *testing.T) {
 	response, err := unsub.Exec(request)
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 	subs, err := repository.Subs(rss.SearchParams{FeedId: feed.Id})
-	if err != nil {
-		t.Error(err)
-	}
-	if len(subs) != 0 {
-		fmt.Println("There should be no subscriptions after a user unsubscribed.")
-		t.Fail()
-	}
-	if response.Message != "Successfully unsubscribed from `news` feed." {
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.Empty(t, subs, "There should be no subscriptions after a user unsubscribed.")
+	assert.Equal(t, "Successfully unsubscribed from `news` feed.", response.Message)
 }
 
 func TestNewUnsubscribeUseCase_Unsubscribe_failed_to_find_sub(t *testing.T) {
@@ -58,12 +49,8 @@ func TestNewUnsubscribeUseCase_Unsubscribe_failed_to_find_sub(t *testing.T) {
 	resp, err := unsub.Exec(UnsubscribeRequest{})
 
 	// Assert
-	if err != expectedErr {
-		t.Error(err)
-	}
-	if resp.Message != "Failed to locate user subscription." {
-		t.Fail()
-	}
+	assert.ErrorIs(t, expectedErr, err)
+	assert.Equal(t, "Failed to locate user subscription.", resp.Message)
 }
 
 func TestNewUnsubscribeUseCase_Unsubscribe_failed_unsub(t *testing.T) {
@@ -90,11 +77,6 @@ func TestNewUnsubscribeUseCase_Unsubscribe_failed_unsub(t *testing.T) {
 	resp, err := unsub.Exec(request)
 
 	// Assert
-	if err != expectedErr {
-		fmt.Println(resp.Message)
-		t.Error(err)
-	}
-	if resp.Message != "Failed to unsubscribe." {
-		t.Fail()
-	}
+	assert.ErrorIs(t, expectedErr, err)
+	assert.Equal(t, "Failed to unsubscribe.", resp.Message)
 }

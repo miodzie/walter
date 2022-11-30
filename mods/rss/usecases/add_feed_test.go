@@ -19,10 +19,7 @@ func TestAddFeed_Exec_adds_a_new_feed_to_the_repository(t *testing.T) {
 	response, err := addFeed.Exec(AddFeedRequest{Name: "foo", Url: "http://localhost.rss"})
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-
+	assert.Nil(t, err)
 	assert.Equal(t, "Feed saved.", response.Message)
 	feed, err := repository.FeedByName("foo")
 	assert.Nil(t, err)

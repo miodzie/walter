@@ -6,6 +6,7 @@ package usecases
 
 import (
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -18,16 +19,10 @@ func TestGetFeeds_Get(t *testing.T) {
 	response, err := getFeeds.Exec()
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-	if len(response.Feeds) != 1 {
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.Len(t, response.Feeds, 1)
 	feed := response.Feeds[0]
-	if feed.Name != "news" {
-		t.Fail()
-	}
+	assert.Equal(t, "news", feed.Name)
 }
 
 func TestGetFeeds_Get_returns_empty_when_no_feeds(t *testing.T) {
@@ -38,13 +33,7 @@ func TestGetFeeds_Get_returns_empty_when_no_feeds(t *testing.T) {
 	response, err := getFeeds.Exec()
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-	if len(response.Feeds) != 0 {
-		t.Fail()
-	}
-	if response.Message != "No feeds available." {
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.Empty(t, response.Feeds)
+	assert.Equal(t, "No feeds available.", response.Message)
 }

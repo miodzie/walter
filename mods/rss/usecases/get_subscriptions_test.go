@@ -7,6 +7,7 @@ package usecases
 import (
 	"errors"
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -33,17 +34,10 @@ func TestGetSubscriptions_Get(t *testing.T) {
 	response, err := getSubs.Exec(request)
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-	if len(response.Subscriptions) == 0 {
-		t.Log("no subscriptions returned")
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.NotEmpty(t, response.Subscriptions, 0)
 	for _, sub := range response.Subscriptions {
-		if sub.Channel != "#general" {
-			t.Fail()
-		}
+		assert.Equal(t, "#general", sub.Channel)
 	}
 }
 
@@ -57,10 +51,6 @@ func TestGetSubscriptions_Get_error(t *testing.T) {
 	resp, err := getSubs.Exec(GetSubscriptionsRequest{User: "Bob"})
 
 	// Assert
-	if err != expectedErr {
-		t.Error(err)
-	}
-	if resp.Message != "Failed to retrieve subscriptions." {
-		t.Fail()
-	}
+	assert.ErrorIs(t, expectedErr, err)
+	assert.Equal(t, "Failed to retrieve subscriptions.", resp.Message)
 }

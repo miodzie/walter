@@ -7,6 +7,7 @@ package usecases
 import (
 	"errors"
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -26,16 +27,10 @@ func TestSubscribe_Subscribe(t *testing.T) {
 	response, err := subscribe.Exec(request)
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-	if response.Message != "Subscribed to news with keywords: fire" {
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, "Subscribed to news with keywords: fire", response.Message)
 	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
-	if len(subs) != 1 {
-		t.Fail()
-	}
+	assert.Len(t, subs, 1)
 }
 
 func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
@@ -55,22 +50,14 @@ func TestSubscribe_Subscribe_with_ignore(t *testing.T) {
 	response, err := subscribe.Exec(request)
 
 	// Assert
-	if err != nil {
-		t.Error(err)
-	}
-	if response.Message != "Subscribed to news with keywords: fire. "+
-		"ignore: potato,salad" {
-		t.Fail()
-	}
+	assert.Nil(t, err)
+	assert.Equal(t,
+		"Subscribed to news with keywords: fire. ignore: potato,salad",
+		response.Message)
 	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
-	if len(subs) != 1 {
-		t.Fail()
-	}
+	assert.Len(t, subs, 1)
 	sub := subs[0]
-	if sub.Ignore != request.IgnoreWords {
-		t.Fail()
-	}
-
+	assert.Equal(t, sub.Ignore, request.IgnoreWords)
 }
 
 func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
@@ -81,12 +68,8 @@ func TestSubscribe_Subscribe_fails_to_find_feed(t *testing.T) {
 	resp, err := useCase.Exec(SubscribeRequest{})
 
 	// Assert
-	if err.Error() != "feed not found" {
-		t.Error(err)
-	}
-	if resp.Message != "Failed to find feed." {
-		t.Fail()
-	}
+	assert.Equal(t, rss.FeedNotFoundError, err)
+	assert.Equal(t, "Failed to find feed.", resp.Message)
 }
 
 func TestSubscribe_Subscribe_fails_to_subscribe(t *testing.T) {
@@ -107,10 +90,6 @@ func TestSubscribe_Subscribe_fails_to_subscribe(t *testing.T) {
 	resp, err := useCase.Exec(request)
 
 	// Assert
-	if resp.Message != "Failed to subscribe." {
-		t.Fail()
-	}
-	if err != expectedErr {
-		t.Error(err)
-	}
+	assert.Equal(t, resp.Message, "Failed to subscribe.")
+	assert.ErrorIs(t, expectedErr, err)
 }

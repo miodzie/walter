@@ -9,8 +9,9 @@ import (
 	"math/rand"
 )
 
-// TODO: Repository defined errors here for implementations to use.
-// e.g. var FeedNotFound = errors.New("feed not found")
+// TODO: Add more Repository errors.
+
+var FeedNotFoundError = errors.New("feed not found")
 
 type Repository interface {
 	Feeds() ([]*Feed, error)
@@ -81,7 +82,7 @@ func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
 			return c, r.popForcedErr()
 		}
 	}
-	return &Feed{}, errors.New("feed not found")
+	return &Feed{}, FeedNotFoundError
 }
 
 func (r *InMemRepository) AddSub(s *Subscription) error {

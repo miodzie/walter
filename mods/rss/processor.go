@@ -45,7 +45,7 @@ func (p *FeedProcessor) Process() ([]*Notification, error) {
 		}
 
 		for _, subscription := range subs {
-			newNotes := p.findNewNotifications(parsedFeed, subscription)
+			newNotes := p.findNewNotificationsFor(subscription, parsedFeed)
 			notifications = append(notifications, newNotes...)
 		}
 	}
@@ -53,7 +53,7 @@ func (p *FeedProcessor) Process() ([]*Notification, error) {
 	return notifications, nil
 }
 
-func (p *FeedProcessor) findNewNotifications(parsedFeed *ParsedFeed, subscription *Subscription) []*Notification {
+func (p *FeedProcessor) findNewNotificationsFor(subscription *Subscription, parsedFeed *ParsedFeed) []*Notification {
 	var notifications []*Notification
 	for _, item := range parsedFeed.ItemsWithKeywords(subscription.KeyWords()) {
 		if p.shouldIgnore(subscription, item) {

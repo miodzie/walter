@@ -29,6 +29,11 @@ func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 	assert.Equal(t, "Subscribed to news with keywords: fire", response.Message)
 	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
 	assert.Len(t, subs, 1)
+	sub := subs[0]
+	assert.Equal(t, "news", sub.Feed.Name)
+	assert.Equal(t, "#news", sub.Channel)
+	assert.Equal(t, "fire", sub.Keywords)
+	assert.Equal(t, "adam", sub.User)
 }
 
 func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {

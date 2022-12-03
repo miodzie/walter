@@ -15,10 +15,8 @@ func TestAddFeed_Exec_adds_a_new_feed_to_the_repository(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	addFeed := NewAddFeed(repository)
 
-	// Act
 	response, err := addFeed.Exec(AddFeedRequest{Name: "foo", Url: "http://localhost.rss"})
 
-	// Assert
 	assert.Nil(t, err)
 	assert.Equal(t, "Feed saved.", response.Message)
 	feed, err := repository.FeedByName("foo")
@@ -32,10 +30,8 @@ func TestAddFeed_Exec_handles_repository_errors(t *testing.T) {
 	repository.ForceError(expectedErr, 0)
 	addFeed := NewAddFeed(repository)
 
-	// Act
 	response, err := addFeed.Exec(AddFeedRequest{})
 
-	// Assert
 	assert.ErrorIs(t, expectedErr, err)
 	assert.Equal(t, "Failed to save feed.", response.Message)
 }

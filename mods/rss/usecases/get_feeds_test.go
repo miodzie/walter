@@ -15,10 +15,8 @@ func TestGetFeeds_Exec_gets_all_feeds(t *testing.T) {
 	repository.AddFeed(&rss.Feed{Name: "news"})
 	getFeeds := NewGetFeeds(repository)
 
-	// Act
 	response, err := getFeeds.Exec()
 
-	// Assert
 	assert.Nil(t, err)
 	assert.Len(t, response.Feeds, 1)
 	feed := response.Feeds[0]
@@ -29,10 +27,8 @@ func TestGetFeeds_Exec_returns_empty_when_no_feeds(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	getFeeds := NewGetFeeds(repository)
 
-	// Act
 	response, err := getFeeds.Exec()
 
-	// Assert
 	assert.Nil(t, err)
 	assert.Empty(t, response.Feeds)
 	assert.Equal(t, "No feeds available.", response.Message)

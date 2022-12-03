@@ -21,10 +21,8 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
 	processor.repository.AddSub(james)
 
-	// Act
 	results, _ := processor.Process()
 
-	// Assert
 	assert.Len(t, results, 2)
 
 	assertNotificationCorrect(t, results[0], alice, feed)
@@ -44,10 +42,8 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
 	processor.repository.AddSub(james)
 
-	// Act
 	results, _ := processor.Process()
 
-	// Assert
 	assert.Len(t, results, 1)
 
 	assertNotificationCorrect(t, results[0], alice, feed)
@@ -76,10 +72,8 @@ func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 	sub.Remember(*item)
 	processor.repository.AddSub(sub)
 
-	// Act
 	notes, _ := processor.Process()
 
-	// Assert
 	assert.Empty(t, notes)
 }
 
@@ -98,10 +92,8 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id}
 	processor.repository.AddSub(alice)
 
-	// Act
 	results, _ := processor.Process()
 
-	// Assert
 	assert.Len(t, results, 3, "limiter should have only allowed 3 notifications")
 }
 

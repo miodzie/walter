@@ -84,8 +84,7 @@ func (p *FeedProcessor) shouldIgnore(subscription *Subscription, item *Item) boo
 		p.notificationCache.ChannelLimitReached(subscription.Channel, p.ChannelLimit)
 }
 
-func (p *FeedProcessor) getOrCreateNotification(subscription *Subscription,
-	item *Item) (*Notification, bool) {
+func (p *FeedProcessor) getOrCreateNotification(subscription *Subscription, item *Item) (*Notification, bool) {
 	wasNew := false
 	key := p.notificationCache.makeKey(item, subscription)
 	notification := p.notificationCache.get(key)

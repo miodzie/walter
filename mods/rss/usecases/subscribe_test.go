@@ -23,7 +23,7 @@ func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 		User:     "adam",
 	}
 
-	response, err := subscribe.Exec(request)
+	response, err := subscribe.Subscribe(request)
 
 	assert.Nil(t, err)
 	assert.Equal(t, "Subscribed to news with keywords: fire", response.Message)
@@ -49,7 +49,7 @@ func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {
 		IgnoreWords: "potato,salad",
 	}
 
-	response, err := subscribe.Exec(request)
+	response, err := subscribe.Subscribe(request)
 
 	assert.Nil(t, err)
 	assert.Equal(t,
@@ -65,7 +65,7 @@ func TestSubscribe_Exec_fails_to_find_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	useCase := NewSubscribe(repository)
 
-	resp, err := useCase.Exec(SubscribeRequest{})
+	resp, err := useCase.Subscribe(SubscribeRequest{})
 
 	assert.Equal(t, rss.FeedNotFoundError, err)
 	assert.Equal(t, "Failed to find feed.", resp.Message)
@@ -85,7 +85,7 @@ func TestSubscribe_Exec_handles_repository_errors(t *testing.T) {
 	expectedErr := errors.New("foo")
 	repository.ForceError(expectedErr, 1)
 
-	resp, err := useCase.Exec(request)
+	resp, err := useCase.Subscribe(request)
 
 	assert.Equal(t, resp.Message, "Failed to subscribe.")
 	assert.ErrorIs(t, expectedErr, err)

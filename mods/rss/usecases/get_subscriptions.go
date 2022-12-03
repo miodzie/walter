@@ -32,7 +32,7 @@ type GetSubscriptionResponse struct {
 	Subscriptions []GetSubscriptionsSub
 }
 
-func (useCase GetSubscriptions) Exec(request GetSubscriptionsRequest) (GetSubscriptionResponse, error) {
+func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) (GetSubscriptionResponse, error) {
 	var lsubs []GetSubscriptionsSub
 	subs, err := useCase.repository.Subs(rss.SearchParams{
 		User:    request.User,

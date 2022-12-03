@@ -24,7 +24,7 @@ type GetFeedsFeed struct {
 	Url  string
 }
 
-func (g *GetFeeds) Exec() (GetFeedsResponse, error) {
+func (g *GetFeeds) Get() (GetFeedsResponse, error) {
 	var resp GetFeedsResponse
 	feeds, err := g.repository.Feeds()
 	for _, f := range feeds {

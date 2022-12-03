@@ -31,7 +31,7 @@ func (mod *RssMod) addFeed(msg walter.Message) {
 		Url:  msg.Arguments[2],
 	}
 
-	resp, err := addFeed.Exec(request)
+	resp, err := addFeed.Add(request)
 
 	if err != nil {
 		log.Error(err)
@@ -43,7 +43,7 @@ func (mod *RssMod) addFeed(msg walter.Message) {
 // !feeds
 func (mod *RssMod) showFeeds(msg walter.Message) {
 	getFeeds := usecases.NewGetFeeds(mod.Repository)
-	resp, err := getFeeds.Exec()
+	resp, err := getFeeds.Get()
 
 	if err != nil {
 		mod.actions.Reply(msg, resp.Message)
@@ -87,7 +87,7 @@ func (mod *RssMod) subscribe(msg walter.Message) {
 		IgnoreWords: ignore,
 	}
 	var subscribe = usecases.NewSubscribe(mod.Repository)
-	resp, err := subscribe.Exec(req)
+	resp, err := subscribe.Subscribe(req)
 	if err != nil {
 		log.Error(err)
 	}
@@ -108,7 +108,7 @@ func (mod *RssMod) unsubscribe(msg walter.Message) {
 		FeedName: feedName,
 	}
 	unsubscribe := usecases.NewUnsubscribe(mod.Repository)
-	response, err := unsubscribe.Exec(request)
+	response, err := unsubscribe.Unsubscribe(request)
 	if err != nil {
 		log.Error(err)
 	}
@@ -122,7 +122,7 @@ func (mod *RssMod) subs(msg walter.Message) {
 	}
 
 	getSubs := usecases.NewGetSubscriptions(mod.Repository)
-	response, err := getSubs.Exec(request)
+	response, err := getSubs.Get(request)
 	if err != nil {
 		log.Error(err)
 		mod.actions.Reply(msg, "oh noes i brokededz")

@@ -30,7 +30,7 @@ func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {
 		},
 	}
 
-	response, err := getSubs.Exec(request)
+	response, err := getSubs.Get(request)
 
 	assert.Nil(t, err)
 	assert.NotEmpty(t, response.Subscriptions, 0)
@@ -45,7 +45,7 @@ func TestGetSubscriptions_Exec_handles_repository_errors(t *testing.T) {
 	repo.ForceError(expectedErr, 0)
 	getSubs := NewGetSubscriptions(repo)
 
-	resp, err := getSubs.Exec(GetSubscriptionsRequest{User: "Bob"})
+	resp, err := getSubs.Get(GetSubscriptionsRequest{User: "Bob"})
 
 	assert.ErrorIs(t, expectedErr, err)
 	assert.Equal(t, "Failed to retrieve subscriptions.", resp.Message)

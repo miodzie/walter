@@ -28,7 +28,7 @@ func TestNewUnsubscribeUseCase_Exec_unsubscribes_a_user(t *testing.T) {
 	unsub := NewUnsubscribe(repository)
 	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
 
-	response, err := unsub.Exec(request)
+	response, err := unsub.Unsubscribe(request)
 
 	assert.Nil(t, err)
 	subs, err := repository.Subs(rss.SearchParams{FeedId: feed.Id})
@@ -43,7 +43,7 @@ func TestNewUnsubscribeUseCase_Exec_failed_to_find_sub(t *testing.T) {
 	repository.ForceError(expectedErr, 0)
 	unsub := NewUnsubscribe(repository)
 
-	resp, err := unsub.Exec(UnsubscribeRequest{})
+	resp, err := unsub.Unsubscribe(UnsubscribeRequest{})
 
 	assert.ErrorIs(t, expectedErr, err)
 	assert.Equal(t, "Failed to locate user subscription.", resp.Message)
@@ -69,7 +69,7 @@ func TestNewUnsubscribeUseCase_Exec_handles_repository_errors(t *testing.T) {
 	unsub := NewUnsubscribe(repository)
 	request := UnsubscribeRequest{Channel: "#news", FeedName: "news", User: "john"}
 
-	resp, err := unsub.Exec(request)
+	resp, err := unsub.Unsubscribe(request)
 
 	assert.ErrorIs(t, expectedErr, err)
 	assert.Equal(t, "Failed to unsubscribe.", resp.Message)

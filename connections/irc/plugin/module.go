@@ -33,7 +33,7 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 			mod.irc.Join(msg.Arguments[1])
 		}
 		if msg.IsCommand("part") && actions.IsAdmin(msg.Author.Id) {
-			if len(msg.Arguments) >= 1 {
+			if len(msg.Arguments) > 1 {
 				mod.irc.Part(msg.Arguments[1])
 			} else {
 				mod.irc.Part(msg.Target)

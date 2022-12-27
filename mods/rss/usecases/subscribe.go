@@ -49,7 +49,10 @@ func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 		return SubscribeResponse{Message: "Failed to subscribe."}, err
 	}
 
-	reply := fmt.Sprintf("Subscribed to %s with keywords: %s", feed.Name, sub.Keywords)
+	reply := fmt.Sprintf("Subscribed to %s", feed.Name)
+	if sub.Keywords != "" {
+		reply += fmt.Sprintf(" with keywords: %s", sub.Keywords)
+	}
 	if sub.Ignore != "" {
 		reply += fmt.Sprintf(". ignore: %s", sub.Ignore)
 	}

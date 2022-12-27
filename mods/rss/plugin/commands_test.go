@@ -47,6 +47,7 @@ func (suite *CommandSuite) TestSubscribeCommandNoKeywords() {
 		suite.Equal("##feeds", sub.Channel)
 		suite.Equal("", sub.Keywords)
 		suite.Equal(suite.Feed.Id, sub.FeedId)
+		suite.Equal("Subscribed to my_feeds.", suite.LastReply)
 	}
 }
 

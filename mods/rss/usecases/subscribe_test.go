@@ -11,6 +11,31 @@ import (
 	"testing"
 )
 
+// TODO: Clean up tests
+
+func TestSubscribeNoKeywords(t *testing.T) {
+	repository := rss.NewInMemRepo()
+	subscribe := NewSubscribe(repository)
+	feed := &rss.Feed{Id: 1, Name: "news"}
+	repository.AddFeed(feed)
+	request := SubscribeRequest{
+		FeedName: "news",
+		Channel:  "#news",
+		User:     "adam",
+	}
+
+	response, err := subscribe.Subscribe(request)
+
+	assert.Nil(t, err)
+	assert.Equal(t, "Subscribed to news", response.Message)
+	subs, _ := repository.Subs(rss.SearchParams{User: "adam"})
+	assert.Len(t, subs, 1)
+	sub := subs[0]
+	assert.Equal(t, "news", sub.Feed.Name)
+	assert.Equal(t, "#news", sub.Channel)
+	assert.Equal(t, "adam", sub.User)
+}
+
 func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)

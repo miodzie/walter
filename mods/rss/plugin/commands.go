@@ -5,6 +5,7 @@
 package plugin
 
 import (
+	"flag"
 	"fmt"
 	"github.com/miodzie/walter/log"
 	"strings"
@@ -68,26 +69,26 @@ func (mod *RssMod) showFeeds(msg walter.Message) {
 // !subscribe {feed name} {keywords, comma separated}
 func (mod *RssMod) subscribe(msg walter.Message) {
 	if len(msg.Arguments) < 3 {
-		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token()))
+		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, "+
+			"use %ssubscribe my_feed -keywords=foo,bar -ignore=baz,buzz "+
+			"keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token()))
 		return
 	}
-	// TODO: validate & parse?
-	// TODO: Replace with flag.NewFlagSet
-	//cmdSubscribe := flag.NewFlagSet("subscribe", flag.ContinueOnError)
-	//cmdSubscribe.Parse(msg.Arguments[2:])
-	keywords := strings.Join(msg.Arguments[2:], " ")
-	var ignore string
-	if strings.Contains(keywords, "ignore:") {
-		split := strings.Split(keywords, "ignore:")
-		keywords = split[0]
-		ignore = split[1]
+	subCmd := flag.NewFlagSet("subscribe", flag.ContinueOnError)
+	keywords := subCmd.String("keywords", "", "keywords")
+	ignore := subCmd.String("ignore", "", "ignore")
+	if err := subCmd.Parse(msg.Arguments[2:]); err != nil {
+		log.Error(err)
+		mod.actions.Reply(msg, "Failed to parse !subscribe commands.")
+		return
 	}
+
 	req := usecases.SubscribeRequest{
 		FeedName:    msg.Arguments[1],
-		Keywords:    keywords,
+		Keywords:    *keywords,
 		Channel:     msg.Target,
 		User:        msg.Author.Mention,
-		IgnoreWords: ignore,
+		IgnoreWords: *ignore,
 	}
 	var subscribe = usecases.NewSubscribe(mod.Repository)
 	resp, err := subscribe.Subscribe(req)

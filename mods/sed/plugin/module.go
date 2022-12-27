@@ -28,12 +28,13 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.log = make(map[string][]walter.Message)
 	for mod.running {
 		msg := <-stream
-		// TODO: holy parse user input better merciful lawd
+		// TODO: Parse user input better.
 		s := sed.ParseSed(msg.Content)
 		if s.Command != ".s" {
 			mod.logMsg(msg)
 		}
-		if s.Command == ".s" {
+		// NOTE: Technically, tokens can be anything, not just "/". Scan for multiple tokens?
+		if s.Command == ".s" || s.Command == "s" {
 			for i := len(mod.log[msg.Target]) - 1; i >= 0; i-- {
 				m := mod.log[msg.Target][i]
 				if s.HasMatch(m.Content) {

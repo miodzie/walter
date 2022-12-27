@@ -22,6 +22,7 @@ type Picture struct {
 	CurrentLine int
 }
 
+// NextLine TODO: This can just be replaced by a Scanner...
 func (p *Picture) NextLine() string {
 	if p.Completed() {
 		return ""

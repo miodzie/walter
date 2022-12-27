@@ -29,6 +29,27 @@ func (suite *CommandSuite) SetupTest() {
 	suite.Repository.AddFeed(suite.Feed)
 }
 
+func (suite *CommandSuite) TestSubscribeCommandNoKeywords() {
+	cmd := "!subscribe my_feed"
+	msg := walter.Message{
+		Content: cmd, Arguments: strings.Split(cmd, " "),
+		Target: "##feeds",
+		Author: walter.Author{Id: "author_id", Mention: "author_mention"},
+	}
+
+	suite.subscribe(msg)
+
+	subs, err := suite.Repository.Subs(rss.SearchParams{})
+	assert.Nil(suite.T(), err)
+	if assert.Len(suite.T(), subs, 1) {
+		sub := subs[0]
+		suite.Equal("author_mention", sub.User)
+		suite.Equal("##feeds", sub.Channel)
+		suite.Equal("", sub.Keywords)
+		suite.Equal(suite.Feed.Id, sub.FeedId)
+	}
+}
+
 func (suite *CommandSuite) TestSubscribeCommandSubscribesWithKeywords() {
 	cmd := "!subscribe my_feed -keywords=foo,bar"
 	msg := walter.Message{

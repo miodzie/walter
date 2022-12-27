@@ -68,7 +68,7 @@ func (mod *RssMod) showFeeds(msg walter.Message) {
 
 // !subscribe {feed name} {keywords, comma separated}
 func (mod *RssMod) subscribe(msg walter.Message) {
-	if len(msg.Arguments) < 3 {
+	if len(msg.Arguments) < 2 {
 		mod.actions.Reply(msg, fmt.Sprintf("To subscribe to a feed, "+
 			"use %ssubscribe my_feed -keywords=foo,bar -ignore=baz,buzz "+
 			"keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token()))

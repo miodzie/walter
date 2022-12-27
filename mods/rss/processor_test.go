@@ -6,8 +6,41 @@ package rss
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"testing"
 )
+
+type FeedProcessorSuite struct {
+	suite.Suite
+	sut        *FeedProcessor
+	repository Repository
+	feed       *Feed
+	item       *Item
+}
+
+func (s *FeedProcessorSuite) SetupTest() {
+	s.item = &Item{Title: "bar", GUID: "1"}
+	parsed := &ParsedFeed{Items: []*Item{s.item}}
+	s.repository = NewInMemRepo()
+	s.sut = NewProcessor(s.repository, &StubParser{Parsed: parsed})
+	s.feed = &Feed{Id: 1}
+	_ = s.sut.repository.AddFeed(s.feed)
+}
+
+func (s *FeedProcessorSuite) TestSubscribeNoKeywords() {
+	alice := &Subscription{User: "alice", Channel: "#chat2", FeedId: s.feed.Id}
+	s.Nil(s.repository.AddSub(alice))
+
+	results, _ := s.sut.Process()
+
+	s.Len(results, 1)
+	assertNotificationCorrect(s.T(), results[0], alice, s.feed)
+	s.True(alice.HasSeen(*s.item))
+}
+
+func TestRunProcessorSuite(t *testing.T) {
+	suite.Run(t, new(FeedProcessorSuite))
+}
 
 func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	item := &Item{Title: "bar", GUID: "1"}

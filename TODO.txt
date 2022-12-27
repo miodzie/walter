@@ -1,0 +1,5 @@
+# TODOs
+
+- [ ] Add auto deploy with GitHub Actions.
+
+

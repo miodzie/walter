@@ -17,53 +17,52 @@ type CommandSuite struct {
 	SpyActions *SpyActions
 }
 
-func (s *CommandSuite) SetupTest() {
-	s.RssMod = New(Context{
+func (suite *CommandSuite) SetupTest() {
+	suite.RssMod = New(Context{
 		Repository: rss.NewInMemRepo(),
 		Parser:     &rss.StubParser{},
 		Formatter:  rss.MinimalFormatter{},
 	})
-	s.SpyActions = &SpyActions{}
-	s.RssMod.actions = s.SpyActions
-	s.Feed = &rss.Feed{Id: 42, Name: "my_feed"}
-	s.Repository.AddFeed(s.Feed)
+	suite.SpyActions = &SpyActions{}
+	suite.RssMod.actions = suite.SpyActions
+	suite.Feed = &rss.Feed{Id: 42, Name: "my_feed"}
+	suite.Repository.AddFeed(suite.Feed)
 }
 
-func (s *CommandSuite) TestSubscribeCommandSubscribesWithKeywords() {
+func (suite *CommandSuite) TestSubscribeCommandSubscribesWithKeywords() {
 	cmd := "!subscribe my_feed -keywords=foo,bar"
 	msg := walter.Message{
-		Content:   cmd,
-		Arguments: strings.Split(cmd, " "),
-		Author:    walter.Author{Id: "author_id", Mention: "author_mention"},
-		Target:    "##feeds",
+		Content: cmd, Arguments: strings.Split(cmd, " "),
+		Target: "##feeds",
+		Author: walter.Author{Id: "author_id", Mention: "author_mention"},
 	}
 
-	s.subscribe(msg)
+	suite.subscribe(msg)
 
-	subs, err := s.Repository.Subs(rss.SearchParams{})
-	assert.Nil(s.T(), err)
-	if assert.Len(s.T(), subs, 1) {
+	subs, err := suite.Repository.Subs(rss.SearchParams{})
+	assert.Nil(suite.T(), err)
+	if assert.Len(suite.T(), subs, 1) {
 		sub := subs[0]
-		assert.Equal(s.T(), "author_mention", sub.User)
-		assert.Equal(s.T(), "##feeds", sub.Channel)
-		assert.Equal(s.T(), "foo,bar", sub.Keywords)
-		assert.Equal(s.T(), s.Feed.Id, sub.FeedId)
+		suite.Equal("author_mention", sub.User)
+		suite.Equal("##feeds", sub.Channel)
+		suite.Equal("foo,bar", sub.Keywords)
+		suite.Equal(suite.Feed.Id, sub.FeedId)
 	}
 }
 
-func (s *CommandSuite) TestSubscribeCommandParsesIgnoreWords() {
+func (suite *CommandSuite) TestSubscribeCommandParsesIgnoreWords() {
 	cmd := "!subscribe my_feed -keywords=one,two -ignore=foo,baz"
 	msg := walter.Message{Content: cmd, Arguments: strings.Split(cmd, " ")}
 
-	s.subscribe(msg)
+	suite.subscribe(msg)
 
-	subs, err := s.Repository.Subs(rss.SearchParams{})
-	assert.Nil(s.T(), err)
-	if assert.Len(s.T(), subs, 1) {
+	subs, err := suite.Repository.Subs(rss.SearchParams{})
+	suite.Nil(err)
+	if suite.Len(subs, 1) {
 		sub := subs[0]
-		assert.Equal(s.T(), "one,two", sub.Keywords)
-		assert.Equal(s.T(), "foo,baz", sub.Ignore)
-		assert.Equal(s.T(), "Subscribed to my_feed with keywords: one,two. ignore: foo,baz", s.SpyActions.ReplyMsg)
+		suite.Equal("one,two", sub.Keywords)
+		suite.Equal("foo,baz", sub.Ignore)
+		suite.Equal("Subscribed to my_feed with keywords: one,two. ignore: foo,baz", suite.SpyActions.ReplyMsg)
 	}
 }
 

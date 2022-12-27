@@ -72,6 +72,9 @@ func (mod *RssMod) subscribe(msg walter.Message) {
 		return
 	}
 	// TODO: validate & parse?
+	// TODO: Replace with flag.NewFlagSet
+	//cmdSubscribe := flag.NewFlagSet("subscribe", flag.ContinueOnError)
+	//cmdSubscribe.Parse(msg.Arguments[2:])
 	keywords := strings.Join(msg.Arguments[2:], " ")
 	var ignore string
 	if strings.Contains(keywords, "ignore:") {

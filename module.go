@@ -36,6 +36,8 @@ func (manager *ModuleManager) Run(stream Stream) error {
 	for _, mod := range manager.modules {
 		modStream := make(chan Message)
 		manager.streams[mod.Name()] = modStream
+		// TODO: Have a blocking channel accepting errors from module streams.
+		// These can be reported and logged.
 		go mod.Start(modStream, manager.actions)
 	}
 

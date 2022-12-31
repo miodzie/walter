@@ -24,7 +24,7 @@ type Connection struct {
 
 func New(conf Config) (*Connection, error) {
 	ircCon := irc.IRC(conf.Nick, conf.Username)
-	ircCon.UseTLS = true
+	ircCon.UseTLS = conf.SASL
 	ircCon.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	ircCon.UseSASL = conf.SASL
 	// TODO: Update to use internal logger or NilledLogger

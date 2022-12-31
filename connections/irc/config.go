@@ -47,17 +47,8 @@ func ParseConfig(val map[string]any) (Config, error) {
 	}
 
 	cfg.SASL, ok = val["sasl"].(bool)
-	if !ok {
-		return cfg, errors.New("unable to parse sasl")
-	}
 	cfg.SASLUsername, ok = val["sasl_username"].(string)
-	if !ok {
-		return cfg, errors.New("unable to parse sasl_username")
-	}
 	cfg.SASLPassword, ok = val["sasl_password"].(string)
-	if !ok {
-		return cfg, errors.New("unable to parse sasl_password")
-	}
 
 	cfg.Server, ok = val["server"].(string)
 	if !ok {

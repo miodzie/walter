@@ -83,7 +83,7 @@ func draw(msg walter.Message, art *Picture, artist chan walter.Message) {
 	for i := 0; i < MaxLines || art.Completed(); i++ {
 		msg.Content = art.NextLine()
 		artist <- msg
-		time.Sleep(time.Millisecond * 300)
+		time.Sleep(time.Millisecond * 100)
 	}
 }
 

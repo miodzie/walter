@@ -7,7 +7,7 @@ package mods
 import (
 	"fmt"
 	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/art"
+	art "github.com/miodzie/walter/mods/art/plugin"
 	"github.com/miodzie/walter/mods/dong"
 	"github.com/miodzie/walter/mods/logger"
 	"github.com/miodzie/walter/mods/logger/drivers"

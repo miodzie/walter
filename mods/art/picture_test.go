@@ -10,7 +10,7 @@ import (
 )
 
 func SkipTestArt_gm(t *testing.T) {
-	art := &Picture{Art: gm}
+	art := &Picture{Art: GM}
 	fmt.Println("test")
 	for !art.Completed() {
 		t.Log(art.NextLine())

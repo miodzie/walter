@@ -13,8 +13,8 @@ func (mod *VisionaryMod) gmCommand(msg walter.Message) {
 	lastRun = time.Now()
 	picture := &art.Picture{Art: art.GM}
 	for !picture.Completed() {
-		for _, artist := range mod.artists {
-			draw(msg, picture, artist)
+		for _, brush := range mod.brushes {
+			draw(msg.Target, picture, brush)
 		}
 	}
 }

@@ -12,15 +12,13 @@ var visionary *VisionaryMod
 var lastRun time.Time
 
 type VisionaryMod struct {
-	artists []chan walter.Message
+	brushes []chan walter.Message
 	running bool
 }
 
-func (mod *VisionaryMod) Name() string {
-	return "visionary"
-}
+func (mod *VisionaryMod) Name() string { return "visionary" }
 
-func (mod *VisionaryMod) Start(stream walter.Stream, actions walter.Actions) error {
+func (mod *VisionaryMod) Start(stream walter.Stream, _ walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -29,24 +27,23 @@ func (mod *VisionaryMod) Start(stream walter.Stream, actions walter.Actions) err
 	return nil
 }
 
-func draw(msg walter.Message, picture *art.Picture, artist chan walter.Message) {
+func draw(target string, picture *art.Picture, artist chan walter.Message) {
 	for i := 0; i < MaxLines || picture.Completed(); i++ {
-		msg.Content = picture.NextLine()
-		artist <- msg
+		artist <- walter.Message{
+			Content: picture.NextLine(),
+			Target:  target}
 		time.Sleep(time.Millisecond * 100)
 	}
 }
 
-func (mod *VisionaryMod) Stop() {
-	mod.running = false
-}
+func (mod *VisionaryMod) Stop() { mod.running = false }
 
 type VisionaryFactory struct{}
 
 func (b *VisionaryFactory) Create(any) (walter.Module, error) {
 	if visionary == nil {
 		visionary = &VisionaryMod{
-			artists: []chan walter.Message{},
+			brushes: []chan walter.Message{},
 			running: false,
 		}
 	}

@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func SkipTestArt_gm(t *testing.T) {
+func TestPrint(t *testing.T) {
 	art := &Picture{Art: GM}
 	fmt.Println("test")
 	for !art.Completed() {

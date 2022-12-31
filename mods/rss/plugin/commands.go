@@ -62,7 +62,7 @@ func (mod *RssMod) showFeeds(msg walter.Message) {
 		reply.Content = "No feeds available. Ask an admin to add some."
 	}
 	mod.actions.Send(reply)
-	reply.Content = fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} {keywords}, keywords being comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token())
+	reply.Content = fmt.Sprintf("To subscribe to a feed, use %ssubscribe {name} -keywords=foo,bar keywords being optional & comma separated (spaces are ok, e.g. \"spy x family, comedy\")", walter.Token())
 	mod.actions.Send(reply)
 }
 

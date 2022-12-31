@@ -53,7 +53,6 @@ func (mod *RssMod) checkFeeds() {
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
 		notifs, err := p.Process()
-		log.Error("testing error log")
 		if err != nil {
 			log.Error(err)
 		}

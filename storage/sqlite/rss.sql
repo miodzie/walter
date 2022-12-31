@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS feeds
     id   INTEGER PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
     url  TEXT UNIQUE NOT NULL
-) STRICT;
+);
 
 CREATE TABLE IF NOT EXISTS feed_subscriptions
 (
@@ -22,4 +22,4 @@ CREATE TABLE IF NOT EXISTS feed_subscriptions
     seen     TEXT NOT NULL DEFAULT '',
     UNIQUE (feed_id, channel, user),
     FOREIGN KEY (feed_id) REFERENCES feeds (id)
-) STRICT;
+);

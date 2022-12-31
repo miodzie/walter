@@ -35,7 +35,11 @@ func (p *FeedProcessor) Process() ([]*Notification, error) {
 	p.notificationCache = newNotificationCache()
 
 	var notifications []*Notification
-	feeds, _ := p.repository.Feeds()
+	feeds, err := p.repository.Feeds()
+	if err != nil {
+		return notifications, err
+	}
+	log.Debugf("len(feeds): %d", len(feeds))
 	for _, feed := range feeds {
 		parsedFeed, err := p.parser.ParseURL(feed.Url)
 		if err != nil {

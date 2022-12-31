@@ -5,6 +5,7 @@
 package rss
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -144,6 +145,16 @@ func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_word
 	notes, _ := processor.Process()
 
 	assert.Empty(t, notes)
+}
+
+func TestProcessReturnsRepositoryError(t *testing.T) {
+	repo := NewInMemRepo()
+	repo.ForceError(errors.New("forced"), 0)
+	processor := NewProcessor(repo, &StubParser{})
+
+	notes, err := processor.Process()
+	assert.Nil(t, notes)
+	assert.Error(t, err)
 }
 
 func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {

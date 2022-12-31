@@ -12,7 +12,7 @@ type ArtistFactory struct {
 }
 
 func (r *ArtistFactory) Create(a interface{}) (walter.Module, error) {
-	sheep := &Artist{
+	sheep := &ArtistMod{
 		instructions: newArtistPalette(),
 		running:      false,
 	}
@@ -20,16 +20,16 @@ func (r *ArtistFactory) Create(a interface{}) (walter.Module, error) {
 	return sheep, nil
 }
 
-type Artist struct {
+type ArtistMod struct {
 	instructions walter.Stream
 	running      bool
 }
 
-func (mod *Artist) Name() string {
+func (mod *ArtistMod) Name() string {
 	return "artist"
 }
 
-func (mod *Artist) Start(stream walter.Stream, actions walter.Actions) error {
+func (mod *ArtistMod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-mod.instructions
@@ -44,6 +44,6 @@ func (mod *Artist) Start(stream walter.Stream, actions walter.Actions) error {
 	return nil
 }
 
-func (mod *Artist) Stop() {
+func (mod *ArtistMod) Stop() {
 	mod.running = false
 }

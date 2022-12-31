@@ -12,7 +12,7 @@ import (
 
 const MaxLines = 4
 
-var visionary *Visionary
+var visionary *VisionaryMod
 var lastRun time.Time
 
 func newArtistPalette() walter.Stream {
@@ -37,7 +37,7 @@ type VisionaryFactory struct {
 
 func (b *VisionaryFactory) Create(a interface{}) (walter.Module, error) {
 	if visionary == nil {
-		visionary = &Visionary{
+		visionary = &VisionaryMod{
 			artists: []chan walter.Message{},
 			running: false,
 		}
@@ -46,16 +46,16 @@ func (b *VisionaryFactory) Create(a interface{}) (walter.Module, error) {
 	return visionary, nil
 }
 
-type Visionary struct {
+type VisionaryMod struct {
 	artists []chan walter.Message
 	running bool
 }
 
-func (mod *Visionary) Name() string {
+func (mod *VisionaryMod) Name() string {
 	return "visionary"
 }
 
-func (mod *Visionary) Start(stream walter.Stream, actions walter.Actions) error {
+func (mod *VisionaryMod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
@@ -65,7 +65,7 @@ func (mod *Visionary) Start(stream walter.Stream, actions walter.Actions) error 
 	return nil
 }
 
-func (mod *Visionary) gmCommand(msg walter.Message) {
+func (mod *VisionaryMod) gmCommand(msg walter.Message) {
 	// Quick throttle impl
 	if time.Since(lastRun) < time.Second*2 {
 		return
@@ -87,6 +87,6 @@ func draw(msg walter.Message, art *Picture, artist chan walter.Message) {
 	}
 }
 
-func (mod *Visionary) Stop() {
+func (mod *VisionaryMod) Stop() {
 	mod.running = false
 }

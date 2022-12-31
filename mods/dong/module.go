@@ -89,6 +89,6 @@ func initDatabase() *impl.GormRepository {
 type ModFactory struct {
 }
 
-func (m ModFactory) Create(config interface{}) (walter.Module, error) {
+func (m ModFactory) Create(interface{}) (walter.Module, error) {
 	return New(), nil
 }

@@ -2,20 +2,24 @@
 // This source code is licensed under the Apache 2.0 license found
 // in the LICENSE file in the root directory of this source tree.
 
+// Package plugin TODO: Consider moving this to the mods/ package?
 package plugin
 
 import (
 	"github.com/miodzie/walter"
+	_ "github.com/miodzie/walter/connections/irc"
+	irc2 "github.com/miodzie/walter/connections/irc"
 	irc "github.com/thoj/go-ircevent"
 )
 
 type Mod struct {
 	irc     *irc.Connection
 	running bool
+	config  irc2.Config
 }
 
-func New(irc *irc.Connection) *Mod {
-	return &Mod{irc: irc}
+func New(irc *irc.Connection, conf irc2.Config) *Mod {
+	return &Mod{irc: irc, config: conf}
 }
 
 func (mod *Mod) Name() string {
@@ -26,6 +30,11 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
+		if msg.Code == "004" {
+			for _, c := range mod.config.Channels {
+				mod.irc.Join(c)
+			}
+		}
 		if msg.Code == "INVITE" && actions.IsAdmin(msg.Author.Id) {
 			mod.irc.Join(msg.Arguments[1])
 		}

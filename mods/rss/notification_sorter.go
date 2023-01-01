@@ -4,16 +4,17 @@
 
 package rss
 
-// NoteSorter sorts new notifications for the subscriptions and feed.
+// NoteSorter sorts new notifications for the subscriptions and feed,
+// ignoring already seen items for a subscription.
 type NoteSorter struct {
-	cache        notificationCache
+	cache        noteCache
 	channelLimit int
 }
 
-func newNoteSorter(channelLimit int) *NoteSorter {
+func NewNoteSorter(channelLimit int) *NoteSorter {
 	return &NoteSorter{
 		channelLimit: channelLimit,
-		cache:        newNotificationCache()}
+		cache:        newNoteCache()}
 }
 
 func (s *NoteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Notification) {
@@ -27,8 +28,8 @@ func (s *NoteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Noti
 func (s *NoteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed) []*Notification {
 	var notes []*Notification
 	for _, item := range feed.ItemsWithKeywords(sub.KeyWords()) {
-		// TODO(refactor): Don't like how this and sub.Remember are called down
-		//  here. Maybe create an interface? "IgnoreStrategy"
+		// TODO(refactor): Don't like how this and sub.Remember()
+		//   are called down here. Maybe create an interface? "IgnoreStrategy"
 		if s.shouldIgnore(sub, item) {
 			continue
 		}
@@ -60,35 +61,35 @@ func (s *NoteSorter) getOrCreateNotification(subscription *Subscription, item *I
 	return notification, wasNew
 }
 
-func newNotificationCache() notificationCache {
-	return notificationCache{
+func newNoteCache() noteCache {
+	return noteCache{
 		channelAmount:     make(map[string]int),
 		seenNotifications: map[string]*Notification{},
 	}
 }
 
-type notificationCache struct {
+type noteCache struct {
 	channelAmount     map[string]int
 	seenNotifications map[string]*Notification
 }
 
-func (c *notificationCache) ChannelLimitReached(channelId string, limit int) bool {
+func (c *noteCache) ChannelLimitReached(channelId string, limit int) bool {
 	if amt, ok := c.channelAmount[channelId]; ok {
 		return amt >= limit
 	}
 	return false
 }
 
-func (c *notificationCache) has(key string) bool {
+func (c *noteCache) has(key string) bool {
 	_, exists := c.seenNotifications[key]
 	return exists
 }
 
-func (c *notificationCache) get(key string) *Notification {
+func (c *noteCache) get(key string) *Notification {
 	return c.seenNotifications[key]
 }
 
-func (c *notificationCache) put(key string, notification *Notification) {
+func (c *noteCache) put(key string, notification *Notification) {
 	if _, exists := c.channelAmount[notification.Channel]; !exists {
 		c.channelAmount[notification.Channel] = 0
 	}
@@ -96,6 +97,6 @@ func (c *notificationCache) put(key string, notification *Notification) {
 	c.seenNotifications[key] = notification
 }
 
-func (c *notificationCache) makeKey(item *Item, sub *Subscription) string {
+func (c *noteCache) makeKey(item *Item, sub *Subscription) string {
 	return item.GUID + sub.Channel
 }

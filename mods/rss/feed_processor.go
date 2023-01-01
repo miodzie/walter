@@ -36,7 +36,7 @@ func (p *FeedProcessor) Process() (notes []*Notification, err error) {
 		return notes, err
 	}
 
-	sorter := newNoteSorter(p.ChannelLimit)
+	sorter := NewNoteSorter(p.ChannelLimit)
 	for _, feed := range feeds {
 		subs, parsedFeed, err2 := p.getSubsAndParsedFeed(feed)
 		if err2 != nil {

@@ -28,11 +28,6 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
-		if msg.Code == "004" {
-			for _, c := range mod.channels {
-				mod.irc.Join(c)
-			}
-		}
 		if msg.Code == "INVITE" && actions.IsAdmin(msg.Author.Id) {
 			mod.irc.Join(msg.Arguments[1])
 		}

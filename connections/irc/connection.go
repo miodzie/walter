@@ -7,6 +7,7 @@ package irc
 import (
 	"crypto/tls"
 	"github.com/miodzie/walter/connections/irc/plugin"
+	"github.com/miodzie/walter/log"
 	"strings"
 	"time"
 
@@ -48,6 +49,13 @@ func (con *Connection) Connect() (walter.Stream, error) {
 		return nil, err
 	}
 	stream := make(chan walter.Message)
+
+	con.irc.AddCallback("004", func(e *irc.Event) {
+		log.Debug("Joining channels: ", con.Channels)
+		for _, channel := range con.Channels {
+			con.irc.Join(channel)
+		}
+	})
 
 	con.irc.AddCallback("*", func(event *irc.Event) {
 		var channel string

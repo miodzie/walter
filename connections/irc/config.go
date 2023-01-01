@@ -50,6 +50,8 @@ func ParseConfig(val map[string]any) (Config, error) {
 	cfg.SASLUsername, ok = val["sasl_username"].(string)
 	cfg.SASLPassword, ok = val["sasl_password"].(string)
 
+	cfg.Channels, _ = val["channels"].([]string)
+
 	cfg.Server, ok = val["server"].(string)
 	if !ok {
 		return cfg, errors.New("unable to parse server")

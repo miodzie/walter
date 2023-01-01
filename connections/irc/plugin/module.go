@@ -8,18 +8,17 @@ package plugin
 import (
 	"github.com/miodzie/walter"
 	_ "github.com/miodzie/walter/connections/irc"
-	irc2 "github.com/miodzie/walter/connections/irc"
 	irc "github.com/thoj/go-ircevent"
 )
 
 type Mod struct {
-	irc     *irc.Connection
-	running bool
-	config  irc2.Config
+	irc      *irc.Connection
+	running  bool
+	channels []string
 }
 
-func New(irc *irc.Connection, conf irc2.Config) *Mod {
-	return &Mod{irc: irc, config: conf}
+func New(irc *irc.Connection, channels []string) *Mod {
+	return &Mod{irc: irc, channels: channels}
 }
 
 func (mod *Mod) Name() string {
@@ -31,7 +30,7 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	for mod.running {
 		msg := <-stream
 		if msg.Code == "004" {
-			for _, c := range mod.config.Channels {
+			for _, c := range mod.channels {
 				mod.irc.Join(c)
 			}
 		}

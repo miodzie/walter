@@ -34,7 +34,7 @@ func New(conf Config) (*Connection, error) {
 	con := &Connection{
 		irc:    ircCon,
 		Config: conf,
-		mods:   []walter.Module{plugin.New(ircCon, conf)},
+		mods:   []walter.Module{plugin.New(ircCon, conf.Channels)},
 	}
 
 	return con, nil

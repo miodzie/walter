@@ -7,7 +7,6 @@ package plugin
 
 import (
 	"github.com/miodzie/walter"
-	_ "github.com/miodzie/walter/connections/irc"
 	irc "github.com/thoj/go-ircevent"
 )
 

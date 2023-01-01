@@ -12,27 +12,41 @@ import (
 )
 
 type FeedProcessorSuite struct {
-	suite.Suite
-	sut        *FeedProcessor
+	processor  *FeedProcessor
 	repository Repository
 	feed       *Feed
 	item       *Item
+	suite.Suite
 }
 
 func (s *FeedProcessorSuite) SetupTest() {
 	s.item = &Item{Title: "bar", GUID: "1"}
 	parsed := &ParsedFeed{Items: []*Item{s.item}}
 	s.repository = NewInMemRepo()
-	s.sut = NewProcessor(s.repository, &StubParser{Parsed: parsed})
+	s.processor = NewProcessor(s.repository, &StubParser{Parsed: parsed})
 	s.feed = &Feed{Id: 1}
-	_ = s.sut.repository.AddFeed(s.feed)
+	_ = s.processor.repository.AddFeed(s.feed)
+}
+
+// TODO: This does tests nothing.
+func (s *FeedProcessorSuite) TestSubscriptionsUpdated() {
+	alice := Subscription{User: "alice", Channel: "#chat2", FeedId: s.feed.Id}
+	aliceCopy := alice
+	s.Nil(s.repository.AddSub(&aliceCopy))
+
+	_, _ = s.processor.Process()
+
+	r, _ := s.repository.Subs(SearchParams{User: "alice"})
+	if s.Len(r, 1) {
+		s.True(r[0].SeenItems[s.item.GUID])
+	}
 }
 
 func (s *FeedProcessorSuite) TestSubscribeNoKeywords() {
 	alice := &Subscription{User: "alice", Channel: "#chat2", FeedId: s.feed.Id}
 	s.Nil(s.repository.AddSub(alice))
 
-	results, _ := s.sut.Process()
+	results, _ := s.processor.Process()
 
 	s.Len(results, 1)
 	assertNotificationCorrect(s.T(), results[0], alice, s.feed)
@@ -59,6 +73,7 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 
 	assert.Len(t, results, 2)
 
+	// TODO: lol fix race condition
 	assertNotificationCorrect(t, results[0], alice, feed)
 	assert.True(t, alice.HasSeen(*item))
 	assertNotificationCorrect(t, results[1], james, feed)

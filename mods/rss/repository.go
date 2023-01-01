@@ -21,6 +21,7 @@ type Repository interface {
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
 	RemoveSub(*Subscription) error
+	// TODO: Refactor into broken down methods again.
 	Subs(params SearchParams) ([]*Subscription, error)
 }
 

@@ -29,8 +29,19 @@ func (suite *CommandSuite) SetupTest() {
 	suite.Repository.AddFeed(suite.Feed)
 }
 
-func TestRemoveFeed(t *testing.T) {
+func (suite *CommandSuite) TestRemoveFeed() {
+	cmd := "!remove_feed my_feed"
+	msg := walter.Message{
+		Content: cmd, Arguments: strings.Split(cmd, " "),
+		Target: "##feeds",
+		Author: walter.Author{Id: "admin", Mention: "author_mention"},
+	}
+	suite.AdminUserId = msg.Author.Id
 
+	suite.removeFeed(msg)
+
+	_, err := suite.Repository.FeedByName("my_feed")
+	suite.ErrorIs(err, rss.FeedNotFoundError)
 }
 
 func (suite *CommandSuite) TestSubscribeCommandNoKeywords() {

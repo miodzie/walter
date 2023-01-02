@@ -7,7 +7,8 @@ import (
 
 // SpyActions provides some helpful commands when testing expected Action calls on a module.
 type SpyActions struct {
-	LastReply string
+	LastReply   string
+	AdminUserId string
 }
 
 func (s *SpyActions) Send(message walter.Message) error {
@@ -28,7 +29,7 @@ func (s *SpyActions) Italicize(s2 string) string {
 }
 
 func (s *SpyActions) IsAdmin(userId string) bool {
-	return false
+	return userId == s.AdminUserId
 }
 
 func (s *SpyActions) TimeoutUser(channel string, user string, until time.Time) error {

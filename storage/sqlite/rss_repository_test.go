@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/miodzie/walter/mods/rss"
 	"github.com/stretchr/testify/suite"
 	"testing"
 )
@@ -30,6 +31,19 @@ func (test *RssRepositorySuite) TestFeeds() {
 	_, err := test.repository.Feeds()
 	fmt.Println(err)
 	test.Nil(err)
+}
+
+func (test *RssRepositorySuite) TestRemoveFeed() {
+	feed := &rss.Feed{Name: "foo"}
+	test.NoError(test.repository.AddFeed(feed))
+
+	err := test.repository.RemoveFeed("foo")
+
+	if test.NoError(err) {
+		f, err := test.repository.Feeds()
+		test.NoError(err)
+		test.Empty(f)
+	}
 }
 
 func TestLongRssRepositorySuite(t *testing.T) {

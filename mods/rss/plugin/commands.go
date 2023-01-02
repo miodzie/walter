@@ -21,9 +21,13 @@ func (mod *RssMod) removeFeed(msg walter.Message) {
 		return
 	}
 	if len(msg.Arguments) != 2 {
+		mod.actions.Reply(msg, "invalid amount of arguments. !remove_feed $name")
 		return
 	}
 	removeFeed := usecases.NewRemoveFeed(mod.Repository)
+
+	log.Debug(msg.Arguments)
+	log.Debug(msg.Arguments[1])
 
 	err := removeFeed.Remove(msg.Arguments[1])
 	if err != nil {

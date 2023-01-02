@@ -15,8 +15,9 @@ type RssRepository struct {
 	db *sql.DB
 }
 
-func NewRssRepository(db *sql.DB) *RssRepository {
-	return &RssRepository{db: db}
+func (r *RssRepository) RemoveFeed(name string) error {
+	_, err := r.db.Query("DELETE FROM feeds WHERE name = ?", name)
+	return err
 }
 
 func (r *RssRepository) Feeds() ([]*rss.Feed, error) {
@@ -167,3 +168,4 @@ func (r *RssRepository) scanSub(rows *sql.Rows) (*rss.Subscription, error) {
 
 	return &sub, nil
 }
+func NewRssRepository(db *sql.DB) *RssRepository { return &RssRepository{db: db} }

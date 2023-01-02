@@ -16,7 +16,7 @@ type RssRepository struct {
 }
 
 func (r *RssRepository) RemoveFeed(name string) error {
-	_, err := r.db.Query("DELETE FROM feeds WHERE name = ?", name)
+	_, err := r.db.Query("DELETE FROM feeds WHERE name = '?'", name)
 	return err
 }
 

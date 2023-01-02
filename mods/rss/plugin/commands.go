@@ -14,6 +14,24 @@ import (
 	"github.com/miodzie/walter/mods/rss/usecases"
 )
 
+// !remove_feed {name} {url}
+func (mod *RssMod) removeFeed(msg walter.Message) {
+	if !mod.actions.IsAdmin(msg.Author.Id) {
+		mod.actions.Reply(msg, "nop")
+		return
+	}
+	if len(msg.Arguments) != 2 {
+		return
+	}
+	removeFeed := usecases.NewRemoveFeed(mod.Repository)
+
+	err := removeFeed.Remove(msg.Arguments[1])
+	if err != nil {
+		log.Error(err)
+		mod.actions.Reply(msg, "failed to remove feed")
+	}
+}
+
 // !add_feed {name} {url}
 func (mod *RssMod) addFeed(msg walter.Message) {
 	if !mod.actions.IsAdmin(msg.Author.Id) {

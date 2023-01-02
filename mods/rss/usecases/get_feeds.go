@@ -10,20 +10,6 @@ import (
 
 type GetFeeds struct{ repository rss.Repository }
 
-func NewGetFeeds(repository rss.Repository) *GetFeeds {
-	return &GetFeeds{repository: repository}
-}
-
-type GetFeedsResponse struct {
-	Feeds   []*GetFeedsFeed
-	Message string
-}
-
-type GetFeedsFeed struct {
-	Name string
-	Url  string
-}
-
 func (g *GetFeeds) Get() (GetFeedsResponse, error) {
 	var resp GetFeedsResponse
 	feeds, err := g.repository.Feeds()
@@ -41,3 +27,15 @@ func (g *GetFeeds) Get() (GetFeedsResponse, error) {
 
 	return resp, err
 }
+
+type GetFeedsResponse struct {
+	Feeds   []*GetFeedsFeed
+	Message string
+}
+
+type GetFeedsFeed struct {
+	Name string
+	Url  string
+}
+
+func NewGetFeeds(repository rss.Repository) *GetFeeds { return &GetFeeds{repository: repository} }

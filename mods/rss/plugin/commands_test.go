@@ -29,6 +29,10 @@ func (suite *CommandSuite) SetupTest() {
 	suite.Repository.AddFeed(suite.Feed)
 }
 
+func TestRemoveFeed(t *testing.T) {
+
+}
+
 func (suite *CommandSuite) TestSubscribeCommandNoKeywords() {
 	cmd := "!subscribe my_feed"
 	msg := walter.Message{

@@ -43,10 +43,8 @@ func (s *NoteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed
 	return notes
 }
 
-func (s *NoteSorter) shouldIgnore(subscription *Subscription, item *Item) bool {
-	return subscription.HasSeen(*item) ||
-		(item.HasKeywords(subscription.IgnoreWords()) && subscription.Ignore != "") ||
-		s.cache.ChannelLimitReached(subscription.Channel, s.channelLimit)
+func (s *NoteSorter) shouldIgnore(sub *Subscription, item *Item) bool {
+	return sub.ShouldIgnore(*item) || s.cache.ChannelLimitReached(sub.Channel, s.channelLimit)
 }
 
 func (s *NoteSorter) getOrCreateNotification(subscription *Subscription, item *Item) (*Notification, bool) {

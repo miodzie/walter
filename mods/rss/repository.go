@@ -14,14 +14,15 @@ import (
 var FeedNotFoundError = errors.New("feed not found")
 
 type Repository interface {
-	Feeds() ([]*Feed, error)
 	AddFeed(*Feed) error
+	RemoveFeed(name string) error
+	Feeds() ([]*Feed, error)
 	FeedByName(name string) (*Feed, error)
 
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
 	RemoveSub(*Subscription) error
-	// TODO: Refactor into broken down methods again.
+	// Subs TODO: Refactor into broken down methods again.
 	Subs(params SearchParams) ([]*Subscription, error)
 }
 
@@ -75,6 +76,17 @@ func (r *InMemRepository) Feeds() ([]*Feed, error) {
 func (r *InMemRepository) AddFeed(feed *Feed) error {
 	r.feeds = append(r.feeds, feed)
 	return r.popForcedErr()
+}
+
+func (r *InMemRepository) RemoveFeed(name string) error {
+	for i, f := range r.feeds {
+		if f.Name == name {
+			r.feeds[i] = r.feeds[len(r.feeds)-1]
+			r.feeds = r.feeds[:len(r.feeds)-1]
+			break
+		}
+	}
+	return nil
 }
 
 func (r *InMemRepository) FeedByName(name string) (*Feed, error) {

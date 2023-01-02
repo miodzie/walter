@@ -39,6 +39,7 @@ func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 		msg := <-stream
 		msg.Command("feeds", mod.showFeeds)
 		msg.Command("add_feed", mod.addFeed)
+		msg.Command("remove_feed", mod.removeFeed)
 		msg.Command("subscribe", mod.subscribe)
 		msg.Command("unsubscribe", mod.unsubscribe)
 		msg.Command("subs", mod.subs)

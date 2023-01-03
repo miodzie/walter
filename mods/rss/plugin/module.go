@@ -15,20 +15,13 @@ import (
 type RssMod struct {
 	actions walter.Actions
 	running bool
-	Context
+	Services
 }
 
-type Context struct {
+type Services struct {
 	rss.Repository
 	rss.Parser
 	rss.Formatter
-}
-
-func New(ctx Context) *RssMod {
-	return &RssMod{Context: ctx}
-}
-func (mod *RssMod) Name() string {
-	return "rss"
 }
 
 func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
@@ -69,7 +62,6 @@ func (mod *RssMod) checkFeeds() {
 		time.Sleep(time.Minute * 30)
 	}
 }
-
-func (mod *RssMod) Stop() {
-	mod.running = false
-}
+func New(services Services) *RssMod { return &RssMod{Services: services} }
+func (mod *RssMod) Name() string    { return "rss" }
+func (mod *RssMod) Stop()           { mod.running = false }

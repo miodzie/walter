@@ -18,7 +18,7 @@ type CommandSuite struct {
 }
 
 func (suite *CommandSuite) SetupTest() {
-	suite.RssMod = New(Context{
+	suite.RssMod = New(Services{
 		Repository: rss.NewInMemRepo(),
 		Parser:     &rss.StubParser{},
 		Formatter:  rss.MinimalFormatter{},

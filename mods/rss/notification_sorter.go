@@ -4,20 +4,20 @@
 
 package rss
 
-// NoteSorter sorts new notifications for the subscriptions and feed,
+// noteSorter sorts new notifications for the subscriptions and feed,
 // ignoring already seen items for a subscription.
-type NoteSorter struct {
+type noteSorter struct {
 	cache        noteCache
 	channelLimit int
 }
 
-func NewNoteSorter(channelLimit int) *NoteSorter {
-	return &NoteSorter{
+func newNoteSorter(channelLimit int) *noteSorter {
+	return &noteSorter{
 		channelLimit: channelLimit,
 		cache:        newNoteCache()}
 }
 
-func (s *NoteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Notification) {
+func (s *noteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Notification) {
 	for _, sub := range subs {
 		newNotes := s.findNewNotificationsFor(sub, feed)
 		notes = append(notes, newNotes...)
@@ -25,7 +25,7 @@ func (s *NoteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Noti
 	return notes
 }
 
-func (s *NoteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed) []*Notification {
+func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed) []*Notification {
 	var notes []*Notification
 	for _, item := range feed.ItemsWithKeywords(sub.KeyWords()) {
 		// TODO(refactor): Don't like how this and sub.Remember()
@@ -43,11 +43,11 @@ func (s *NoteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed
 	return notes
 }
 
-func (s *NoteSorter) shouldIgnore(sub *Subscription, item *Item) bool {
+func (s *noteSorter) shouldIgnore(sub *Subscription, item *Item) bool {
 	return sub.ShouldIgnore(*item) || s.cache.ChannelLimitReached(sub.Channel, s.channelLimit)
 }
 
-func (s *NoteSorter) getOrCreateNotification(subscription *Subscription, item *Item) (*Notification, bool) {
+func (s *noteSorter) getOrCreateNotification(subscription *Subscription, item *Item) (*Notification, bool) {
 	wasNew := false
 	key := s.cache.makeKey(item, subscription)
 	notification := s.cache.get(key)

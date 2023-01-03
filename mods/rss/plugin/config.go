@@ -50,16 +50,16 @@ type Config struct {
 }
 
 func (c *Config) CreateMod() (*RssMod, error) {
-	ctx := Context{}
+	services := Services{}
 	var ok bool
-	ctx.Parser, ok = parsers[c.Parser]
+	services.Parser, ok = parsers[c.Parser]
 	if !ok {
 		return nil, fmt.Errorf("unknown parser: `%s`", c.Parser)
 	}
 	if c.Striphtml {
-		ctx.Parser = decorators.StripHtml(ctx.Parser)
+		services.Parser = decorators.StripHtml(services.Parser)
 	}
-	ctx.Formatter, ok = formatters[c.Formatter]
+	services.Formatter, ok = formatters[c.Formatter]
 	if !ok {
 		return nil, fmt.Errorf("unknown formatter: `%s`", c.Formatter)
 	}
@@ -68,12 +68,12 @@ func (c *Config) CreateMod() (*RssMod, error) {
 		return nil, fmt.Errorf("unknown storage: `%s`", c.Storage)
 	}
 	var err error
-	ctx.Repository, err = createRepository(c.Database)
+	services.Repository, err = createRepository(c.Database)
 	if err != nil {
 		return nil, err
 	}
 
-	return New(ctx), nil
+	return New(services), nil
 }
 
 func (s *Config) FillStruct(m map[string]any) error {
@@ -88,7 +88,7 @@ func (s *Config) FillStruct(m map[string]any) error {
 }
 
 type ModFactory struct {
-	Context Context
+	Context Services
 }
 
 func (m ModFactory) Create(c any) (walter.Module, error) {

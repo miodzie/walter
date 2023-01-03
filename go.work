@@ -1,0 +1,9 @@
+go 1.19
+
+use (
+	.
+	./connections/discord
+	./connections/irc
+	./mods/dong
+	./mods/rss
+)

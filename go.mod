@@ -10,6 +10,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/miodzie/dong v0.4.0
 	github.com/mmcdole/gofeed v1.1.3
+	github.com/stretchr/testify v1.8.1
 	github.com/thoj/go-ircevent v0.0.0-20210723090443-73e444401d64
 )
 
@@ -26,8 +27,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
 	golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect

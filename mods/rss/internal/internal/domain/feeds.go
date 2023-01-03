@@ -11,6 +11,7 @@ import (
 // Feed is the allowed and available web feeds that users can subscribe
 // to.
 type Feed struct {
+	// TODO: Id is a database concept, should be removed.
 	Id            uint64
 	Name          string
 	Url           string

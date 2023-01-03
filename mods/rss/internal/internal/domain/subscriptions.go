@@ -15,6 +15,7 @@ type Subscriptions interface {
 }
 
 type Subscription struct {
+	// TODO: Id is a database concept, should be removed from domain.
 	Id        uint64
 	FeedId    uint64
 	User      string

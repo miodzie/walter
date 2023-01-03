@@ -8,7 +8,7 @@ import (
 )
 
 func TestNotification_String(t *testing.T) {
-	item := Item{Title: "New Cool Blog Post",
+	item := ParsedItem{Title: "New Cool Blog Post",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
 	notification := Notification{Item: item, Users: []string{"Abraham", "Isaac", "Jacob"}}

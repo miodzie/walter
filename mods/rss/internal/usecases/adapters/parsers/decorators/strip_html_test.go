@@ -15,7 +15,7 @@ func TestStripHtml(t *testing.T) {
 	expected := "cool bean's!"
 	feed := &domain.ParsedFeed{
 		Title: "<strong>hello</strong> world!",
-		Items: []*domain.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
+		Items: []*domain.ParsedItem{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
 	dummy := &usecases.StubParser{Parsed: feed}
 	sut := cleanHtml{BaseParser: dummy}

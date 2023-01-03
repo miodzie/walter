@@ -10,8 +10,9 @@ import (
 )
 
 type Notification struct {
+	// TODO: Feed doesn't need to be on here.
 	Feed    Feed
-	Item    Item
+	Item    ParsedItem
 	Channel string
 	Users   []string
 }

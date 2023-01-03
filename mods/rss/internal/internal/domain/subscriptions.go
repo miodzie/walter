@@ -23,11 +23,11 @@ type Subscription struct {
 	Ignore    string
 	Channel   string
 	Feed      *Feed
-	Seen      string          // Item.GUID comma separated
+	Seen      string          // ParsedItem.GUID comma separated
 	SeenItems map[string]bool // [guid]bool
 }
 
-func (s *Subscription) Remember(item Item) {
+func (s *Subscription) Remember(item ParsedItem) {
 	s.makeSeenMap()
 	if _, seen := s.SeenItems[item.GUID]; !seen {
 		s.SeenItems[item.GUID] = true
@@ -40,13 +40,13 @@ func (s *Subscription) Remember(item Item) {
 	}
 }
 
-func (s *Subscription) HasSeen(item Item) bool {
+func (s *Subscription) HasSeen(item ParsedItem) bool {
 	s.makeSeenMap()
 	_, seen := s.SeenItems[item.GUID]
 	return seen
 }
 
-func (s *Subscription) ShouldIgnore(item Item) bool {
+func (s *Subscription) ShouldIgnore(item ParsedItem) bool {
 	return s.HasSeen(item) ||
 		(item.HasKeywords(s.IgnoreWords()) && s.Ignore != "")
 }

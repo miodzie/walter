@@ -36,7 +36,7 @@ func (receiver *Parser) ParseURL(url string) (*domain.ParsedFeed, error) {
 	parsed.Custom = feed.Custom
 
 	for _, i := range feed.Items {
-		var pi domain.Item
+		var pi domain.ParsedItem
 		pi.Title = i.Title
 		pi.Description = i.Description
 		pi.Content = i.Content

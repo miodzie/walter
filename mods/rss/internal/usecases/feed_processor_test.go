@@ -16,20 +16,20 @@ type FeedProcessorSuite struct {
 	processor  *FeedProcessor
 	repository Repository
 	feed       *Feed
-	item       *Item
+	item       *ParsedItem
 	suite.Suite
 }
 
 func (s *FeedProcessorSuite) SetupTest() {
-	s.item = &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{s.item}}
+	s.item = &ParsedItem{Title: "bar", GUID: "1"}
+	parsed := &ParsedFeed{Items: []*ParsedItem{s.item}}
 	s.repository = NewInMemRepo()
 	s.processor = NewFeedProcessor(s.repository, &StubParser{Parsed: parsed})
 	s.feed = &Feed{Id: 1}
 	_ = s.processor.repository.AddFeed(s.feed)
 }
 
-// TODO: This does tests nothing.
+// TODO: This test does nothing. lol
 func (s *FeedProcessorSuite) TestSubscriptionsUpdated() {
 	alice := Subscription{User: "alice", Channel: "#chat2", FeedId: s.feed.Id}
 	aliceCopy := alice
@@ -59,8 +59,8 @@ func TestRunProcessorSuite(t *testing.T) {
 }
 
 func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
-	item := &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{item}}
+	item := &ParsedItem{Title: "bar", GUID: "1"}
+	parsed := &ParsedFeed{Items: []*ParsedItem{item}}
 	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
@@ -82,7 +82,7 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 }
 
 func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
-	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
+	parsed := &ParsedFeed{Items: []*ParsedItem{{Title: "bar", GUID: "1"}}}
 	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
@@ -101,7 +101,7 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 }
 
 func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
-	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
+	p := &ParsedFeed{Items: []*ParsedItem{{Title: "foo"}}}
 	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
@@ -113,8 +113,8 @@ func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 }
 
 func TestProcessor_Process_ignores_seen_items(t *testing.T) {
-	item := &Item{Title: "foo"}
-	p := &ParsedFeed{Items: []*Item{item}}
+	item := &ParsedItem{Title: "foo"}
+	p := &ParsedFeed{Items: []*ParsedItem{item}}
 	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)
@@ -128,8 +128,8 @@ func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 }
 
 func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
-	item := &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{
+	item := &ParsedItem{Title: "bar", GUID: "1"}
+	parsed := &ParsedFeed{Items: []*ParsedItem{
 		item,
 		{Title: "bar", GUID: "2"},
 		{Title: "bar", GUID: "3"},
@@ -148,7 +148,7 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 }
 
 func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_words(t *testing.T) {
-	p := &ParsedFeed{Items: []*Item{{Title: "foo bar", GUID: "1"}}}
+	p := &ParsedFeed{Items: []*ParsedItem{{Title: "foo bar", GUID: "1"}}}
 	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &Feed{Id: 1}
 	processor.repository.AddFeed(feed)

@@ -10,7 +10,7 @@ import (
 
 func TestMinimalFormatter_Format(t *testing.T) {
 	formatter := MinimalFormatter{}
-	item := domain.Item{Title: "New Cool Blog Post",
+	item := domain.ParsedItem{Title: "New Cool Blog Post",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
 	notification := domain.Notification{Item: item, Users: []string{"Abraham", "Isaac", "Jacob"}}

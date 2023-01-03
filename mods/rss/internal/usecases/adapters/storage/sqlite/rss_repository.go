@@ -13,8 +13,6 @@ import (
 	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 )
 
-// TODO: Register migrations in sqlite?
-
 //go:embed rss.sql
 var Migration string
 

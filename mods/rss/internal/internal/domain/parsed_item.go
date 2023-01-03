@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type Item struct {
+type ParsedItem struct {
 	Title       string
 	Description string
 	Content     string
@@ -16,7 +16,7 @@ type Item struct {
 	Custom      map[string]string
 }
 
-func (i *Item) DescriptionTruncated() string {
+func (i *ParsedItem) DescriptionTruncated() string {
 	if len(i.Description) < 100 {
 		return i.Description
 	}
@@ -25,7 +25,7 @@ func (i *Item) DescriptionTruncated() string {
 	return strings.Join(sp[:100], "") + "..."
 }
 
-func (i *Item) HasKeywords(keywords []string) bool {
+func (i *ParsedItem) HasKeywords(keywords []string) bool {
 	for _, keyword := range keywords {
 		reg, err := createWordBoundaryRegex(keyword)
 		if err != nil {

@@ -11,11 +11,11 @@ import (
 
 func TestSubscription_Seen(t *testing.T) {
 	sub := &Subscription{SeenItems: make(map[string]bool)}
-	item := Item{GUID: "1234"}
+	item := ParsedItem{GUID: "1234"}
 
 	sub.Remember(item)
-	sub.Remember(Item{GUID: "1"})
-	sub.Remember(Item{GUID: "1"})
+	sub.Remember(ParsedItem{GUID: "1"})
+	sub.Remember(ParsedItem{GUID: "1"})
 
 	_, exists := sub.SeenItems[item.GUID]
 	assert.True(t, exists)
@@ -24,7 +24,7 @@ func TestSubscription_Seen(t *testing.T) {
 
 func TestSubscription_HasSeen(t *testing.T) {
 	sub := &Subscription{SeenItems: make(map[string]bool)}
-	item := Item{GUID: "1234"}
+	item := ParsedItem{GUID: "1234"}
 	assert.False(t, sub.HasSeen(item))
 
 	sub.Remember(item)

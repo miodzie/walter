@@ -6,12 +6,12 @@ type ParsedFeed struct {
 	Link        string
 	Updated     string
 	Published   string
-	Items       []*Item
+	Items       []*ParsedItem
 	Custom      map[string]string
 }
 
-func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {
-	var items []*Item
+func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*ParsedItem {
+	var items []*ParsedItem
 	for _, i := range feed.Items {
 		if i.HasKeywords(keywords) {
 			items = append(items, i)

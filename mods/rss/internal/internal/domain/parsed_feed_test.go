@@ -11,13 +11,13 @@ import (
 )
 
 func TestItem_HasKeywords_Ignores_words_within_a_word(t *testing.T) {
-	item := &Item{Title: "Financially"}
+	item := &ParsedItem{Title: "Financially"}
 	assert.False(t, item.HasKeywords([]string{"CIA"}))
 	assert.True(t, item.HasKeywords([]string{"financially"}))
 }
 
 func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing.T) {
-	item := &Item{Description: ""}
+	item := &ParsedItem{Description: ""}
 	for i := 0; i < 99; i++ {
 		item.Description += "A"
 	}
@@ -26,7 +26,7 @@ func TestItem_DescTruncated_returns_the_string_if_less_than_100_chars(t *testing
 }
 
 func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *testing.T) {
-	item := &Item{Description: ""}
+	item := &ParsedItem{Description: ""}
 	for i := 0; i < 150; i++ {
 		item.Description += "A"
 	}
@@ -39,7 +39,7 @@ func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *test
 func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "foo,bar"}
 	feed := &ParsedFeed{
-		Items: []*Item{{Title: "foo"}, {Title: "bar"}, {Title: "baz"}},
+		Items: []*ParsedItem{{Title: "foo"}, {Title: "bar"}, {Title: "baz"}},
 	}
 
 	result := feed.ItemsWithKeywords(sub.KeyWords())
@@ -59,28 +59,28 @@ func TestParsedFeed_HasKeywords(t *testing.T) {
 }
 
 var hasKeywords = []*ParsedFeed{
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Title: "FOO"},
 	}},
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Title: "baz"},
 	}},
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Description: "foo"},
 	}},
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Content: "foo"},
 	}},
 }
 
 var hasNotKeywords = []*ParsedFeed{
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Title: "zab"},
 	}},
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Description: "oof"},
 	}},
-	{Items: []*Item{
+	{Items: []*ParsedItem{
 		{Content: "oof"},
 	}},
 }

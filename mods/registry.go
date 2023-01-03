@@ -26,7 +26,7 @@ func init() {
 	Register("dong", &dong.ModFactory{})
 	Register("sed", &sed.ModFactory{})
 	Register("logger", &logger.ModFactory{DefaultLogger: drivers.NewMultiLogger(drivers.ConsoleLogger{})})
-	Register("rss", &rss_plugin.ModFactory{})
+	Register("domain", &rss_plugin.ModFactory{})
 	Register("visionary", &art.VisionaryFactory{})
 	Register("artist", &art.ArtistFactory{})
 }

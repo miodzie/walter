@@ -6,6 +6,7 @@ package usecases
 
 import . "github.com/miodzie/walter/mods/rss/internal/internal/domain"
 
+// Used by FeedProcessor, composition class.
 // noteSorter sorts new notifications for the subscriptions and feed,
 // ignoring already seen items for a subscription.
 type noteSorter struct {

@@ -5,9 +5,10 @@
 package decorators
 
 import (
+	"github.com/miodzie/walter/mods/rss/internal/usecases"
 	"testing"
 
-	"github.com/miodzie/walter/mods/rss/internal/domain"
+	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 )
 
 func TestStripHtml(t *testing.T) {
@@ -16,7 +17,7 @@ func TestStripHtml(t *testing.T) {
 		Title: "<strong>hello</strong> world!",
 		Items: []*domain.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
-	dummy := &domain.StubParser{Parsed: feed}
+	dummy := &usecases.StubParser{Parsed: feed}
 	sut := cleanHtml{BaseParser: dummy}
 
 	parsed, _ := sut.ParseURL("")

@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/domain"
+	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/suite"
 	"testing"
 )
@@ -9,11 +9,11 @@ import (
 type RemoveFeedSuite struct {
 	suite.Suite
 	removeFeed *RemoveFeed
-	repository domain.Repository
+	repository Repository
 }
 
 func (t *RemoveFeedSuite) SetupTest() {
-	t.repository = domain.NewInMemRepo()
+	t.repository = NewInMemRepo()
 	t.removeFeed = NewRemoveFeed(t.repository)
 }
 
@@ -28,7 +28,7 @@ func (t *RemoveFeedSuite) TestItRemovesAllSubscriptionsToThatFeed() {
 	err := t.removeFeed.Remove(feed.Name)
 
 	if t.NoError(err) {
-		subs, _ := t.repository.Subs(domain.SearchParams{FeedId: feed.Id})
+		subs, _ := t.repository.Subs(SearchParams{FeedId: feed.Id})
 		t.Len(subs, 0)
 	}
 }

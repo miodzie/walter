@@ -6,11 +6,17 @@ package sqlite
 
 import (
 	"database/sql"
+	_ "embed"
 	"fmt"
 	"github.com/miodzie/walter/mods/rss/internal/usecases"
 
 	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 )
+
+// TODO: Register migrations in sqlite?
+
+//go:embed rss.sql
+var Migration string
 
 type RssRepository struct {
 	db *sql.DB

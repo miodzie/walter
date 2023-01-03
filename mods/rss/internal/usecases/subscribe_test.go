@@ -6,7 +6,7 @@ package usecases
 
 import (
 	"errors"
-	"github.com/miodzie/walter/mods/rss/internal/domain"
+	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -14,7 +14,7 @@ import (
 // TODO: Clean up tests
 
 func TestSubscribeNoKeywords(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	subscribe := NewSubscribe(repository)
 	feed := &domain.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
@@ -28,7 +28,7 @@ func TestSubscribeNoKeywords(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, "Subscribed to news", response.Message)
-	subs, _ := repository.Subs(domain.SearchParams{User: "adam"})
+	subs, _ := repository.Subs(SearchParams{User: "adam"})
 	assert.Len(t, subs, 1)
 	sub := subs[0]
 	assert.Equal(t, "news", sub.Feed.Name)
@@ -37,7 +37,7 @@ func TestSubscribeNoKeywords(t *testing.T) {
 }
 
 func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	subscribe := NewSubscribe(repository)
 	feed := &domain.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
@@ -52,7 +52,7 @@ func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, "Subscribed to news with keywords: fire", response.Message)
-	subs, _ := repository.Subs(domain.SearchParams{User: "adam"})
+	subs, _ := repository.Subs(SearchParams{User: "adam"})
 	assert.Len(t, subs, 1)
 	sub := subs[0]
 	assert.Equal(t, "news", sub.Feed.Name)
@@ -62,7 +62,7 @@ func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 }
 
 func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	subscribe := NewSubscribe(repository)
 	feed := &domain.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
@@ -80,24 +80,24 @@ func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {
 	assert.Equal(t,
 		"Subscribed to news with keywords: fire. ignore: potato,salad",
 		response.Message)
-	subs, _ := repository.Subs(domain.SearchParams{User: "adam"})
+	subs, _ := repository.Subs(SearchParams{User: "adam"})
 	assert.Len(t, subs, 1)
 	sub := subs[0]
 	assert.Equal(t, sub.Ignore, request.IgnoreWords)
 }
 
 func TestSubscribe_Exec_fails_to_find_feed(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	useCase := NewSubscribe(repository)
 
 	resp, err := useCase.Subscribe(SubscribeRequest{})
 
-	assert.Equal(t, domain.FeedNotFoundError, err)
+	assert.Equal(t, FeedNotFoundError, err)
 	assert.Equal(t, "Failed to find feed.", resp.Message)
 }
 
 func TestSubscribe_Exec_handles_repository_errors(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	useCase := NewSubscribe(repository)
 	feed := &domain.Feed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)

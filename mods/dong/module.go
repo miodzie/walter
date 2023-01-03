@@ -80,7 +80,7 @@ func initDatabase() *impl.GormRepository {
 	db, err := gorm.Open("sqlite3", path.Join(workDir, "dongs.db"))
 	if err != nil {
 		log.Error(err)
-		panic("failed to connect database")
+		panic("failed to connect storage")
 	}
 
 	return impl.NewGormRepository(db)

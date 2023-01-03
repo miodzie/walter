@@ -6,13 +6,13 @@ package usecases
 
 import (
 	"errors"
-	"github.com/miodzie/walter/mods/rss/internal/domain"
+	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {
-	repository := domain.NewInMemRepo()
+	repository := NewInMemRepo()
 	getSubs := NewGetSubscriptions(repository)
 
 	feed := &domain.Feed{Id: 1, Name: "news"}
@@ -40,7 +40,7 @@ func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {
 }
 
 func TestGetSubscriptions_Exec_handles_repository_errors(t *testing.T) {
-	repo := domain.NewInMemRepo()
+	repo := NewInMemRepo()
 	expectedErr := errors.New("testing")
 	repo.ForceError(expectedErr, 0)
 	getSubs := NewGetSubscriptions(repo)

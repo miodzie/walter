@@ -21,7 +21,7 @@ type FeedProcessor struct {
 	sync.Mutex
 }
 
-func NewProcessor(repo Repository, parser Parser) *FeedProcessor {
+func NewFeedProcessor(repo Repository, parser Parser) *FeedProcessor {
 	return &FeedProcessor{
 		repository:   repo,
 		parser:       parser,

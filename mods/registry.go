@@ -11,7 +11,7 @@ import (
 	"github.com/miodzie/walter/mods/dong"
 	"github.com/miodzie/walter/mods/logger"
 	"github.com/miodzie/walter/mods/logger/drivers"
-	rss_plugin "github.com/miodzie/walter/mods/rss/plugin"
+	rss "github.com/miodzie/walter/mods/rss/ports/plugin"
 	sed "github.com/miodzie/walter/mods/sed/plugin"
 )
 
@@ -26,7 +26,7 @@ func init() {
 	Register("dong", &dong.ModFactory{})
 	Register("sed", &sed.ModFactory{})
 	Register("logger", &logger.ModFactory{DefaultLogger: drivers.NewMultiLogger(drivers.ConsoleLogger{})})
-	Register("domain", &rss_plugin.ModFactory{})
+	Register("domain", &rss.ModFactory{})
 	Register("visionary", &art.VisionaryFactory{})
 	Register("artist", &art.ArtistFactory{})
 }

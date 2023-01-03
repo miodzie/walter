@@ -52,7 +52,7 @@ func Register(name string, db *sql.DB) {
 func Get(name string) (*sql.DB, error) {
 	db, ok := storages[name]
 	if !ok {
-		return nil, fmt.Errorf("database `%s` not registered", name)
+		return nil, fmt.Errorf("storage `%s` not registered", name)
 	}
 
 	return db, nil

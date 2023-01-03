@@ -10,7 +10,7 @@ import (
 	"github.com/miodzie/walter"
 	"github.com/miodzie/walter/mods/rss/internal/adapters/parsers/decorators"
 	"github.com/miodzie/walter/mods/rss/internal/adapters/parsers/gofeed"
-	"github.com/miodzie/walter/mods/rss/internal/adapters/sqlite"
+	"github.com/miodzie/walter/mods/rss/internal/adapters/storage/sqlite"
 	domain "github.com/miodzie/walter/mods/rss/internal/usecases"
 	"github.com/miodzie/walter/storage"
 	"strings"

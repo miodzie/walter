@@ -5,7 +5,7 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/domain"
+	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

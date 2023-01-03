@@ -6,9 +6,9 @@ package gofeed
 
 import (
 	"crypto/tls"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/mmcdole/gofeed"
 	"net/http"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type Parser struct {

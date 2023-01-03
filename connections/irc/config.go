@@ -6,7 +6,7 @@ package irc
 
 import (
 	"errors"
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 var ErrIncorrectType = errors.New("config is not of type: 'irc'")

@@ -1,13 +1,13 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
-	"github.com/miodzie/walter/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"strings"
 	"testing"
+	"walter"
+	"walter/mods/rss/internal/usecases"
+	"walter/test"
 )
 
 type CommandSuite struct {

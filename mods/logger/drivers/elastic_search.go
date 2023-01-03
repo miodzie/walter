@@ -4,7 +4,7 @@
 
 package drivers
 
-import "github.com/miodzie/walter"
+import "walter"
 
 type ElasticSearchLogger struct {
 }

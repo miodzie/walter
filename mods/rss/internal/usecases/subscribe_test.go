@@ -6,9 +6,9 @@ package usecases
 
 import (
 	"errors"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 // TODO: Clean up tests

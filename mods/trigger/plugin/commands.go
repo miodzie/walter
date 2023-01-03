@@ -4,7 +4,7 @@
 
 package plugin
 
-import "github.com/miodzie/walter"
+import "walter"
 
 func (mod *TriggerMod) addTrig(msg walter.Message) {
 	// TODO: Implement me.

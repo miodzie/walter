@@ -5,7 +5,7 @@
 package test
 
 import (
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 type Connection struct {

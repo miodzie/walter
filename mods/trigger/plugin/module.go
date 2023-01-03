@@ -7,8 +7,8 @@ package plugin
 import (
 	"log"
 
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/trigger"
+	"walter"
+	"walter/mods/trigger"
 )
 
 type TriggerMod struct {

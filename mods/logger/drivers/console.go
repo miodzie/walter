@@ -6,7 +6,7 @@ package drivers
 
 import (
 	"fmt"
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 type ConsoleLogger struct {

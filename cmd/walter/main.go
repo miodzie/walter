@@ -8,18 +8,18 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/miodzie/walter/log"
-	"github.com/miodzie/walter/mods"
-	"github.com/miodzie/walter/storage"
 	"os"
 	"os/signal"
 	"runtime"
 	"strings"
 	"syscall"
+	"walter/log"
+	"walter/mods"
+	"walter/storage"
 
-	"github.com/miodzie/walter"
-	_ "github.com/miodzie/walter/connections/discord"
-	_ "github.com/miodzie/walter/connections/irc"
+	"walter"
+	_ "walter/connections/discord"
+	_ "walter/connections/irc"
 )
 
 func main() {

@@ -6,7 +6,7 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 func (mod *StockMod) getPrice(msg walter.Message) {

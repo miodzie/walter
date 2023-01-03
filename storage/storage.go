@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"github.com/miodzie/walter/storage/sqlite"
+	"walter/storage/sqlite"
 )
 
 var storages map[string]*sql.DB

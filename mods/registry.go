@@ -6,13 +6,13 @@ package mods
 
 import (
 	"fmt"
-	"github.com/miodzie/walter"
-	art "github.com/miodzie/walter/mods/art/plugin"
-	"github.com/miodzie/walter/mods/dong"
-	"github.com/miodzie/walter/mods/logger"
-	"github.com/miodzie/walter/mods/logger/drivers"
-	rss "github.com/miodzie/walter/mods/rss/ports/plugin"
-	sed "github.com/miodzie/walter/mods/sed/plugin"
+	"walter"
+	art "walter/mods/art/plugin"
+	"walter/mods/dong"
+	"walter/mods/logger"
+	"walter/mods/logger/drivers"
+	rss "walter/mods/rss/ports/plugin"
+	sed "walter/mods/sed/plugin"
 )
 
 var factories map[string]Factory

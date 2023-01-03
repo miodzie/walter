@@ -8,8 +8,8 @@
 package main
 
 import (
-	"github.com/miodzie/walter/mods"
-	"github.com/miodzie/walter/mods/bestbot"
+	"walter/mods"
+	"walter/mods/bestbot"
 )
 
 func init() {

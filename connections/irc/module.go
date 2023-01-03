@@ -4,7 +4,7 @@
 
 package irc
 
-import "github.com/miodzie/walter"
+import "walter"
 
 // walter.Modable
 

@@ -4,7 +4,7 @@
 
 package usecases
 
-import "github.com/miodzie/walter/mods/rss/internal/internal/domain"
+import "walter/mods/rss/internal/internal/domain"
 
 type AddFeed struct {
 	repository Repository

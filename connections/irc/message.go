@@ -5,9 +5,9 @@
 package irc
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
 	"strings"
+	"walter"
+	"walter/log"
 )
 
 func (con *Connection) Send(msg walter.Message) error {

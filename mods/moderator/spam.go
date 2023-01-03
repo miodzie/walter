@@ -7,7 +7,7 @@ package moderator
 import (
 	"regexp"
 
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 // If the string has more than 3 all caps words.

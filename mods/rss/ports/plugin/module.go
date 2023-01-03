@@ -5,11 +5,11 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter/log"
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
 	"time"
+	"walter/log"
+	"walter/mods/rss/internal/usecases"
 
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 type RssMod struct {

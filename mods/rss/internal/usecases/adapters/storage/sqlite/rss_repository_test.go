@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/suite"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type RssRepositorySuite struct {

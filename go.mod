@@ -1,4 +1,4 @@
-module github.com/miodzie/walter
+module walter
 
 go 1.18
 

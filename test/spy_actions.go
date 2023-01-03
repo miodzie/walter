@@ -1,8 +1,8 @@
 package test
 
 import (
-	"github.com/miodzie/walter"
 	"time"
+	"walter"
 )
 
 // SpyActions provides some helpful commands when testing expected Action calls on a module.

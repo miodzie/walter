@@ -6,7 +6,7 @@ package usecases
 
 import (
 	"fmt"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type Subscribe struct {

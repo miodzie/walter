@@ -1,9 +1,9 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
 	"time"
+	"walter"
+	"walter/log"
 )
 
 type Brush <-chan walter.Message

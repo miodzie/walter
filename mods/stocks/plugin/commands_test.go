@@ -1,11 +1,11 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/test"
 	"github.com/stretchr/testify/suite"
 	"strings"
 	"testing"
+	"walter"
+	"walter/test"
 )
 
 type CommandSuite struct {

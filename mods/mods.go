@@ -5,7 +5,7 @@
 package mods
 
 import (
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 // List [mod name]config

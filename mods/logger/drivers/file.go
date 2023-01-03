@@ -5,7 +5,7 @@
 package drivers
 
 import (
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 type FileLogger struct {

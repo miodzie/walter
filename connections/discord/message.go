@@ -7,9 +7,9 @@ package discord
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
 	"strings"
+	"walter"
+	"walter/log"
 )
 
 func (con *Connection) Send(msg walter.Message) error {

@@ -5,12 +5,12 @@
 package decorators
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
 	"html"
 	"reflect"
+	"walter/mods/rss/internal/usecases"
 
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type cleanHtml struct {

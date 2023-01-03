@@ -6,8 +6,8 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
 	irc "github.com/thoj/go-ircevent"
+	"walter"
 )
 
 type Mod struct {

@@ -5,9 +5,9 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 func TestGetFeeds_Exec_gets_all_feeds(t *testing.T) {

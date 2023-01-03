@@ -4,7 +4,7 @@
 
 package usecases
 
-import . "github.com/miodzie/walter/mods/rss/internal/internal/domain"
+import . "walter/mods/rss/internal/internal/domain"
 
 // Used by FeedProcessor, composition class.
 // noteSorter sorts new notifications for the subscriptions and feed,

@@ -2,10 +2,10 @@ package usecases
 
 import (
 	"fmt"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 func TestMinimalFormatter_Format(t *testing.T) {

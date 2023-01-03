@@ -7,11 +7,11 @@ package plugin
 import (
 	"flag"
 	"fmt"
-	"github.com/miodzie/walter/log"
 	"strings"
+	"walter/log"
 
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
+	"walter"
+	"walter/mods/rss/internal/usecases"
 )
 
 // !remove_feed {name} {url}

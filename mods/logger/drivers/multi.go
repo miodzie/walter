@@ -5,8 +5,8 @@
 package drivers
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/logger"
+	"walter"
+	"walter/mods/logger"
 )
 
 type MultiLogger struct {

@@ -5,19 +5,19 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 // Parser downloads a Feed.Url and translates it to a ParsedFeed to
 // be checked by a Subscription.
 type Parser interface {
-	ParseURL(string) (*domain.ParsedFeed, error)
+	ParseURL(url string) (*domain.ParsedFeed, error)
 }
 
 type StubParser struct {
 	Parsed *domain.ParsedFeed
 }
 
-func (p *StubParser) ParseURL(url string) (*domain.ParsedFeed, error) {
+func (p *StubParser) ParseURL(string) (*domain.ParsedFeed, error) {
 	return p.Parsed, nil
 }

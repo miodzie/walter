@@ -6,9 +6,9 @@ package usecases
 
 import (
 	"errors"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {

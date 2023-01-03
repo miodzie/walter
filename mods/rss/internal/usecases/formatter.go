@@ -2,8 +2,8 @@ package usecases
 
 import (
 	"fmt"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"strings"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type Formatter interface {

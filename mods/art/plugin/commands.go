@@ -1,9 +1,9 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/art"
 	"time"
+	"walter"
+	"walter/mods/art"
 )
 
 func (mod *VisionaryMod) gmCommand(msg walter.Message) {

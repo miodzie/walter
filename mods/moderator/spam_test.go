@@ -7,8 +7,8 @@ package moderator_test
 import (
 	"testing"
 
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/moderator"
+	"walter"
+	"walter/mods/moderator"
 )
 
 func TestAllCapsRegex(t *testing.T) {

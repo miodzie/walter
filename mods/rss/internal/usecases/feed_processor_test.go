@@ -6,10 +6,10 @@ package usecases
 
 import (
 	"errors"
-	. "github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"
+	. "walter/mods/rss/internal/internal/domain"
 )
 
 type FeedProcessorSuite struct {

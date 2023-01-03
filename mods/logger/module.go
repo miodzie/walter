@@ -6,8 +6,8 @@ package logger
 
 import (
 	"errors"
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
+	"walter"
+	"walter/log"
 )
 
 type Mod struct {

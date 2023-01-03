@@ -6,8 +6,8 @@ package walter
 
 import (
 	"fmt"
-	"github.com/miodzie/walter/log"
 	"strings"
+	"walter/log"
 )
 
 type Bot interface {

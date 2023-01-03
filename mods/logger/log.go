@@ -4,7 +4,7 @@
 
 package logger
 
-import "github.com/miodzie/walter"
+import "walter"
 
 // Logger is meant for logging all incoming and outgoing Messages on a per-connection
 // basis.

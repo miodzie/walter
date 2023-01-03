@@ -9,11 +9,11 @@ import (
 	"github.com/miodzie/dong"
 	"github.com/miodzie/dong/impl"
 	"github.com/miodzie/dong/usecases"
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
 	"os"
 	"os/user"
 	"path"
+	"walter"
+	"walter/log"
 )
 
 const WORKDIR = ".dong"

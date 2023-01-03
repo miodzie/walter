@@ -6,14 +6,14 @@ package irc
 
 import (
 	"crypto/tls"
-	"github.com/miodzie/walter/connections/irc/plugin"
-	"github.com/miodzie/walter/log"
 	"strings"
 	"time"
+	"walter/connections/irc/plugin"
+	"walter/log"
 
-	"github.com/miodzie/walter"
 	irc "github.com/thoj/go-ircevent"
 	"sync"
+	"walter"
 )
 
 type Connection struct {

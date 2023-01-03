@@ -1,9 +1,9 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"github.com/stretchr/testify/suite"
 	"testing"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 type RemoveFeedSuite struct {

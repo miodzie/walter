@@ -5,10 +5,10 @@
 package moderator
 
 import (
-	"github.com/miodzie/walter/log"
 	"time"
+	"walter/log"
 
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 type Mod struct {

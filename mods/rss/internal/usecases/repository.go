@@ -6,9 +6,9 @@ package usecases
 
 import (
 	"errors"
-	// TODO: Remove . import?
-	. "github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"math/rand"
+	// TODO: Remove . import?
+	. "walter/mods/rss/internal/internal/domain"
 )
 
 // TODO: Add more Repository errors.

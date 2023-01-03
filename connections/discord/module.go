@@ -5,7 +5,7 @@
 package discord
 
 import (
-	"github.com/miodzie/walter"
+	"walter"
 )
 
 // walter.Modable

@@ -1,9 +1,9 @@
 package domain
 
 import (
-	"github.com/miodzie/walter/log"
 	"regexp"
 	"strings"
+	"walter/log"
 )
 
 type ParsedItem struct {

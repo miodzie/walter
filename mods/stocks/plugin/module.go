@@ -5,8 +5,8 @@
 package plugin
 
 import (
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/stocks"
+	"walter"
+	"walter/mods/stocks"
 )
 
 type StockMod struct {

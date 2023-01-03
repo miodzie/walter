@@ -6,8 +6,8 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/mods/sed"
+	"walter"
+	"walter/mods/sed"
 )
 
 func New() *Mod {

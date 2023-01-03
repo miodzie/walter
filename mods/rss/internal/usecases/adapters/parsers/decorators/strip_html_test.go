@@ -5,10 +5,10 @@
 package decorators
 
 import (
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
 	"testing"
+	"walter/mods/rss/internal/usecases"
 
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 func TestStripHtml(t *testing.T) {

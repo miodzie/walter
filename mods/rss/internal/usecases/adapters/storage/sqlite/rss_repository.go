@@ -8,9 +8,9 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
-	"github.com/miodzie/walter/mods/rss/internal/usecases"
+	"walter/mods/rss/internal/usecases"
 
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 //go:embed rss.sql

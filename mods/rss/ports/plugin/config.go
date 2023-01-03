@@ -7,13 +7,13 @@ package plugin
 import (
 	"errors"
 	"fmt"
-	"github.com/miodzie/walter"
-	domain "github.com/miodzie/walter/mods/rss/internal/usecases"
-	"github.com/miodzie/walter/mods/rss/internal/usecases/adapters/parsers/decorators"
-	"github.com/miodzie/walter/mods/rss/internal/usecases/adapters/parsers/gofeed"
-	"github.com/miodzie/walter/mods/rss/internal/usecases/adapters/storage/sqlite"
-	"github.com/miodzie/walter/storage"
 	"strings"
+	"walter"
+	domain "walter/mods/rss/internal/usecases"
+	"walter/mods/rss/internal/usecases/adapters/parsers/decorators"
+	"walter/mods/rss/internal/usecases/adapters/parsers/gofeed"
+	"walter/mods/rss/internal/usecases/adapters/storage/sqlite"
+	"walter/storage"
 )
 
 var parsers map[string]domain.Parser

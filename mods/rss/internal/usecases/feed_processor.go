@@ -5,9 +5,9 @@
 package usecases
 
 import (
-	"github.com/miodzie/walter/log"
-	"github.com/miodzie/walter/mods/rss/internal/internal/domain"
 	"sync"
+	"walter/log"
+	"walter/mods/rss/internal/internal/domain"
 )
 
 // FeedProcessor iterates over each Feed, retrieves a ParsedFeed through the Parser,

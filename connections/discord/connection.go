@@ -6,8 +6,8 @@ package discord
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/miodzie/walter"
 	"sync"
+	"walter"
 )
 
 type Connection struct {

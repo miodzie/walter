@@ -15,7 +15,7 @@ func TestGetSubscriptions_Exec_gets_subscriptions_for_a_user(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	getSubs := NewGetSubscriptions(repository)
 
-	feed := &rss.Feed{Id: 1, Name: "news"}
+	feed := &rss.UserFeed{Id: 1, Name: "news"}
 	_ = repository.AddFeed(feed)
 	subscription := &rss.Subscription{
 		FeedId:  feed.Id,

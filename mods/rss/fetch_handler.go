@@ -4,8 +4,10 @@ type FetchHandler struct {
 	fetcher Fetcher
 }
 
-func (h *FetchHandler) Handle(urls []string) <-chan ParsedFeed {
-	output := make(chan ParsedFeed, len(urls))
+// Handle
+// TODO(miodzie): Considering passing a channel of urls?
+func (h *FetchHandler) Handle(urls []string) <-chan Feed {
+	output := make(chan Feed, len(urls))
 	go func() {
 		for _, u := range urls {
 			feed, err := h.fetcher.Fetch(u)

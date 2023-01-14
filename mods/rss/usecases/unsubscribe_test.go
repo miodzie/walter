@@ -13,7 +13,7 @@ import (
 
 func TestNewUnsubscribeUseCase_Exec_unsubscribes_a_user(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	feed := rss.Feed{Id: 1, Name: "news", Url: ""}
+	feed := rss.UserFeed{Id: 1, Name: "news", Url: ""}
 	if err := repository.AddFeed(&feed); err != nil {
 		t.Fail()
 	}
@@ -51,7 +51,7 @@ func TestNewUnsubscribeUseCase_Exec_failed_to_find_sub(t *testing.T) {
 
 func TestNewUnsubscribeUseCase_Exec_handles_repository_errors(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	feed := rss.Feed{Id: 1, Name: "news", Url: ""}
+	feed := rss.UserFeed{Id: 1, Name: "news", Url: ""}
 	if err := repository.AddFeed(&feed); err != nil {
 		t.Fail()
 	}

@@ -21,7 +21,7 @@ type Subscription struct {
 	Keywords  string
 	Ignore    string
 	Channel   string
-	Feed      *Feed
+	Feed      *UserFeed
 	Seen      string          // Item.GUID comma separated
 	SeenItems map[string]bool // [guid]bool
 }

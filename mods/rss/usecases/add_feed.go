@@ -24,9 +24,9 @@ type AddFeedResponse struct {
 }
 
 func (a *AddFeed) Add(req AddFeedRequest) (AddFeedResponse, error) {
-	resp := AddFeedResponse{Message: "Feed saved."}
+	resp := AddFeedResponse{Message: "UserFeed saved."}
 
-	var feed rss.Feed
+	var feed rss.UserFeed
 	feed.Name = req.Name
 	feed.Url = req.Url
 

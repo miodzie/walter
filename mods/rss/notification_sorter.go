@@ -17,7 +17,7 @@ func newNoteSorter(channelLimit int) *noteSorter {
 		cache:        newNoteCache()}
 }
 
-func (s *noteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Notification) {
+func (s *noteSorter) sort(subs []*Subscription, feed *Feed) (notes []*Notification) {
 	for _, sub := range subs {
 		newNotes := s.findNewNotificationsFor(sub, feed)
 		notes = append(notes, newNotes...)
@@ -25,7 +25,7 @@ func (s *noteSorter) sort(subs []*Subscription, feed *ParsedFeed) (notes []*Noti
 	return notes
 }
 
-func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed) []*Notification {
+func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *Feed) []*Notification {
 	var notes []*Notification
 	for _, item := range feed.ItemsWithKeywords(sub.KeyWords()) {
 		// TODO(refactor): Don't like how this and sub.Remember()
@@ -35,7 +35,7 @@ func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *ParsedFeed
 		}
 		sub.Remember(*item)
 		notification, wasNew := s.getOrCreateNotification(sub, item)
-		notification.Users = append(notification.Users, sub.User)
+		//notification.User = append(notification.User, sub.User)
 		if wasNew {
 			notes = append(notes, notification)
 		}

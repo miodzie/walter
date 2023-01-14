@@ -19,25 +19,25 @@ func (s *FetchHandlerSuite) PreTest(*td.T, string) error {
 }
 
 func (s *FetchHandlerSuite) TestFetcherPipelineReturnsParsedFeeds(assert *td.T) {
-	golangBlog := ParsedFeed{Title: "Go Blog"}
+	golangBlog := Feed{Title: "Go Blog"}
 	s.stubFetcher.Add("blog.golang.org", golangBlog)
-	randomBlog := ParsedFeed{Title: "Random Blog"}
+	randomBlog := Feed{Title: "Random Blog"}
 	s.stubFetcher.Add("localhost", randomBlog)
 
 	output := s.fetchHandler.Handle([]string{"blog.golang.org", "localhost"})
 
 	assert.Cmp(<-output, golangBlog)
 	assert.Cmp(<-output, randomBlog)
-	assert.Cmp(<-output, ParsedFeed{})
+	assert.Cmp(<-output, Feed{})
 }
 
 func (s *FetchHandlerSuite) TestItIgnoresOnFetchError(assert *td.T) {
-	s.stubFetcher.Add("localhost", ParsedFeed{Title: "Blog"})
+	s.stubFetcher.Add("localhost", Feed{Title: "Blog"})
 	s.stubFetcher.AddErr(errors.New("test"))
 
 	output := s.fetchHandler.Handle([]string{"localhost"})
 
-	assert.Cmp(<-output, ParsedFeed{})
+	assert.Cmp(<-output, Feed{})
 }
 
 func TestFetcherTestSuite(t *testing.T) {
@@ -47,15 +47,15 @@ func TestFetcherTestSuite(t *testing.T) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 type StubFetcher struct {
-	feeds map[string]ParsedFeed
+	feeds map[string]Feed
 	err   error
 }
 
 func NewStubFetcher() *StubFetcher {
-	return &StubFetcher{feeds: make(map[string]ParsedFeed)}
+	return &StubFetcher{feeds: make(map[string]Feed)}
 }
 
-func (s *StubFetcher) Fetch(rssUrl string) (*ParsedFeed, error) {
+func (s *StubFetcher) Fetch(rssUrl string) (*Feed, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
@@ -67,7 +67,7 @@ func (s *StubFetcher) Fetch(rssUrl string) (*ParsedFeed, error) {
 	return &f, nil
 }
 
-func (s *StubFetcher) Add(url string, blog ParsedFeed) {
+func (s *StubFetcher) Add(url string, blog Feed) {
 	s.feeds[url] = blog
 }
 

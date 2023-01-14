@@ -11,7 +11,7 @@ import (
 )
 
 type CommandSuite struct {
-	Feed *rss.Feed
+	Feed *rss.UserFeed
 	*RssMod
 	suite.Suite
 	*test.SpyActions
@@ -25,7 +25,7 @@ func (suite *CommandSuite) SetupTest() {
 	})
 	suite.SpyActions = &test.SpyActions{}
 	suite.RssMod.actions = suite.SpyActions
-	suite.Feed = &rss.Feed{Id: 42, Name: "my_feed"}
+	suite.Feed = &rss.UserFeed{Id: 42, Name: "my_feed"}
 	suite.Repository.AddFeed(suite.Feed)
 }
 

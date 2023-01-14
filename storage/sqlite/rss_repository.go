@@ -20,16 +20,16 @@ func (r *RssRepository) RemoveFeed(name string) error {
 	return err
 }
 
-func (r *RssRepository) Feeds() ([]*rss.Feed, error) {
+func (r *RssRepository) Feeds() ([]*rss.UserFeed, error) {
 	rows, err := r.db.Query("SELECT * FROM feeds")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var feeds []*rss.Feed
+	var feeds []*rss.UserFeed
 	for rows.Next() {
-		var feed rss.Feed
+		var feed rss.UserFeed
 		if err := rows.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 			return nil, err
 		}
@@ -42,7 +42,7 @@ func (r *RssRepository) Feeds() ([]*rss.Feed, error) {
 	return feeds, nil
 }
 
-func (r *RssRepository) AddFeed(feed *rss.Feed) error {
+func (r *RssRepository) AddFeed(feed *rss.UserFeed) error {
 	result, err := r.db.Exec("INSERT INTO feeds (name, url) VALUES(?, ?)", feed.Name, feed.Url)
 	if err != nil {
 		return fmt.Errorf("FeedRepository.add: %v", err)
@@ -56,8 +56,8 @@ func (r *RssRepository) AddFeed(feed *rss.Feed) error {
 	return nil
 }
 
-func (r *RssRepository) FeedByName(name string) (*rss.Feed, error) {
-	var feed rss.Feed
+func (r *RssRepository) FeedByName(name string) (*rss.UserFeed, error) {
+	var feed rss.UserFeed
 	row := r.db.QueryRow("SELECT * FROM feeds WHERE name = ?", name)
 	if err := row.Scan(&feed.Id, &feed.Name, &feed.Url); err != nil {
 		if err == sql.ErrNoRows {

@@ -13,11 +13,12 @@ import (
 
 var FeedNotFoundError = errors.New("feed not found")
 
+// Repository is staying here because I can.
 type Repository interface {
-	AddFeed(*Feed) error
+	AddFeed(*UserFeed) error
 	RemoveFeed(name string) error
-	Feeds() ([]*Feed, error)
-	FeedByName(name string) (*Feed, error)
+	Feeds() ([]*UserFeed, error)
+	FeedByName(name string) (*UserFeed, error)
 
 	AddSub(*Subscription) error
 	UpdateSub(*Subscription) error
@@ -34,7 +35,7 @@ type SearchParams struct {
 }
 
 type InMemRepository struct {
-	feeds            []*Feed
+	feeds            []*UserFeed
 	subs             map[uint64]*Subscription
 	delayForcedErrBy int
 	forcedErr        error
@@ -69,11 +70,11 @@ func (r *InMemRepository) popForcedErr() error {
 	return r.forcedErr
 }
 
-func (r *InMemRepository) Feeds() ([]*Feed, error) {
+func (r *InMemRepository) Feeds() ([]*UserFeed, error) {
 	return r.feeds, r.popForcedErr()
 }
 
-func (r *InMemRepository) AddFeed(feed *Feed) error {
+func (r *InMemRepository) AddFeed(feed *UserFeed) error {
 	r.feeds = append(r.feeds, feed)
 	return r.popForcedErr()
 }
@@ -89,13 +90,13 @@ func (r *InMemRepository) RemoveFeed(name string) error {
 	return nil
 }
 
-func (r *InMemRepository) FeedByName(name string) (*Feed, error) {
+func (r *InMemRepository) FeedByName(name string) (*UserFeed, error) {
 	for _, c := range r.feeds {
 		if c.Name == name {
 			return c, r.popForcedErr()
 		}
 	}
-	return &Feed{}, FeedNotFoundError
+	return &UserFeed{}, FeedNotFoundError
 }
 
 func (r *InMemRepository) AddSub(s *Subscription) error {

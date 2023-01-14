@@ -34,7 +34,7 @@ func (test *RssRepositorySuite) TestFeeds() {
 }
 
 func (test *RssRepositorySuite) SkipTestRemoveFeed() {
-	feed := &rss.Feed{Name: "foo"}
+	feed := &rss.UserFeed{Name: "foo"}
 	test.NoError(test.repository.AddFeed(feed))
 
 	err := test.repository.RemoveFeed("foo")

@@ -10,13 +10,13 @@ import (
 	"strings"
 )
 
-// Fetcher downloads a Feed.Url and translates it to a ParsedFeed to
+// Fetcher downloads a UserFeed.Url and translates it to a Feed to
 // be checked by a Subscription.
 type Fetcher interface {
-	Fetch(rssUrl string) (*ParsedFeed, error)
+	Fetch(rssUrl string) (*Feed, error)
 }
 
-type ParsedFeed struct {
+type Feed struct {
 	Title       string
 	Description string
 	Link        string
@@ -26,7 +26,7 @@ type ParsedFeed struct {
 	Custom      map[string]string
 }
 
-func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {
+func (feed *Feed) ItemsWithKeywords(keywords []string) []*Item {
 	var items []*Item
 	for _, i := range feed.Items {
 		if i.HasKeywords(keywords) {
@@ -36,7 +36,7 @@ func (feed *ParsedFeed) ItemsWithKeywords(keywords []string) []*Item {
 	return items
 }
 
-func (feed *ParsedFeed) HasKeywords(keywords []string) bool {
+func (feed *Feed) HasKeywords(keywords []string) bool {
 	for _, item := range feed.Items {
 		if item.HasKeywords(keywords) {
 			return true
@@ -91,9 +91,9 @@ func createWordBoundaryRegex(word string) (*regexp.Regexp, error) {
 }
 
 type StubParser struct {
-	Parsed *ParsedFeed
+	Parsed *Feed
 }
 
-func (p *StubParser) Fetch(url string) (*ParsedFeed, error) {
+func (p *StubParser) Fetch(url string) (*Feed, error) {
 	return p.Parsed, nil
 }

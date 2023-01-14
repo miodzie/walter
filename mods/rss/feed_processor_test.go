@@ -14,17 +14,17 @@ import (
 type FeedProcessorSuite struct {
 	processor  *FeedProcessor
 	repository Repository
-	feed       *Feed
+	feed       *UserFeed
 	item       *Item
 	suite.Suite
 }
 
 func (s *FeedProcessorSuite) SetupTest() {
 	s.item = &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{s.item}}
+	parsed := &Feed{Items: []*Item{s.item}}
 	s.repository = NewInMemRepo()
 	s.processor = NewProcessor(s.repository, &StubParser{Parsed: parsed})
-	s.feed = &Feed{Id: 1}
+	s.feed = &UserFeed{Id: 1}
 	_ = s.processor.repository.AddFeed(s.feed)
 }
 
@@ -59,9 +59,9 @@ func TestRunProcessorSuite(t *testing.T) {
 
 func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	item := &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{item}}
+	parsed := &Feed{Items: []*Item{item}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 
 	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id, Ignore: "dub"}
@@ -81,9 +81,9 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 }
 
 func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
-	parsed := &ParsedFeed{Items: []*Item{{Title: "bar", GUID: "1"}}}
+	parsed := &Feed{Items: []*Item{{Title: "bar", GUID: "1"}}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 
 	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
@@ -96,13 +96,13 @@ func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *
 	assert.Len(t, results, 1)
 
 	assertNotificationCorrect(t, results[0], alice, feed)
-	assert.Len(t, results[0].Users, 2, "notification should have alice and james")
+	assert.Len(t, results[0].User, 2, "notification should have alice and james")
 }
 
 func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
-	p := &ParsedFeed{Items: []*Item{{Title: "foo"}}}
+	p := &Feed{Items: []*Item{{Title: "foo"}}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	processor.repository.AddSub(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})
 
@@ -113,9 +113,9 @@ func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 
 func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 	item := &Item{Title: "foo"}
-	p := &ParsedFeed{Items: []*Item{item}}
+	p := &Feed{Items: []*Item{item}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	sub := &Subscription{User: "james", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
 	sub.Remember(*item)
@@ -128,14 +128,14 @@ func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 
 func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 	item := &Item{Title: "bar", GUID: "1"}
-	parsed := &ParsedFeed{Items: []*Item{
+	parsed := &Feed{Items: []*Item{
 		item,
 		{Title: "bar", GUID: "2"},
 		{Title: "bar", GUID: "3"},
 		{Title: "bar", GUID: "4"},
 	}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 
 	alice := &Subscription{User: "alice", Channel: "#chat2", Keywords: "bar", FeedId: feed.Id}
@@ -147,9 +147,9 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 }
 
 func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_words(t *testing.T) {
-	p := &ParsedFeed{Items: []*Item{{Title: "foo bar", GUID: "1"}}}
+	p := &Feed{Items: []*Item{{Title: "foo bar", GUID: "1"}}}
 	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
-	feed := &Feed{Id: 1}
+	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	processor.repository.AddSub(&Subscription{
 		User: "james", Channel: "#chat",
@@ -172,8 +172,8 @@ func TestProcessReturnsRepositoryError(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *Feed) {
+func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *UserFeed) {
 	assert.Equal(t, n.Channel, sub.Channel)
-	assert.Contains(t, n.Users, sub.User)
+	assert.Contains(t, n.User, sub.User)
 	assert.Equal(t, n.Feed.Id, feed.Id)
 }

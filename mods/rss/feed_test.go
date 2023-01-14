@@ -38,7 +38,7 @@ func TestItem_DescTruncated_shortens_the_description_length_to_100_chars(t *test
 
 func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "foo,bar"}
-	feed := &ParsedFeed{
+	feed := &Feed{
 		Items: []*Item{{Title: "foo"}, {Title: "bar"}, {Title: "baz"}},
 	}
 
@@ -58,7 +58,7 @@ func TestParsedFeed_HasKeywords(t *testing.T) {
 	}
 }
 
-var hasKeywords = []*ParsedFeed{
+var hasKeywords = []*Feed{
 	{Items: []*Item{
 		{Title: "FOO"},
 	}},
@@ -73,7 +73,7 @@ var hasKeywords = []*ParsedFeed{
 	}},
 }
 
-var hasNotKeywords = []*ParsedFeed{
+var hasNotKeywords = []*Feed{
 	{Items: []*Item{
 		{Title: "zab"},
 	}},

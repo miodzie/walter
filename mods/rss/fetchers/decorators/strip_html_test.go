@@ -12,7 +12,7 @@ import (
 
 func TestStripHtml(t *testing.T) {
 	expected := "cool bean's!"
-	feed := &rss.ParsedFeed{
+	feed := &rss.Feed{
 		Title: "<strong>hello</strong> world!",
 		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}

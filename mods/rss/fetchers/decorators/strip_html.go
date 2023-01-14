@@ -20,7 +20,7 @@ func StripHtml(p rss.Fetcher) rss.Fetcher {
 	return &cleanHtml{BaseFetcher: p}
 }
 
-func (s *cleanHtml) Fetch(url string) (*rss.ParsedFeed, error) {
+func (s *cleanHtml) Fetch(url string) (*rss.Feed, error) {
 	feed, err := s.BaseFetcher.Fetch(url)
 	if err != nil {
 		return feed, err

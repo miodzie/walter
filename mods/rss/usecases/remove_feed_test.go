@@ -18,7 +18,7 @@ func (t *RemoveFeedSuite) SetupTest() {
 }
 
 func (t *RemoveFeedSuite) TestItRemovesAllSubscriptionsToThatFeed() {
-	feed := &rss.Feed{Id: 42, Name: "some_feed"}
+	feed := &rss.UserFeed{Id: 42, Name: "some_feed"}
 	t.NoError(t.repository.AddFeed(feed))
 	sub := &rss.Subscription{User: "isaac", FeedId: feed.Id}
 	sub2 := &rss.Subscription{User: "jacob", FeedId: feed.Id}
@@ -34,7 +34,7 @@ func (t *RemoveFeedSuite) TestItRemovesAllSubscriptionsToThatFeed() {
 }
 
 func (t *RemoveFeedSuite) TestItRemovesAFeed() {
-	feed := &rss.Feed{Id: 42, Name: "some_feed"}
+	feed := &rss.UserFeed{Id: 42, Name: "some_feed"}
 	t.NoError(t.repository.AddFeed(feed))
 
 	err := t.removeFeed.Remove(feed.Name)

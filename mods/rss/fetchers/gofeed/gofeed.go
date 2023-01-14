@@ -18,8 +18,8 @@ func New() *Fetcher {
 	return &Fetcher{}
 }
 
-func (receiver *Fetcher) Fetch(url string) (*rss.ParsedFeed, error) {
-	var parsed rss.ParsedFeed
+func (receiver *Fetcher) Fetch(url string) (*rss.Feed, error) {
+	var parsed rss.Feed
 	fp := gofeed.NewParser()
 	// If TLSClientConfig is non-nil, HTTP/2 support may not be enabled by default.
 	fp.Client = &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{}}}

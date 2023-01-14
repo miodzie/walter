@@ -6,14 +6,13 @@ package rss
 
 import (
 	"fmt"
-	"strings"
 )
 
 type Notification struct {
-	Feed    Feed
+	Feed    UserFeed
 	Item    Item
 	Channel string
-	Users   []string
+	User    string
 }
 
 func (n Notification) String() string {
@@ -23,7 +22,8 @@ func (n Notification) String() string {
 		i.Title,
 		i.DescriptionTruncated(),
 		i.Link,
-		strings.Join(n.Users, ", "))
+		n.User,
+	)
 
 	return t
 }
@@ -46,6 +46,6 @@ func (m MinimalFormatter) Format(n Notification) string {
 	i := n.Item
 	return fmt.Sprintf(
 		"%s - %s : %s",
-		i.Title, i.Link, strings.Join(n.Users, ","),
+		i.Title, i.Link, n.User,
 	)
 }

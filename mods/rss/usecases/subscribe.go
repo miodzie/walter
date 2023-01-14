@@ -29,7 +29,7 @@ type SubscribeResponse struct {
 	Message string
 }
 
-// Subscribe Subscribes a user to a Feed.
+// Subscribe Subscribes a user to a UserFeed.
 func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {
 	feed, err := s.repository.FeedByName(req.FeedName)
 	if err != nil {

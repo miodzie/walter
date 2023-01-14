@@ -16,7 +16,7 @@ import (
 func TestSubscribeNoKeywords(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)
-	feed := &rss.Feed{Id: 1, Name: "news"}
+	feed := &rss.UserFeed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
 		FeedName: "news",
@@ -39,7 +39,7 @@ func TestSubscribeNoKeywords(t *testing.T) {
 func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)
-	feed := &rss.Feed{Id: 1, Name: "news"}
+	feed := &rss.UserFeed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
 		FeedName: "news",
@@ -64,7 +64,7 @@ func TestSubscribe_Exec_subscribes_a_user_to_a_feed(t *testing.T) {
 func TestSubscribe_Exec_subscribes_a_user_with_ignore_words(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	subscribe := NewSubscribe(repository)
-	feed := &rss.Feed{Id: 1, Name: "news"}
+	feed := &rss.UserFeed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
 		FeedName:    "news",
@@ -99,7 +99,7 @@ func TestSubscribe_Exec_fails_to_find_feed(t *testing.T) {
 func TestSubscribe_Exec_handles_repository_errors(t *testing.T) {
 	repository := rss.NewInMemRepo()
 	useCase := NewSubscribe(repository)
-	feed := &rss.Feed{Id: 1, Name: "news"}
+	feed := &rss.UserFeed{Id: 1, Name: "news"}
 	repository.AddFeed(feed)
 	request := SubscribeRequest{
 		FeedName: "news",

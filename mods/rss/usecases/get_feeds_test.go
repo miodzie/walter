@@ -12,7 +12,7 @@ import (
 
 func TestGetFeeds_Exec_gets_all_feeds(t *testing.T) {
 	repository := rss.NewInMemRepo()
-	repository.AddFeed(&rss.Feed{Name: "news"})
+	repository.AddFeed(&rss.UserFeed{Name: "news"})
 	getFeeds := NewGetFeeds(repository)
 
 	response, err := getFeeds.Get()

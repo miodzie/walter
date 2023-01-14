@@ -8,9 +8,9 @@ import (
 	"time"
 )
 
-// Feed is the allowed and available web feeds that users can subscribe
+// UserFeed is the allowed web feeds that users can subscribe
 // to.
-type Feed struct {
+type UserFeed struct {
 	Id            uint64
 	Name          string
 	Url           string

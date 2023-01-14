@@ -9,8 +9,8 @@ import (
 	"sync"
 )
 
-// FeedProcessor iterates over each Feed, retrieves a ParsedFeed through the Fetcher,
-// finds new Feed Items that haven't been seen by each User's Subscription to said Feed,
+// FeedProcessor iterates over each UserFeed, retrieves a Feed through the Fetcher,
+// finds new UserFeed Items that haven't been seen by each User's Subscription to said UserFeed,
 // then turns them into grouped, sendable Notifications.
 type FeedProcessor struct {
 	// Max notifications sent per channel per Process() call.
@@ -36,7 +36,7 @@ func (p *FeedProcessor) Process() (notes []*Notification, err error) {
 		return notes, err
 	}
 
-	// Fetcher -> Sorter -> Deliverer
+	// FetchFeeds -> Notification -> Announcements
 
 	sorter := newNoteSorter(p.ChannelLimit)
 	for _, feed := range feeds {
@@ -52,8 +52,8 @@ func (p *FeedProcessor) Process() (notes []*Notification, err error) {
 	return notes, nil
 }
 
-func (p *FeedProcessor) getSubsAndParsedFeed(feed *Feed) (
-	[]*Subscription, *ParsedFeed, error) {
+func (p *FeedProcessor) getSubsAndParsedFeed(feed *UserFeed) (
+	[]*Subscription, *Feed, error) {
 	parsedFeed, err := p.parser.Fetch(feed.Url)
 	if err != nil {
 		return nil, nil, err

@@ -3,20 +3,19 @@ package rss
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"strings"
 	"testing"
 )
 
 func TestNotification_String(t *testing.T) {
-	item := Item{Title: "New Cool Blog Post",
+	item := Item{Title: "New Cool Blog Notification",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
-	notification := Notification{Item: item, Users: []string{"Abraham", "Isaac", "Jacob"}}
+	notification := Notification{Item: item, User: "Abraham"}
 	expected := fmt.Sprintf("%s\n%s\n%s\n%s\n",
 		item.Title,
 		item.DescriptionTruncated(),
 		item.Link,
-		strings.Join(notification.Users, ", "))
+		notification.User)
 
 	assert.Equal(t, expected, notification.String())
 	//fmt.Println(expected)
@@ -24,14 +23,15 @@ func TestNotification_String(t *testing.T) {
 
 func TestMinimalFormatter_Format(t *testing.T) {
 	formatter := MinimalFormatter{}
-	item := Item{Title: "New Cool Blog Post",
+	item := Item{Title: "New Cool Blog Notification",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
-	notification := Notification{Item: item, Users: []string{"Abraham", "Isaac", "Jacob"}}
+	notification := Notification{Item: item, User: "Abraham"}
 
 	expected := fmt.Sprintf(
 		"%s - %s : %s",
-		item.Title, item.Link, strings.Join(notification.Users, ","))
+		item.Title, item.Link, notification.User,
+	)
 
 	assert.Equal(t, expected, formatter.Format(notification))
 	//fmt.Println(expected)

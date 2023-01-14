@@ -8,7 +8,10 @@ func (h *FetchHandler) Handle(urls []string) <-chan ParsedFeed {
 	output := make(chan ParsedFeed, len(urls))
 	go func() {
 		for _, u := range urls {
-			feed, _ := h.fetcher.Fetch(u)
+			feed, err := h.fetcher.Fetch(u)
+			if err != nil {
+				continue
+			}
 			output <- *feed
 		}
 		close(output)

@@ -44,7 +44,7 @@ func (receiver *Fetcher) Fetch(url string) (*rss.Feed, error) {
 		pi.Links = i.Links
 		pi.GUID = i.GUID
 		pi.Custom = i.Custom
-		parsed.Items = append(parsed.Items, &pi)
+		parsed.Items = append(parsed.Items, pi)
 	}
 
 	return &parsed, nil

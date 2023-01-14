@@ -33,7 +33,7 @@ func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *Feed) []*N
 		if s.shouldIgnore(sub, item) {
 			continue
 		}
-		sub.Remember(*item)
+		sub.Remember(item)
 		notification, wasNew := s.getOrCreateNotification(sub, item)
 		notification.User = sub.User
 		if wasNew {
@@ -43,16 +43,16 @@ func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *Feed) []*N
 	return notes
 }
 
-func (s *noteSorter) shouldIgnore(sub *Subscription, item *Item) bool {
-	return sub.ShouldIgnore(*item) || s.cache.ChannelLimitReached(sub.Channel, s.channelLimit)
+func (s *noteSorter) shouldIgnore(sub *Subscription, item Item) bool {
+	return sub.ShouldIgnore(item) || s.cache.ChannelLimitReached(sub.Channel, s.channelLimit)
 }
 
-func (s *noteSorter) getOrCreateNotification(subscription *Subscription, item *Item) (*Notification, bool) {
+func (s *noteSorter) getOrCreateNotification(subscription *Subscription, item Item) (*Notification, bool) {
 	wasNew := false
 	key := s.cache.makeKey(item, subscription)
 	notification := s.cache.get(key)
 	if !s.cache.has(key) {
-		notification = &Notification{Channel: subscription.Channel, Feed: *subscription.Feed, Item: *item}
+		notification = &Notification{Channel: subscription.Channel, Feed: *subscription.Feed, Item: item}
 		s.cache.put(key, notification)
 		wasNew = true
 	}
@@ -95,6 +95,6 @@ func (c *noteCache) put(key string, notification *Notification) {
 	c.seenNotifications[key] = notification
 }
 
-func (c *noteCache) makeKey(item *Item, sub *Subscription) string {
+func (c *noteCache) makeKey(item Item, sub *Subscription) string {
 	return item.GUID + sub.Channel
 }

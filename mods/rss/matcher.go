@@ -1,5 +1,7 @@
 package rss
 
+// Matcher matches Subscriptions to Feed Items.
+// Returns Notifications that satisfies the Subscription requirements.
 type Matcher struct {
 	subs []Subscription
 }

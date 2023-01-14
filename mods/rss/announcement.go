@@ -13,6 +13,10 @@ import (
 
 // By having the Notification be separate, I can later port this to self-hosted stuff.
 
+type Messenger interface {
+	Deliver([]Announcement) error
+}
+
 type Announcement struct {
 	Message    string
 	Room       string
@@ -23,8 +27,6 @@ type Announcement struct {
 
 // Fetch Feeds  -> Create Notification -> Organize into Announcements -> Deliver
 
-// []Notifications -> Announcement
-
 type AnnouncementOrganizer struct{}
 
 func (o *AnnouncementOrganizer) Organize(notes []Notification) []Announcement {
@@ -34,13 +36,13 @@ func (o *AnnouncementOrganizer) Organize(notes []Notification) []Announcement {
 		a, exists := seen[o.key(n)]
 		if exists {
 			a.users = append(a.users, n.User)
-			a.Message = formatMsg(n, a.users)
+			a.Message = o.formatMsg(n, a.users)
 		} else {
 			a2 := &Announcement{
 				Room:  n.Channel,
 				users: []string{n.User},
 			}
-			a2.Message = formatMsg(n, a2.users)
+			a2.Message = o.formatMsg(n, a2.users)
 			seen[o.key(n)] = a2
 		}
 	}
@@ -50,12 +52,12 @@ func (o *AnnouncementOrganizer) Organize(notes []Notification) []Announcement {
 
 	return announces
 }
-
 func (o *AnnouncementOrganizer) key(n Notification) string {
 	return n.Channel + n.Item.GUID
 }
 
-func formatMsg(n Notification, users []string) string {
+// TODO: Consider replacing with formatter.
+func (o *AnnouncementOrganizer) formatMsg(n Notification, users []string) string {
 	return fmt.Sprintf(
 		"%s - %s : %s",
 		n.Item.Title, n.Item.Link, strings.Join(users, ","))

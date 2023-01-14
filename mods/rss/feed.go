@@ -22,12 +22,12 @@ type Feed struct {
 	Link        string
 	Updated     string
 	Published   string
-	Items       []*Item
+	Items       []Item
 	Custom      map[string]string
 }
 
-func (feed *Feed) ItemsWithKeywords(keywords []string) []*Item {
-	var items []*Item
+func (feed *Feed) ItemsWithKeywords(keywords []string) []Item {
+	var items []Item
 	for _, i := range feed.Items {
 		if i.HasKeywords(keywords) {
 			items = append(items, i)

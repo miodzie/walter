@@ -4,7 +4,7 @@
 
 package rss
 
-// noteSorter sorts new notifications for the subscriptions and feed,
+// noteSorter sorts new notifications for the subscriptions and userFeed,
 // ignoring already seen items for a subscription.
 type noteSorter struct {
 	cache        noteCache

@@ -6,31 +6,50 @@ import (
 	"testing"
 )
 
-// Fetch Feeds -> Notification -> Announcements -> Filters -> Announce
+// Fetch Feeds -> Notifications -> Announcements -> Announce
 
 // TODO
 // - ThrottledMessenger Decorator
-// - Update Subscription seen items on successful delivery?
+// - Update Subscription seen items on successful delivery? Use hook?
 
 type ProcessorSuite struct {
 	processor  *Processor
 	announcer  *StubAnnouncer
 	repository *InMemRepository
 	fetcher    *StubFetcher
+
+	userFeed *UserFeed
+	item     Item
 }
 
 func (p *ProcessorSuite) PreTest(t *td.T, testName string) error {
 	p.repository = NewInMemRepo()
-	p.fetcher = &StubFetcher{}
+	p.fetcher = NewStubFetcher()
 	p.announcer = &StubAnnouncer{}
 	p.processor = NewProcessor(p.fetcher, p.repository, p.announcer)
-	return nil
+
+	p.item = Item{Title: "The Go Blog", Link: "https://go.dev/blog", GUID: "1"}
+	p.userFeed = &UserFeed{Id: 1, Url: "go.dev/blog"}
+	feed := Feed{Items: []Item{p.item}}
+	p.fetcher.Add(p.userFeed.Url, feed)
+
+	return p.repository.AddFeed(p.userFeed)
 }
 
-func (p *ProcessorSuite) TestDeliversNotifications(assert *td.T) {
-	_ = p.processor.Process()
+func (p *ProcessorSuite) TestDeliversNotification(assert, require *td.T) {
+	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: p.userFeed.Id}
+	jacob := &Subscription{User: "jacob", Channel: "#general", FeedId: p.userFeed.Id}
+	require.CmpNoError(p.repository.AddSub(jacob))
+	require.CmpNoError(p.repository.AddSub(isaac))
 
-	assert.Len(p.announcer.delivered, 1)
+	err := p.processor.Process()
+	require.CmpNoError(err)
+
+	if assert.Len(p.announcer.delivered, 1) {
+		a := p.announcer.delivered[0]
+		assert.Cmp(a.Room, "#general")
+		assert.Cmp(a.Message, "The Go Blog - https://go.dev/blog : jacob,isaac")
+	}
 }
 
 func TestRunProcessorSuite(t *testing.T) {

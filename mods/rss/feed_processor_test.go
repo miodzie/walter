@@ -83,19 +83,19 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 //func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
 //	parsed := &Feed{Items: []*Item{{Title: "bar", GUID: "1"}}}
 //	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
-//	feed := &UserFeed{Id: 1}
-//	processor.storage.AddFeed(feed)
+//	userFeed := &UserFeed{Id: 1}
+//	processor.storage.AddFeed(userFeed)
 //
-//	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+//	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: userFeed.Id}
 //	processor.storage.AddSub(alice)
-//	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+//	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: userFeed.Id}
 //	processor.storage.AddSub(james)
 //
 //	results, _ := processor.Process()
 //
 //	assert.Len(t, results, 1)
 //
-//	assertNotificationCorrect(t, results[0], alice, feed)
+//	assertNotificationCorrect(t, results[0], alice, userFeed)
 //	assert.Len(t, results[0].User, 2, "notification should have alice and james")
 //}
 

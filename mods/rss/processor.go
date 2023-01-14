@@ -4,6 +4,7 @@ import "github.com/miodzie/walter/log"
 
 // TODO: CachedFetcher decorator
 // TODO: ThrottledAnnouncer decorator
+// TODO: RealTime Processor option?
 
 type Processor struct {
 	storage   Repository

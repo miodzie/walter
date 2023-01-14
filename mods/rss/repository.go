@@ -11,7 +11,7 @@ import (
 
 // TODO: Add more Repository errors.
 
-var FeedNotFoundError = errors.New("feed not found")
+var FeedNotFoundError = errors.New("userFeed not found")
 
 // Repository is staying here because I can.
 type Repository interface {

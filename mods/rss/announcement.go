@@ -26,6 +26,8 @@ type Announcement struct {
 // Fetch Feeds  -> Create Notification -> Organize into Announcements
 // -> Announce (Decorate Announcer for filters)
 
+// AnnouncementOrganizer organizes new Subscription Notifications into grouped
+// Announcements, by Channel(Room) and the Item's GUID.
 type AnnouncementOrganizer struct{}
 
 func (o *AnnouncementOrganizer) Organize(notes []Notification) []Announcement {

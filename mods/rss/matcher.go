@@ -14,7 +14,7 @@ func (m *Matcher) Match(items []Item) (matches []Notification) {
 	for _, sub := range m.subs {
 		matches = append(matches, findMatches(sub, items)...)
 	}
-	return
+	return matches
 }
 
 func findMatches(sub Subscription, items []Item) (matches []Notification) {

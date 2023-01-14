@@ -61,7 +61,7 @@ func (s *StubFetcher) Fetch(rssUrl string) (*Feed, error) {
 	}
 	f, ok := s.feeds[rssUrl]
 	if !ok {
-		return nil, errors.New("url for parsed feed wasn't added")
+		return nil, errors.New("url for parsed userFeed wasn't added")
 	}
 	delete(s.feeds, rssUrl)
 	return &f, nil

@@ -7,14 +7,12 @@ import (
 
 // EXCUSE ME! I HAVE TO MAKE AN ANNOUNCEMENT!
 
-// Fetch Feeds -> Notification -> Announcements -> Filters -> Deliver
-// Filters:
-// - Channel Limit
+// By having the Notification be separate,
+// I can keep the option of delivering notifications instead of announcements through
+// PMs, or possible digest emails/links.
 
-// By having the Notification be separate, I can later port this to self-hosted stuff.
-
-type Messenger interface {
-	Deliver([]Announcement) error
+type Announcer interface {
+	Announce([]Announcement) error
 }
 
 type Announcement struct {
@@ -25,7 +23,8 @@ type Announcement struct {
 	users []string
 }
 
-// Fetch Feeds  -> Create Notification -> Organize into Announcements -> Deliver
+// Fetch Feeds  -> Create Notification -> Organize into Announcements
+// -> Announce (Decorate Announcer for filters)
 
 type AnnouncementOrganizer struct{}
 

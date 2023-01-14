@@ -1,35 +1,50 @@
 package rss
 
+import "github.com/miodzie/walter/log"
+
+// TODO: CachedFetcher decorator
+// TODO: ThrottledAnnouncer decorator
+
 type Processor struct {
 	storage   Repository
 	fetcher   Fetcher
-	messenger Messenger
+	announcer Announcer
 }
 
-func NewProcessor(f Fetcher, r Repository, m Messenger) *Processor {
+func NewProcessor(f Fetcher, r Repository, m Announcer) *Processor {
 	return &Processor{
 		storage:   r,
 		fetcher:   f,
-		messenger: m,
+		announcer: m,
 	}
 }
 
 func (p *Processor) Process() error {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user feeds.
-	userFeeds, _ := p.storage.Feeds()
-	matcher, _ := p.createMatcher()
+	userFeeds, err := p.storage.Feeds()
+	if err != nil {
+		return err
+	}
+	matcher, err := p.createMatcher()
+	if err != nil {
+		return err
+	}
 
 	var notes []Notification
 	for _, uf := range userFeeds {
-		f, _ := p.fetcher.Fetch(uf.Url)
+		f, err := p.fetcher.Fetch(uf.Url)
+		if err != nil {
+			log.Error(err)
+			continue
+		}
 		notes = append(notes, matcher.Match(f.Items)...)
 	}
 
 	organizer := AnnouncementOrganizer{}
 	announcements := organizer.Organize(notes)
 
-	return p.messenger.Deliver(announcements)
+	return p.announcer.Announce(announcements)
 }
 
 func (p *Processor) createMatcher() (*Matcher, error) {

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Fetch Feeds -> Notification -> Announcements -> Filters -> Deliver
+// Fetch Feeds -> Notification -> Announcements -> Filters -> Announce
 
 // TODO
 // - ThrottledMessenger Decorator
@@ -14,7 +14,7 @@ import (
 
 type ProcessorSuite struct {
 	processor  *Processor
-	messenger  *StubMessenger
+	announcer  *StubAnnouncer
 	repository *InMemRepository
 	fetcher    *StubFetcher
 }
@@ -22,15 +22,15 @@ type ProcessorSuite struct {
 func (p *ProcessorSuite) PreTest(t *td.T, testName string) error {
 	p.repository = NewInMemRepo()
 	p.fetcher = &StubFetcher{}
-	p.messenger = &StubMessenger{}
-	p.processor = NewProcessor(p.fetcher, p.repository, p.messenger)
+	p.announcer = &StubAnnouncer{}
+	p.processor = NewProcessor(p.fetcher, p.repository, p.announcer)
 	return nil
 }
 
 func (p *ProcessorSuite) TestDeliversNotifications(assert *td.T) {
 	_ = p.processor.Process()
 
-	assert.Len(p.messenger.delivered, 1)
+	assert.Len(p.announcer.delivered, 1)
 }
 
 func TestRunProcessorSuite(t *testing.T) {
@@ -39,11 +39,11 @@ func TestRunProcessorSuite(t *testing.T) {
 
 ///////////////////////////////////////////////////////
 
-type StubMessenger struct {
+type StubAnnouncer struct {
 	delivered []Announcement
 }
 
-func (m *StubMessenger) Deliver(announcements []Announcement) error {
+func (m *StubAnnouncer) Announce(announcements []Announcement) error {
 	m.delivered = announcements
 	return nil
 }

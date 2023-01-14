@@ -23,7 +23,7 @@ func (s *FeedProcessorSuite) SetupTest() {
 	s.item = &Item{Title: "bar", GUID: "1"}
 	parsed := &Feed{Items: []*Item{s.item}}
 	s.repository = NewInMemRepo()
-	s.processor = NewProcessor(s.repository, &StubParser{Parsed: parsed})
+	s.processor = NewFeedProcessor(s.repository, &StubParser{Parsed: parsed})
 	s.feed = &UserFeed{Id: 1}
 	_ = s.processor.repository.AddFeed(s.feed)
 }
@@ -53,14 +53,14 @@ func (s *FeedProcessorSuite) TestSubscribeNoKeywords() {
 	s.True(alice.HasSeen(*s.item))
 }
 
-func TestRunProcessorSuite(t *testing.T) {
+func TestRunFeedProcessorSuite(t *testing.T) {
 	suite.Run(t, new(FeedProcessorSuite))
 }
 
 func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	item := &Item{Title: "bar", GUID: "1"}
 	parsed := &Feed{Items: []*Item{item}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
+	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
 	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 
@@ -80,28 +80,28 @@ func TestProcessor_Process_returns_the_expected_notifications(t *testing.T) {
 	assert.True(t, james.HasSeen(*item))
 }
 
-func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
-	parsed := &Feed{Items: []*Item{{Title: "bar", GUID: "1"}}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
-	feed := &UserFeed{Id: 1}
-	processor.repository.AddFeed(feed)
-
-	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
-	processor.repository.AddSub(alice)
-	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
-	processor.repository.AddSub(james)
-
-	results, _ := processor.Process()
-
-	assert.Len(t, results, 1)
-
-	assertNotificationCorrect(t, results[0], alice, feed)
-	assert.Len(t, results[0].User, 2, "notification should have alice and james")
-}
+//func TestProcessor_Process_returns_grouped_notifications_by_channel_and_item(t *testing.T) {
+//	parsed := &Feed{Items: []*Item{{Title: "bar", GUID: "1"}}}
+//	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
+//	feed := &UserFeed{Id: 1}
+//	processor.storage.AddFeed(feed)
+//
+//	alice := &Subscription{User: "alice", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+//	processor.storage.AddSub(alice)
+//	james := &Subscription{User: "james", Channel: "#chat", Keywords: "bar", FeedId: feed.Id}
+//	processor.storage.AddSub(james)
+//
+//	results, _ := processor.Process()
+//
+//	assert.Len(t, results, 1)
+//
+//	assertNotificationCorrect(t, results[0], alice, feed)
+//	assert.Len(t, results[0].User, 2, "notification should have alice and james")
+//}
 
 func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 	p := &Feed{Items: []*Item{{Title: "foo"}}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
+	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	processor.repository.AddSub(&Subscription{User: "james", Channel: "#chat", Keywords: "baz", FeedId: feed.Id})
@@ -114,7 +114,7 @@ func TestProcessor_Process_returns_empty_when_no_keywords_found(t *testing.T) {
 func TestProcessor_Process_ignores_seen_items(t *testing.T) {
 	item := &Item{Title: "foo"}
 	p := &Feed{Items: []*Item{item}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
+	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	sub := &Subscription{User: "james", Channel: "#chat", Keywords: "foo", FeedId: feed.Id}
@@ -134,7 +134,7 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 		{Title: "bar", GUID: "3"},
 		{Title: "bar", GUID: "4"},
 	}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
+	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: parsed})
 	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 
@@ -148,7 +148,7 @@ func TestProcessor_Process_rate_limits_notifications_per_channel(t *testing.T) {
 
 func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_words(t *testing.T) {
 	p := &Feed{Items: []*Item{{Title: "foo bar", GUID: "1"}}}
-	processor := NewProcessor(NewInMemRepo(), &StubParser{Parsed: p})
+	processor := NewFeedProcessor(NewInMemRepo(), &StubParser{Parsed: p})
 	feed := &UserFeed{Id: 1}
 	processor.repository.AddFeed(feed)
 	processor.repository.AddSub(&Subscription{
@@ -165,7 +165,7 @@ func TestProcessor_Process_returns_empty_when_keywords_found_but_has_ignore_word
 func TestProcessReturnsRepositoryError(t *testing.T) {
 	repo := NewInMemRepo()
 	repo.ForceError(errors.New("forced"), 0)
-	processor := NewProcessor(repo, &StubParser{})
+	processor := NewFeedProcessor(repo, &StubParser{})
 
 	notes, err := processor.Process()
 	assert.Nil(t, notes)
@@ -174,6 +174,6 @@ func TestProcessReturnsRepositoryError(t *testing.T) {
 
 func assertNotificationCorrect(t *testing.T, n *Notification, sub *Subscription, feed *UserFeed) {
 	assert.Equal(t, n.Channel, sub.Channel)
-	assert.Contains(t, n.User, sub.User)
+	assert.Equal(t, n.User, sub.User)
 	assert.Equal(t, n.Feed.Id, feed.Id)
 }

@@ -35,7 +35,7 @@ func (s *noteSorter) findNewNotificationsFor(sub *Subscription, feed *Feed) []*N
 		}
 		sub.Remember(*item)
 		notification, wasNew := s.getOrCreateNotification(sub, item)
-		//notification.User = append(notification.User, sub.User)
+		notification.User = sub.User
 		if wasNew {
 			notes = append(notes, notification)
 		}

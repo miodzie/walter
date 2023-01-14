@@ -11,14 +11,14 @@ import (
 	"net/http"
 )
 
-type Parser struct {
+type Fetcher struct {
 }
 
-func New() *Parser {
-	return &Parser{}
+func New() *Fetcher {
+	return &Fetcher{}
 }
 
-func (receiver *Parser) ParseURL(url string) (*rss.ParsedFeed, error) {
+func (receiver *Fetcher) Fetch(url string) (*rss.ParsedFeed, error) {
 	var parsed rss.ParsedFeed
 	fp := gofeed.NewParser()
 	// If TLSClientConfig is non-nil, HTTP/2 support may not be enabled by default.

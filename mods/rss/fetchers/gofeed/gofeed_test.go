@@ -11,7 +11,7 @@ import (
 
 func SkipTestItCanParseARedditFeed(t *testing.T) {
 	p := New()
-	feed, err := p.ParseURL("https://www.reddit.com/r/news/.rss")
+	feed, err := p.Fetch("https://www.reddit.com/r/news/.rss")
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()

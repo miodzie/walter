@@ -17,9 +17,9 @@ func TestStripHtml(t *testing.T) {
 		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
 	dummy := &rss.StubParser{Parsed: feed}
-	sut := cleanHtml{BaseParser: dummy}
+	sut := cleanHtml{BaseFetcher: dummy}
 
-	parsed, _ := sut.ParseURL("")
+	parsed, _ := sut.Fetch("")
 
 	if parsed.Title != "hello world!" {
 		t.Error("failed to strip html")

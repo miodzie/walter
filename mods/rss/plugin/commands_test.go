@@ -20,7 +20,7 @@ type CommandSuite struct {
 func (suite *CommandSuite) SetupTest() {
 	suite.RssMod = New(Services{
 		Repository: rss.NewInMemRepo(),
-		Parser:     &rss.StubParser{},
+		Fetcher:    &rss.StubParser{},
 		Formatter:  rss.MinimalFormatter{},
 	})
 	suite.SpyActions = &test.SpyActions{}

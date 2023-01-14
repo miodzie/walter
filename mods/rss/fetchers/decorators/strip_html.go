@@ -13,15 +13,15 @@ import (
 )
 
 type cleanHtml struct {
-	BaseParser rss.Parser
+	BaseFetcher rss.Fetcher
 }
 
-func StripHtml(p rss.Parser) rss.Parser {
-	return &cleanHtml{BaseParser: p}
+func StripHtml(p rss.Fetcher) rss.Fetcher {
+	return &cleanHtml{BaseFetcher: p}
 }
 
-func (s *cleanHtml) ParseURL(url string) (*rss.ParsedFeed, error) {
-	feed, err := s.BaseParser.ParseURL(url)
+func (s *cleanHtml) Fetch(url string) (*rss.ParsedFeed, error) {
+	feed, err := s.BaseFetcher.Fetch(url)
 	if err != nil {
 		return feed, err
 	}

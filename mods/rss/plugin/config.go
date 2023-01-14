@@ -9,19 +9,19 @@ import (
 	"fmt"
 	"github.com/miodzie/walter"
 	"github.com/miodzie/walter/mods/rss"
-	"github.com/miodzie/walter/mods/rss/parsers/decorators"
-	"github.com/miodzie/walter/mods/rss/parsers/gofeed"
+	"github.com/miodzie/walter/mods/rss/fetchers/decorators"
+	"github.com/miodzie/walter/mods/rss/fetchers/gofeed"
 	"github.com/miodzie/walter/storage"
 	"github.com/miodzie/walter/storage/sqlite"
 	"strings"
 )
 
-var parsers map[string]rss.Parser
+var parsers map[string]rss.Fetcher
 var formatters map[string]rss.Formatter
 var storages map[string]func(database string) (rss.Repository, error)
 
 func init() {
-	parsers = make(map[string]rss.Parser)
+	parsers = make(map[string]rss.Fetcher)
 	parsers["gofeed"] = gofeed.New()
 
 	formatters = make(map[string]rss.Formatter)
@@ -52,12 +52,12 @@ type Config struct {
 func (c *Config) CreateMod() (*RssMod, error) {
 	services := Services{}
 	var ok bool
-	services.Parser, ok = parsers[c.Parser]
+	services.Fetcher, ok = parsers[c.Parser]
 	if !ok {
 		return nil, fmt.Errorf("unknown parser: `%s`", c.Parser)
 	}
 	if c.Striphtml {
-		services.Parser = decorators.StripHtml(services.Parser)
+		services.Fetcher = decorators.StripHtml(services.Fetcher)
 	}
 	services.Formatter, ok = formatters[c.Formatter]
 	if !ok {

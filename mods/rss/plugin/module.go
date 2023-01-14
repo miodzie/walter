@@ -20,7 +20,7 @@ type RssMod struct {
 
 type Services struct {
 	rss.Repository
-	rss.Parser
+	rss.Fetcher
 	rss.Formatter
 }
 
@@ -43,7 +43,7 @@ func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 
 func (mod *RssMod) checkFeeds() {
 	time.Sleep(time.Minute * 1)
-	p := rss.NewProcessor(mod.Repository, mod.Parser)
+	p := rss.NewProcessor(mod.Repository, mod.Fetcher)
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
 		notifs, err := p.Process()

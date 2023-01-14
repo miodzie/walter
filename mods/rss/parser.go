@@ -10,10 +10,10 @@ import (
 	"strings"
 )
 
-// Parser downloads a Feed.Url and translates it to a ParsedFeed to
+// Fetcher downloads a Feed.Url and translates it to a ParsedFeed to
 // be checked by a Subscription.
-type Parser interface {
-	ParseURL(string) (*ParsedFeed, error)
+type Fetcher interface {
+	Fetch(rssUrl string) (*ParsedFeed, error)
 }
 
 type ParsedFeed struct {
@@ -94,6 +94,6 @@ type StubParser struct {
 	Parsed *ParsedFeed
 }
 
-func (p *StubParser) ParseURL(url string) (*ParsedFeed, error) {
+func (p *StubParser) Fetch(url string) (*ParsedFeed, error) {
 	return p.Parsed, nil
 }

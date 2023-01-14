@@ -1,5 +1,10 @@
 package rss
 
+import (
+	"fmt"
+	"strings"
+)
+
 // EXCUSE ME! I HAVE TO MAKE AN ANNOUNCEMENT!
 
 // Fetch Feeds -> Notification -> Announcements -> Filters -> Deliver
@@ -12,6 +17,8 @@ type Announcement struct {
 	Message    string
 	Room       string
 	OnDelivery func() error
+
+	users []string
 }
 
 // Fetch Feeds  -> Create Notification -> Organize into Announcements -> Deliver
@@ -22,11 +29,34 @@ type AnnouncementOrganizer struct{}
 
 func (o *AnnouncementOrganizer) Organize(notes []Notification) []Announcement {
 	var announces []Announcement
-
+	seen := make(map[string]*Announcement)
 	for _, n := range notes {
-		a := Announcement{Room: n.Channel, Message: n.String()}
-		announces = append(announces, a)
+		a, exists := seen[o.key(n)]
+		if exists {
+			a.users = append(a.users, n.User)
+			a.Message = formatMsg(n, a.users)
+		} else {
+			a2 := &Announcement{
+				Room:  n.Channel,
+				users: []string{n.User},
+			}
+			a2.Message = formatMsg(n, a2.users)
+			seen[o.key(n)] = a2
+		}
+	}
+	for _, a := range seen {
+		announces = append(announces, *a)
 	}
 
 	return announces
+}
+
+func (o *AnnouncementOrganizer) key(n Notification) string {
+	return n.Channel + n.Item.GUID
+}
+
+func formatMsg(n Notification, users []string) string {
+	return fmt.Sprintf(
+		"%s - %s : %s",
+		n.Item.Title, n.Item.Link, strings.Join(users, ","))
 }

@@ -14,7 +14,7 @@ func TestStripHtml(t *testing.T) {
 	expected := "cool bean's!"
 	feed := &rss.Feed{
 		Title: "<strong>hello</strong> world!",
-		Items: []*rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
+		Items: []rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
 	}
 	dummy := &rss.StubParser{Parsed: feed}
 	sut := cleanHtml{BaseFetcher: dummy}

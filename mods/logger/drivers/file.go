@@ -14,5 +14,4 @@ type FileLogger struct {
 func (l FileLogger) Log(message walter.Message) error {
 	//TODO implement me
 	panic("implement me")
-	return nil
 }

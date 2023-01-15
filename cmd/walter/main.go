@@ -78,7 +78,7 @@ func initConfig() (*walter.Config, error) {
 }
 
 func interrupt(callable func()) {
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-quit

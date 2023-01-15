@@ -2,9 +2,11 @@ package rss
 
 import "github.com/miodzie/walter/log"
 
-// TODO: CachedFetcher decorator
 // TODO: ThrottledAnnouncer decorator
+
+// TODO: CachedFetcher decorator
 // TODO: RealTime Processor option?
+// TODO: AnnouncementFormatter?
 
 type Processor struct {
 	storage   Repository
@@ -42,8 +44,23 @@ func (p *Processor) Process() error {
 		notes = append(notes, matcher.Match(f.Items)...)
 	}
 
+	// I can abstract this out into a pipeline that returns a channel of
+	// Notifications, this enables more modularity.
+	// I can then have that RealTimeProcessor,
+	//that's constantly polling and sending new Notifications fresh off the channel.
+	// While this aggregate into announcements can be a separate pipeline,
+	//off the same base.
+
 	organizer := AnnouncementOrganizer{}
 	announcements := organizer.Organize(notes)
+
+	// TODO: Add a "transaction" for subscriptions to fail on save if they're not
+	// delivered?
+	// e.g.
+	if p.announcer.Announce(announcements) != nil {
+		// rollback _all_ announcements?
+		// what if some were delivered, some not?
+	}
 
 	return p.announcer.Announce(announcements)
 }

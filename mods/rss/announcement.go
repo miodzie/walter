@@ -11,9 +11,23 @@ import (
 // I can keep the option of delivering notifications instead of announcements through
 // PMs, or possible digest emails/links.
 
-type Announcer interface {
-	Announce([]Announcement) error
-}
+// I can abstract this out into a pipeline that returns a channel of
+// Notifications, this enables more modularity.
+// I can then have that RealTimeProcessor,
+//that's constantly polling and sending new Notifications fresh off the channel.
+// While this aggregate into announcements can be a separate pipeline,
+//off the same base.
+
+//organizer := AnnouncementOrganizer{}
+//announcements := organizer.Organize(notes)
+//
+//// TODO: Add a "transaction" for subscriptions to fail on save if they're not delivered?
+//if err := p.announcer.Announce(announcements); err != nil {
+//	// TODO: wtd for some that didn't deliver?
+//	log.Error(err)
+//}
+//
+//return p.announcer.Announce(announcements)
 
 type Announcement struct {
 	Message    string

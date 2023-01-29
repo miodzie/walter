@@ -43,22 +43,25 @@ func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 
 func (mod *RssMod) checkFeeds() {
 	time.Sleep(time.Minute * 1)
-	p := rss.NewFeedProcessor(mod.Repository, mod.Fetcher)
+	processor := rss.NewProcessor(mod.Fetcher, mod.Repository)
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
-		notifs, err := p.Process()
+		deliveries, err := processor.Process()
 		if err != nil {
 			log.Error(err)
+			return
 		}
-		log.Infof("%d notifications found\n", len(notifs))
-		for _, notif := range notifs {
+		total := 0
+		for delivery := range deliveries {
+			log.Debug(delivery)
 			msg := walter.Message{
-				Target:  notif.Channel,
-				Content: mod.Format(*notif),
+				Target:  delivery.Channel,
+				Content: mod.Format(delivery),
 			}
-			log.Debug(notif)
 			mod.actions.Send(msg)
+			total++
 		}
+		log.Infof("%d notifications delivered\n", total)
 		time.Sleep(time.Minute * 30)
 	}
 }

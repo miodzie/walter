@@ -1,6 +1,8 @@
 package rss
 
-import "github.com/miodzie/walter/log"
+import (
+	"github.com/miodzie/walter/log"
+)
 
 // TODO: ThrottledAnnouncer decorator
 
@@ -9,60 +11,55 @@ import "github.com/miodzie/walter/log"
 // TODO: AnnouncementFormatter?
 
 type Processor struct {
-	storage   Repository
-	fetcher   Fetcher
-	announcer Announcer
+	storage Repository
+	fetcher Fetcher
 }
 
-func NewProcessor(f Fetcher, r Repository, m Announcer) *Processor {
+func NewProcessor(f Fetcher, r Repository) *Processor {
 	return &Processor{
-		storage:   r,
-		fetcher:   f,
-		announcer: m,
+		storage: r,
+		fetcher: f,
 	}
 }
 
-func (p *Processor) Process() error {
+type Deliverable interface {
+	Address() string
+	Content() string
+
+	// TODO: Figure out how to update subscription on delivery.
+	OnDelivery() func()
+	Sub() Subscription
+}
+
+func (p *Processor) Process() (chan Notification, error) {
 	// TODO: Should only be active userFeeds that has subs.
-	// Maybe at some point just have UserFeeds be actual user feeds.
+	// Maybe at some point just have UserFeeds be actual user created feeds.
 	userFeeds, err := p.storage.Feeds()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	matcher, err := p.createMatcher()
 	if err != nil {
-		return err
+		return nil, err
 	}
+	notes := make(chan Notification)
+	go p.process(userFeeds, matcher, notes)
+	return notes, nil
+}
 
-	var notes []Notification
-	for _, uf := range userFeeds {
-		f, err := p.fetcher.Fetch(uf.Url)
+func (p *Processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Notification) {
+	for _, uf := range feeds {
+		feed, err := p.fetcher.Fetch(uf.Url)
 		if err != nil {
-			log.Error(err)
+			log.Error(err) // TODO: retry?
 			continue
 		}
-		notes = append(notes, matcher.Match(f.Items)...)
+		matches := matcher.Match(feed.Items)
+		for _, m := range matches {
+			notes <- m
+		}
 	}
-
-	// I can abstract this out into a pipeline that returns a channel of
-	// Notifications, this enables more modularity.
-	// I can then have that RealTimeProcessor,
-	//that's constantly polling and sending new Notifications fresh off the channel.
-	// While this aggregate into announcements can be a separate pipeline,
-	//off the same base.
-
-	organizer := AnnouncementOrganizer{}
-	announcements := organizer.Organize(notes)
-
-	// TODO: Add a "transaction" for subscriptions to fail on save if they're not
-	// delivered?
-	// e.g.
-	if p.announcer.Announce(announcements) != nil {
-		// rollback _all_ announcements?
-		// what if some were delivered, some not?
-	}
-
-	return p.announcer.Announce(announcements)
+	close(notes)
 }
 
 func (p *Processor) createMatcher() (*Matcher, error) {

@@ -46,11 +46,11 @@ func (s *Subscription) HasSeen(item Item) bool {
 }
 
 func (s *Subscription) ShouldSee(item Item) bool {
-	return !(s.HasSeen(item) ||
-		(item.HasKeywords(s.IgnoreWords()) && s.Ignore != ""))
+	return item.HasKeywords(s.KeywordsSlice()) &&
+		!(s.HasSeen(item) || (item.HasKeywords(s.IgnoreWords()) && s.Ignore != ""))
 }
 
-func (s *Subscription) KeyWords() []string {
+func (s *Subscription) KeywordsSlice() []string {
 	return strings.Split(s.Keywords, ",")
 }
 

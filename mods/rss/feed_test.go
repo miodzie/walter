@@ -42,7 +42,7 @@ func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 		Items: []Item{{Title: "foo"}, {Title: "bar"}, {Title: "baz"}},
 	}
 
-	result := feed.ItemsWithKeywords(sub.KeyWords())
+	result := feed.ItemsWithKeywords(sub.KeywordsSlice())
 
 	assert.Len(t, result, 2)
 }
@@ -50,11 +50,11 @@ func TestParsedFeed_ItemsWithKeywords(t *testing.T) {
 func TestParsedFeed_HasKeywords(t *testing.T) {
 	sub := &Subscription{Keywords: "fOo,bar,baz"}
 	for _, feed := range hasKeywords {
-		assert.True(t, feed.HasKeywords(sub.KeyWords()), sub.Keywords)
+		assert.True(t, feed.HasKeywords(sub.KeywordsSlice()), sub.Keywords)
 	}
 
 	for _, feed := range hasNotKeywords {
-		assert.False(t, feed.HasKeywords(sub.KeyWords()))
+		assert.False(t, feed.HasKeywords(sub.KeywordsSlice()))
 	}
 }
 

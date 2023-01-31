@@ -46,7 +46,7 @@ func (useCase GetSubscriptions) Get(request GetSubscriptionsRequest) (GetSubscri
 		lsubs = append(lsubs, GetSubscriptionsSub{
 			Feed:     sub.Feed.Name,
 			Channel:  sub.Channel,
-			Keywords: sub.KeyWords(),
+			Keywords: sub.KeywordsSlice(),
 		})
 	}
 

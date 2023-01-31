@@ -14,7 +14,10 @@ func TestStripHtml(t *testing.T) {
 	expected := "cool bean's!"
 	feed := &rss.Feed{
 		Title: "<strong>hello</strong> world!",
-		Items: []rss.Item{{Description: "<img src=\"localhost\">cool bean&#39;s!"}},
+		Items: []rss.Item{
+			{Description: "<img src=\"localhost\">cool bean&#39;s!"},
+			{Description: "egg salad&#39;s!"},
+		},
 	}
 	dummy := &rss.StubParser{Parsed: feed}
 	sut := cleanHtml{BaseFetcher: dummy}
@@ -26,6 +29,12 @@ func TestStripHtml(t *testing.T) {
 	}
 
 	d := parsed.Items[0].Description
+	if d != expected {
+		t.Error("failed to strip html")
+		t.Errorf("expected: %s, got: %s", expected, d)
+	}
+	d = parsed.Items[1].Description
+	expected = "egg salad's!"
 	if d != expected {
 		t.Error("failed to strip html")
 		t.Errorf("expected: %s, got: %s", expected, d)

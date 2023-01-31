@@ -27,8 +27,9 @@ func (s *cleanHtml) Fetch(url string) (*rss.Feed, error) {
 	}
 
 	stripHtml(feed)
-	for _, i := range feed.Items {
-		stripHtml(i)
+	for i, item := range feed.Items {
+		stripHtml(&item)
+		feed.Items[i] = item
 	}
 
 	return feed, nil

@@ -4,19 +4,19 @@ import (
 	"github.com/miodzie/walter/log"
 )
 
-// TODO: ThrottledAnnouncer decorator
+// TODO: ThrottledAnnouncer decorator (ThrottledDeliveries)
 
 // TODO: CachedFetcher decorator
-// TODO: RealTime Processor option?
-// TODO: AnnouncementFormatter?
+// TODO: RealTime processor option?
+// TODO: AnnouncementFormatter? (DeliveryFormatter)
 
-type Processor struct {
+type processor struct {
 	storage Repository
 	fetcher Fetcher
 }
 
-func NewProcessor(f Fetcher, r Repository) *Processor {
-	return &Processor{
+func Processor(f Fetcher, r Repository) *processor {
+	return &processor{
 		storage: r,
 		fetcher: f,
 	}
@@ -26,12 +26,11 @@ type Deliverable interface {
 	Address() string
 	Content() string
 
-	// TODO: Figure out how to update subscription on delivery.
-	OnDelivery() func()
-	Sub() Subscription
+	OnDelivery()
 }
 
-func (p *Processor) Process() (chan Notification, error) {
+// TODO: Consider adding context.
+func (p *processor) Process() (chan Notification, error) {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user created feeds.
 	userFeeds, err := p.storage.Feeds()
@@ -47,7 +46,7 @@ func (p *Processor) Process() (chan Notification, error) {
 	return notes, nil
 }
 
-func (p *Processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Notification) {
+func (p *processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Notification) {
 	for _, uf := range feeds {
 		feed, err := p.fetcher.Fetch(uf.Url)
 		if err != nil {
@@ -56,13 +55,17 @@ func (p *Processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Noti
 		}
 		matches := matcher.Match(feed.Items)
 		for _, m := range matches {
+			m.OnDeliveryHook = func() {
+				m.Subscription.Remember(m.Item)
+				_ = p.storage.UpdateSub(&m.Subscription)
+			}
 			notes <- m
 		}
 	}
 	close(notes)
 }
 
-func (p *Processor) createMatcher() (*Matcher, error) {
+func (p *processor) createMatcher() (*Matcher, error) {
 	subs, err := p.storage.Subs(SearchParams{})
 	var litSubs []Subscription
 	for _, s := range subs {

@@ -1,5 +1,6 @@
 # TODOs
 
+- [ ] Parent context for graceful shutdowns.
 - [ ] Add auto deploy with GitHub Actions.
 
 

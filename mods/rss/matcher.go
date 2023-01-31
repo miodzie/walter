@@ -21,10 +21,11 @@ func findMatches(sub Subscription, items []Item) (matches []Notification) {
 	for _, item := range items {
 		if !sub.ShouldIgnore(item) {
 			note := Notification{
-				Channel: sub.Channel,
-				Feed:    *sub.Feed,
-				Item:    item,
-				User:    sub.User,
+				Channel:      sub.Channel,
+				Feed:         *sub.Feed,
+				Item:         item,
+				User:         sub.User,
+				Subscription: sub,
 			}
 			matches = append(matches, note)
 		}

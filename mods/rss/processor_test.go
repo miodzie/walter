@@ -85,6 +85,17 @@ func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, re
 	assert.True(n.Subscription.HasSeen(p.item))
 }
 
+func (p *ProcessorSuite) TestItDoesntMatchOtherFeedItems(assert, require *td.T) {
+	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: 2}
+	require.CmpNoError(p.repository.AddFeed(&UserFeed{Id: 2, Url: "go.dev/blog"}))
+	require.CmpNoError(p.repository.AddSub(isaac))
+
+	notes, err := p.processor.Process()
+	require.CmpNoError(err)
+
+	assert.Cmp(<-notes, Notification{})
+}
+
 func TestRunProcessorSuite(t *testing.T) {
 	tdsuite.Run(t, new(ProcessorSuite))
 }

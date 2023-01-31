@@ -37,22 +37,25 @@ func (p *processor) Process() (chan Notification, error) {
 	if err != nil {
 		return nil, err
 	}
-	matcher, err := p.createMatcher()
-	if err != nil {
-		return nil, err
-	}
 
 	notes := make(chan Notification)
-	go p.process(userFeeds, matcher, notes)
+	go p.process(userFeeds, notes)
 
 	return notes, nil
 }
 
-func (p *processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Notification) {
+func (p *processor) process(feeds []*UserFeed, notes chan Notification) {
 	for _, uf := range feeds {
 		feed, err := p.fetcher.Fetch(uf.Url)
 		if err != nil {
 			log.Error(err) // TODO: retry?
+			continue
+		}
+		// TODO: fix
+		var matcher *Matcher
+		matcher, err = p.createMatcherFor(uf.Id)
+		if err != nil {
+			log.Error(err)
 			continue
 		}
 		matches := matcher.Match(feed.Items)
@@ -67,8 +70,8 @@ func (p *processor) process(feeds []*UserFeed, matcher *Matcher, notes chan Noti
 	close(notes)
 }
 
-func (p *processor) createMatcher() (*Matcher, error) {
-	subs, err := p.storage.Subs(SearchParams{})
+func (p *processor) createMatcherFor(userFeedId uint64) (*Matcher, error) {
+	subs, err := p.storage.Subs(SearchParams{FeedId: userFeedId})
 	var litSubs []Subscription
 	for _, s := range subs {
 		litSubs = append(litSubs, *s)

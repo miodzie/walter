@@ -41,31 +41,29 @@ func (p *ProcessorSuite) TestReturnsChannelOfNotifications(assert, require *td.T
 	jacob := &Subscription{User: "jacob", Channel: "#general", FeedId: p.userFeed.Id}
 	require.CmpNoError(p.repository.AddSub(jacob))
 
-	isaac.makeSeenMap()
-	jacob.makeSeenMap()
-
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 
-	n1 := <-notes
-	n1.OnDeliveryHook = nil
-	assert.Cmp(n1, Notification{
-		Channel:      "#general",
-		User:         "isaac",
-		Item:         p.item,
-		Feed:         *p.userFeed,
-		Subscription: *isaac,
-	})
+	assert.Cmp(getNote(notes), p.noteFromSub(isaac))
+	assert.Cmp(getNote(notes), p.noteFromSub(jacob))
+	assert.Cmp(<-notes, Notification{})
+}
+
+func getNote(notes chan Notification) Notification {
 	n2 := <-notes
 	n2.OnDeliveryHook = nil
-	assert.Cmp(n2, Notification{
-		Channel:      "#general",
-		User:         "jacob",
+	return n2
+}
+
+func (p *ProcessorSuite) noteFromSub(sub *Subscription) Notification {
+	sub.makeSeenMap()
+	return Notification{
+		Channel:      sub.Channel,
+		User:         sub.User,
 		Item:         p.item,
 		Feed:         *p.userFeed,
-		Subscription: *jacob,
-	})
-	assert.Cmp(<-notes, Notification{})
+		Subscription: *sub,
+	}
 }
 
 func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, require *td.T) {

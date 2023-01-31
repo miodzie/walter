@@ -29,7 +29,7 @@ type Deliverable interface {
 	OnDelivery()
 }
 
-// TODO: Consider adding context.
+// TODO: Consider adding context.Context
 func (p *processor) Process() (chan Notification, error) {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user created feeds.
@@ -41,8 +41,10 @@ func (p *processor) Process() (chan Notification, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	notes := make(chan Notification)
 	go p.process(userFeeds, matcher, notes)
+
 	return notes, nil
 }
 

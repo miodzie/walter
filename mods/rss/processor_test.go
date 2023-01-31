@@ -49,21 +49,26 @@ func (p *ProcessorSuite) TestReturnsChannelOfNotifications(assert, require *td.T
 	assert.Cmp(<-notes, Notification{})
 }
 
-func getNote(notes chan Notification) Notification {
-	n2 := <-notes
-	n2.OnDeliveryHook = nil
-	return n2
+// TODO: Consider moving Matcher specific cases to a Matcher test?
+func (p *ProcessorSuite) TestIgnoresMatches(assert, require *td.T) {
+	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: p.userFeed.Id, Ignore: "Go"}
+	require.CmpNoError(p.repository.AddSub(isaac))
+
+	notes, err := p.processor.Process()
+	require.CmpNoError(err)
+
+	assert.Cmp(<-notes, Notification{})
 }
 
-func (p *ProcessorSuite) noteFromSub(sub *Subscription) Notification {
-	sub.makeSeenMap()
-	return Notification{
-		Channel:      sub.Channel,
-		User:         sub.User,
-		Item:         p.item,
-		Feed:         *p.userFeed,
-		Subscription: *sub,
-	}
+func (p *ProcessorSuite) TestHidesSeenItems(assert, require *td.T) {
+	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: p.userFeed.Id}
+	isaac.Remember(p.item)
+	require.CmpNoError(p.repository.AddSub(isaac))
+
+	notes, err := p.processor.Process()
+	require.CmpNoError(err)
+
+	assert.Cmp(<-notes, Notification{})
 }
 
 func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, require *td.T) {
@@ -82,4 +87,21 @@ func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, re
 
 func TestRunProcessorSuite(t *testing.T) {
 	tdsuite.Run(t, new(ProcessorSuite))
+}
+
+func getNote(notes chan Notification) Notification {
+	n2 := <-notes
+	n2.OnDeliveryHook = nil
+	return n2
+}
+
+func (p *ProcessorSuite) noteFromSub(sub *Subscription) Notification {
+	sub.makeSeenMap()
+	return Notification{
+		Channel:      sub.Channel,
+		User:         sub.User,
+		Item:         p.item,
+		Feed:         *p.userFeed,
+		Subscription: *sub,
+	}
 }

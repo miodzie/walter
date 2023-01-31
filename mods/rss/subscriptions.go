@@ -45,9 +45,9 @@ func (s *Subscription) HasSeen(item Item) bool {
 	return seen
 }
 
-func (s *Subscription) ShouldIgnore(item Item) bool {
-	return s.HasSeen(item) ||
-		(item.HasKeywords(s.IgnoreWords()) && s.Ignore != "")
+func (s *Subscription) ShouldSee(item Item) bool {
+	return !(s.HasSeen(item) ||
+		(item.HasKeywords(s.IgnoreWords()) && s.Ignore != ""))
 }
 
 func (s *Subscription) KeyWords() []string {

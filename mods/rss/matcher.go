@@ -19,7 +19,7 @@ func (m *Matcher) Match(items []Item) (matches []Notification) {
 
 func findMatches(sub Subscription, items []Item) (matches []Notification) {
 	for _, item := range items {
-		if !sub.ShouldIgnore(item) {
+		if sub.ShouldSee(item) {
 			note := Notification{
 				Channel:      sub.Channel,
 				Feed:         *sub.Feed,

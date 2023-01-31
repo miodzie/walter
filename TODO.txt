@@ -3,4 +3,10 @@
 - [ ] Parent context for graceful shutdowns.
 - [ ] Add auto deploy with GitHub Actions.
 
+- [ ] Urban Dictionary lookup
+- [ ] Wolfram Alpha
+- [ ] Scripting engine? Lua, JavaScript, Lisp?
+
+
+
 

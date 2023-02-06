@@ -25,8 +25,8 @@ func (s *AnnouncementOrganizerSuite) TestOrganizeGroupsByGUIDAndChannel(assert *
 	announces := organizer.Organize([]Notification{bob, carl})
 
 	if assert.Len(announces, 1) {
-		assert.Cmp(announces[0].Room, "#general")
-		assert.Cmp(announces[0].Message, "foo - blog.golang.org : bob,carl")
+		assert.Cmp(announces[0].room, "#general")
+		assert.Cmp(announces[0].message, "foo - blog.golang.org : bob,carl")
 	}
 }
 
@@ -53,8 +53,8 @@ func (s *AnnouncementOrganizerSuite) TestOrganizeSameChannelDifferentGUID(assert
 		} else {
 			b, c = announces[1], announces[0]
 		}
-		assert.True(strings.Contains(b.Message, "hi bob"))
-		assert.True(strings.Contains(c.Message, "hi carl"))
+		assert.True(strings.Contains(b.message, "hi bob"))
+		assert.True(strings.Contains(c.message, "hi carl"))
 	}
 }
 

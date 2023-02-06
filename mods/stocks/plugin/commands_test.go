@@ -22,7 +22,7 @@ func (s *CommandSuite) SetupTest() {
 
 //func (s *CommandSuite) TestPriceUnknownSecurity() {
 //	cmd := "!price POTATO"
-//	msg := walter.Message{Content: cmd, Arguments: strings.Split(cmd, " ")}
+//	msg := walter.message{Content: cmd, Arguments: strings.Split(cmd, " ")}
 //
 //	s.getPrice(msg)
 //

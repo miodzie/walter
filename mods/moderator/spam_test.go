@@ -15,13 +15,13 @@ func TestAllCapsRegex(t *testing.T) {
 	msg := walter.Message{Content: "SHUT UP DUDE"}
 
 	if !moderator.IsSpam(msg) {
-		t.Logf(`Message content: "%s" should be flagged`, msg.Content)
+		t.Logf(`message content: "%s" should be flagged`, msg.Content)
 		t.Fail()
 	}
 
 	msg.Content = "ok then whatever"
 	if moderator.IsSpam(msg) {
-		t.Logf(`Message content: "%s" should not be flagged`, msg.Content)
+		t.Logf(`message content: "%s" should not be flagged`, msg.Content)
 		t.Fail()
 	}
 }

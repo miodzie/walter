@@ -9,10 +9,6 @@ import (
 
 // Fetch Feeds -> Notifications -> Announcements -> Announce
 
-// TODO
-// - ThrottledMessenger Decorator
-// - Update Subscription seen items on successful delivery? Use hook?
-
 type ProcessorSuite struct {
 	processor  *processor
 	repository *InMemRepository
@@ -49,7 +45,6 @@ func (p *ProcessorSuite) TestReturnsChannelOfNotifications(assert, require *td.T
 	assert.Nil(<-notes)
 }
 
-// TODO: Consider moving Matcher specific cases to a Matcher test?
 func (p *ProcessorSuite) TestIgnoresMatches(assert, require *td.T) {
 	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: p.userFeed.Id, Ignore: "Go"}
 	require.CmpNoError(p.repository.AddSub(isaac))

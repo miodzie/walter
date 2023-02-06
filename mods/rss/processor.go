@@ -51,7 +51,7 @@ func (p *processor) process(feeds []*UserFeed, notes chan Notification) {
 			log.Error(err) // TODO: retry?
 			continue
 		}
-		// TODO: fix
+		// TODO: fix, code smell.
 		var matcher *Matcher
 		matcher, err = p.createMatcherFor(uf.Id)
 		if err != nil {

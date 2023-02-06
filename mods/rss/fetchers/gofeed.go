@@ -2,7 +2,7 @@
 // This source code is licensed under the Apache 2.0 license found
 // in the LICENSE file in the root directory of this source tree.
 
-package gofeed
+package fetchers
 
 import (
 	"crypto/tls"
@@ -11,14 +11,14 @@ import (
 	"net/http"
 )
 
-type Fetcher struct {
+type GoFeedFetcher struct {
 }
 
-func New() *Fetcher {
-	return &Fetcher{}
+func GoFeed() *GoFeedFetcher {
+	return &GoFeedFetcher{}
 }
 
-func (receiver *Fetcher) Fetch(url string) (*rss.Feed, error) {
+func (receiver *GoFeedFetcher) Fetch(url string) (*rss.Feed, error) {
 	var parsed rss.Feed
 	fp := gofeed.NewParser()
 	// If TLSClientConfig is non-nil, HTTP/2 support may not be enabled by default.

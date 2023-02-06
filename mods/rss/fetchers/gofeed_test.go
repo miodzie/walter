@@ -2,7 +2,7 @@
 // This source code is licensed under the Apache 2.0 license found
 // in the LICENSE file in the root directory of this source tree.
 
-package gofeed
+package fetchers
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 func SkipTestItCanParseARedditFeed(t *testing.T) {
-	p := New()
+	p := GoFeed()
 	feed, err := p.Fetch("https://www.reddit.com/r/news/.rss")
 	if err != nil {
 		fmt.Println(err)

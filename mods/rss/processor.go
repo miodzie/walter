@@ -4,8 +4,6 @@ import (
 	"github.com/miodzie/walter/log"
 )
 
-// TODO: ThrottledAnnouncer decorator (ThrottledDeliveries)
-
 // TODO: CachedFetcher decorator
 // TODO: RealTime processor option?
 // TODO: AnnouncementFormatter? (DeliveryFormatter)
@@ -45,36 +43,39 @@ func (p *processor) Process() (chan Notification, error) {
 }
 
 func (p *processor) process(feeds []*UserFeed, notes chan Notification) {
+	// TODO: Concurrent feed processing.
 	for _, uf := range feeds {
 		feed, err := p.fetcher.Fetch(uf.Url)
 		if err != nil {
 			log.Error(err) // TODO: retry?
 			continue
 		}
-		// TODO: fix, code smell.
-		var matcher *Matcher
-		matcher, err = p.createMatcherFor(uf.Id)
+		subs, err := p.storage.Subs(SearchParams{FeedId: uf.Id})
 		if err != nil {
 			log.Error(err)
 			continue
 		}
-		matches := matcher.Match(feed.Items)
-		for _, m := range matches {
-			m.OnDeliveryHook = func() {
-				m.Subscription.Remember(m.Item)
-				_ = p.storage.UpdateSub(&m.Subscription)
-			}
-			notes <- m
+		for _, sub := range subs {
+			p.match(sub, feed.Items, notes)
 		}
 	}
 	close(notes)
 }
 
-func (p *processor) createMatcherFor(userFeedId uint64) (*Matcher, error) {
-	subs, err := p.storage.Subs(SearchParams{FeedId: userFeedId})
-	var litSubs []Subscription
-	for _, s := range subs {
-		litSubs = append(litSubs, *s)
+func (p *processor) match(sub *Subscription, items []Item, matches chan Notification) {
+	for _, item := range items {
+		if sub.ShouldSee(item) {
+			matches <- Notification{
+				Channel:      sub.Channel,
+				Feed:         *sub.Feed,
+				Item:         item,
+				User:         sub.User,
+				Subscription: *sub,
+				OnDeliveryHook: func() {
+					sub.Remember(item)
+					_ = p.storage.UpdateSub(sub)
+				},
+			}
+		}
 	}
-	return NewMatcher(litSubs), err
 }

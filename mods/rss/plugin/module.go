@@ -51,6 +51,7 @@ func (mod *RssMod) checkFeeds() {
 			log.Error(err)
 			return
 		}
+		deliveries = rss.ThrottleByChannel(deliveries, 3)
 		total := 0
 		for delivery := range deliveries {
 			log.Debug(delivery)

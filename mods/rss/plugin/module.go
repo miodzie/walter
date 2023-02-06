@@ -58,8 +58,8 @@ func (mod *RssMod) checkFeeds() {
 			log.Debug(delivery)
 			delivery.Deliver(func(address string, content string) error {
 				msg := walter.Message{
-					Target:  delivery.Channel,
-					Content: mod.Format(delivery),
+					Target:  address,
+					Content: content,
 				}
 				err := mod.actions.Send(msg)
 				if err != nil {

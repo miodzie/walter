@@ -46,7 +46,7 @@ func (p *ProcessorSuite) TestReturnsChannelOfNotifications(assert, require *td.T
 
 	assert.Cmp(getNote(notes), p.noteFromSub(isaac))
 	assert.Cmp(getNote(notes), p.noteFromSub(jacob))
-	assert.Cmp(<-notes, Notification{})
+	assert.Nil(<-notes)
 }
 
 // TODO: Consider moving Matcher specific cases to a Matcher test?
@@ -57,7 +57,7 @@ func (p *ProcessorSuite) TestIgnoresMatches(assert, require *td.T) {
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 
-	assert.Cmp(<-notes, Notification{})
+	assert.Nil(<-notes)
 }
 
 func (p *ProcessorSuite) TestHidesSeenItems(assert, require *td.T) {
@@ -68,7 +68,7 @@ func (p *ProcessorSuite) TestHidesSeenItems(assert, require *td.T) {
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 
-	assert.Cmp(<-notes, Notification{})
+	assert.Nil(<-notes)
 }
 
 func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, require *td.T) {
@@ -76,7 +76,7 @@ func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, re
 	require.CmpNoError(p.repository.AddSub(isaac))
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
-	n := <-notes
+	n := (<-notes).(Notification)
 	p.repository.forcedErr = errors.New("test")
 
 	n.Deliver(func(address string, content string) error {
@@ -95,7 +95,7 @@ func (p *ProcessorSuite) TestItDoesntMatchOtherFeedItems(assert, require *td.T) 
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 
-	assert.Cmp(<-notes, Notification{})
+	assert.Nil(<-notes)
 }
 
 func (p *ProcessorSuite) TestItOnlyNotifiesOnKeywords(assert, require *td.T) {
@@ -105,17 +105,18 @@ func (p *ProcessorSuite) TestItOnlyNotifiesOnKeywords(assert, require *td.T) {
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 
-	assert.Cmp(<-notes, Notification{})
+	assert.Nil(<-notes)
 }
 
 func TestRunProcessorSuite(t *testing.T) {
 	tdsuite.Run(t, new(ProcessorSuite))
 }
 
-func getNote(notes chan Notification) Notification {
+func getNote(notes chan Deliverable) Notification {
 	n2 := <-notes
-	n2.DeliveryHook = nil
-	return n2
+	n := n2.(Notification)
+	n.DeliveryHook = nil
+	return n
 }
 
 func (p *ProcessorSuite) noteFromSub(sub *Subscription) Notification {

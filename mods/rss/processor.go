@@ -8,26 +8,32 @@ import (
 // TODO: RealTime processor option?
 // TODO: AnnouncementFormatter? (DeliveryFormatter)
 
-type processor struct {
+type Processor struct {
 	storage Repository
 	fetcher Fetcher
 }
 
-func Processor(f Fetcher, r Repository) *processor {
-	return &processor{
+func NewProcessor(f Fetcher, r Repository) *Processor {
+	return &Processor{
 		storage: r,
 		fetcher: f,
 	}
 }
 
 type Deliverable interface {
+	// Where the Mail is being delivered.
 	Address() string
+	// The contents of the letter. You have to "open it",
+	// e.g. call the func, to see what's inside.
+	//
+	// Returning nil means it was delivered successfully, therefor any post
+	// delivery actions are OK to do. (e.g. update Subscription that item was seen/delivered)
 	Deliver(deliver func(address, content string) error)
 }
 
 // TODO: Consider adding context.Context
 // TODO: Return chan Deliverable
-func (p *processor) Process() (chan Deliverable, error) {
+func (p *Processor) Process() (chan Deliverable, error) {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user created feeds.
 	userFeeds, err := p.storage.Feeds()
@@ -41,7 +47,7 @@ func (p *processor) Process() (chan Deliverable, error) {
 	return deliveries, nil
 }
 
-func (p *processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
+func (p *Processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
 	// TODO: Concurrent feed processing.
 	for _, uf := range feeds {
 		feed, err := p.fetcher.Fetch(uf.Url)
@@ -61,7 +67,7 @@ func (p *processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
 	close(deliveries)
 }
 
-func (p *processor) match(sub *Subscription, items []Item, matches chan Deliverable) {
+func (p *Processor) match(sub *Subscription, items []Item, matches chan Deliverable) {
 	for _, item := range items {
 		if sub.ShouldSee(item) {
 			matches <- Notification{
@@ -70,6 +76,7 @@ func (p *processor) match(sub *Subscription, items []Item, matches chan Delivera
 				Item:         item,
 				User:         sub.User,
 				Subscription: *sub,
+				// TODO: I still don't like having this here, could maybe have a Subscription method?
 				DeliveryHook: func() {
 					sub.Remember(item)
 					_ = p.storage.UpdateSub(sub)

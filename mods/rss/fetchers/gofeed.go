@@ -11,12 +11,9 @@ import (
 	"net/http"
 )
 
-type GoFeedFetcher struct {
-}
+type GoFeedFetcher struct{}
 
-func GoFeed() *GoFeedFetcher {
-	return &GoFeedFetcher{}
-}
+func GoFeed() *GoFeedFetcher { return &GoFeedFetcher{} }
 
 func (receiver *GoFeedFetcher) Fetch(url string) (*rss.Feed, error) {
 	var parsed rss.Feed

@@ -43,7 +43,7 @@ func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 
 func (mod *RssMod) checkFeeds() {
 	time.Sleep(time.Minute * 1)
-	processor := rss.Processor(mod.Fetcher, mod.Repository)
+	processor := rss.NewProcessor(mod.Fetcher, mod.Repository)
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
 		deliveries, err := processor.Process()

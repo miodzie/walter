@@ -10,7 +10,7 @@ import (
 // Fetch Feeds -> Notifications -> Announcements -> Announce
 
 type ProcessorSuite struct {
-	processor  *processor
+	processor  *Processor
 	repository *InMemRepository
 	fetcher    *StubFetcher
 
@@ -21,7 +21,7 @@ type ProcessorSuite struct {
 func (p *ProcessorSuite) PreTest(t *td.T, testName string) error {
 	p.repository = NewInMemRepo()
 	p.fetcher = NewStubFetcher()
-	p.processor = Processor(p.fetcher, p.repository)
+	p.processor = NewProcessor(p.fetcher, p.repository)
 
 	p.item = Item{Title: "The Go Blog", Link: "https://go.dev/blog", GUID: "1"}
 	p.userFeed = &UserFeed{Id: 1, Url: "go.dev/blog"}

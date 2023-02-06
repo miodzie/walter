@@ -22,12 +22,11 @@ func Processor(f Fetcher, r Repository) *processor {
 
 type Deliverable interface {
 	Address() string
-	Content() string
-
-	OnDelivery()
+	Deliver(deliver func(address, content string) error)
 }
 
 // TODO: Consider adding context.Context
+// TODO: Return chan Deliverable
 func (p *processor) Process() (chan Notification, error) {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user created feeds.
@@ -71,7 +70,7 @@ func (p *processor) match(sub *Subscription, items []Item, matches chan Notifica
 				Item:         item,
 				User:         sub.User,
 				Subscription: *sub,
-				OnDeliveryHook: func() {
+				DeliveryHook: func() {
 					sub.Remember(item)
 					_ = p.storage.UpdateSub(sub)
 				},

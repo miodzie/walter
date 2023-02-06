@@ -9,24 +9,22 @@ import (
 )
 
 type Notification struct {
-	Feed           UserFeed
-	Item           Item
-	Channel        string
-	User           string
-	Subscription   Subscription
-	OnDeliveryHook func()
+	Feed         UserFeed
+	Item         Item
+	Channel      string
+	User         string
+	Subscription Subscription
+	DeliveryHook func()
 }
 
 func (n Notification) Address() string {
 	return n.Channel
 }
 
-func (n Notification) Content() string {
-	return n.String()
-}
-
-func (n Notification) OnDelivery() {
-	n.OnDeliveryHook()
+func (n Notification) Deliver(deliver func(address string, content string) error) {
+	if deliver(n.Channel, n.String()) == nil {
+		n.DeliveryHook()
+	}
 }
 
 func (n Notification) String() string {

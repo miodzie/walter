@@ -79,7 +79,9 @@ func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, re
 	n := <-notes
 	p.repository.forcedErr = errors.New("test")
 
-	n.OnDelivery()
+	n.Deliver(func(address string, content string) error {
+		return nil // it was delivered without error.
+	})
 
 	assert.Nil(p.repository.forcedErr) // Confirms Repository call called
 	assert.True(n.Subscription.HasSeen(p.item))
@@ -112,7 +114,7 @@ func TestRunProcessorSuite(t *testing.T) {
 
 func getNote(notes chan Notification) Notification {
 	n2 := <-notes
-	n2.OnDeliveryHook = nil
+	n2.DeliveryHook = nil
 	return n2
 }
 

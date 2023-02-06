@@ -53,18 +53,12 @@ func (mod *RssMod) checkFeeds() {
 		}
 		deliveries = rss.ThrottleByChannel(deliveries, 3)
 		total := 0
-		failed := 0
 		for delivery := range deliveries {
 			log.Debug(delivery)
 			delivery.Deliver(func(address string, content string) error {
-				msg := walter.Message{
-					Target:  address,
-					Content: content,
-				}
-				err := mod.actions.Send(msg)
-				if err != nil {
+				msg := walter.Message{Target: address, Content: content}
+				if err := mod.actions.Send(msg); err != nil {
 					log.Error(err)
-					failed++
 					return err
 				}
 				total++
@@ -72,7 +66,6 @@ func (mod *RssMod) checkFeeds() {
 			})
 		}
 		log.Infof("%d notifications delivered\n", total)
-		log.Infof("%d notification delivery failures\n", failed)
 		time.Sleep(time.Minute * 30)
 	}
 }

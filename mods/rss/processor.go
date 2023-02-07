@@ -4,10 +4,6 @@ import (
 	"github.com/miodzie/walter/log"
 )
 
-// TODO: CachedFetcher decorator
-// TODO: RealTime processor option?
-// TODO: AnnouncementFormatter? (DeliveryFormatter)
-
 type Processor struct {
 	storage Repository
 	fetcher Fetcher
@@ -32,7 +28,6 @@ type Deliverable interface {
 }
 
 // TODO: Consider adding context.Context
-// TODO: Return chan Deliverable
 func (p *Processor) Process() (chan Deliverable, error) {
 	// TODO: Should only be active userFeeds that has subs.
 	// Maybe at some point just have UserFeeds be actual user created feeds.

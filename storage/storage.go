@@ -13,10 +13,6 @@ import (
 
 var storages map[string]*sql.DB
 
-type Repository interface {
-	setDB(db *sql.DB)
-}
-
 type Config struct {
 	Storage map[string]Storage
 }

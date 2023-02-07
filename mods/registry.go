@@ -18,6 +18,7 @@ import (
 var factories map[string]Factory
 
 type Factory interface {
+	// TODO: Replace with any instead with an interface?
 	Create(config any) (walter.Module, error)
 }
 

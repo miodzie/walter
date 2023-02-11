@@ -66,13 +66,13 @@ func (p *Processor) match(sub *Subscription, items []Item, matches chan Delivera
 	for _, item := range items {
 		if sub.ShouldSee(item) {
 			matches <- Notification{
-				Channel:      sub.Channel,
-				Feed:         *sub.Feed,
-				Item:         item,
-				User:         sub.User,
-				Subscription: *sub,
+				Channel: sub.Channel,
+				Feed:    *sub.Feed,
+				Item:    item,
+				User:    sub.User,
 				// TODO: I still don't like having this here, could maybe have a Subscription method?
 				DeliveryHook: func() {
+					log.Debug(item.GUID, item)
 					sub.Remember(item)
 					_ = p.storage.UpdateSub(sub)
 				},

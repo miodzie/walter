@@ -6,6 +6,7 @@ package rss
 
 import (
 	"fmt"
+	"github.com/miodzie/walter/log"
 )
 
 type Notification struct {
@@ -13,7 +14,6 @@ type Notification struct {
 	Item         Item
 	Channel      string
 	User         string
-	Subscription Subscription
 	DeliveryHook func()
 }
 
@@ -23,6 +23,7 @@ func (n Notification) Address() string {
 
 func (n Notification) Deliver(deliver func(address string, content string) error) {
 	if deliver(n.Channel, n.String()) == nil {
+		log.Debugf("delivery hook being called for feed.Name: %s", n.Feed.Name)
 		n.DeliveryHook()
 	}
 }

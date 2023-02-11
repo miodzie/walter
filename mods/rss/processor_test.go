@@ -67,8 +67,8 @@ func (p *ProcessorSuite) TestHidesSeenItems(assert, require *td.T) {
 }
 
 func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, require *td.T) {
-	isaac := &Subscription{User: "isaac", Channel: "#general", FeedId: p.userFeed.Id}
-	require.CmpNoError(p.repository.AddSub(isaac))
+	jacob := &Subscription{User: "jacob", Channel: "#general", FeedId: p.userFeed.Id}
+	require.CmpNoError(p.repository.AddSub(jacob))
 	notes, err := p.processor.Process()
 	require.CmpNoError(err)
 	n := (<-notes).(Notification)
@@ -79,7 +79,7 @@ func (p *ProcessorSuite) TestItAddsSubscriptionRememberOnDeliveryHook(assert, re
 	})
 
 	assert.Nil(p.repository.forcedErr) // Confirms Repository call called
-	assert.True(n.Subscription.HasSeen(p.item))
+	assert.True(jacob.HasSeen(p.item))
 }
 
 func (p *ProcessorSuite) TestItDoesntMatchOtherFeedItems(assert, require *td.T) {
@@ -117,10 +117,9 @@ func getNote(notes chan Deliverable) Notification {
 func (p *ProcessorSuite) noteFromSub(sub *Subscription) Notification {
 	sub.makeSeenMap()
 	return Notification{
-		Channel:      sub.Channel,
-		User:         sub.User,
-		Item:         p.item,
-		Feed:         *p.userFeed,
-		Subscription: *sub,
+		Channel: sub.Channel,
+		User:    sub.User,
+		Item:    p.item,
+		Feed:    *p.userFeed,
 	}
 }

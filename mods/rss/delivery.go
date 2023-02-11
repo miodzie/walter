@@ -5,10 +5,10 @@ func ThrottleByChannel(notes chan Deliverable, maxPerChannel int) chan Deliverab
 	go func() {
 		seen := make(map[string]int)
 		for n := range notes {
-			seen[n.Address()]++
-			if seen[n.Address()] != maxPerChannel {
+			if seen[n.Address()] < maxPerChannel {
 				wrapped <- n
 			}
+			seen[n.Address()]++
 		}
 		close(wrapped)
 	}()

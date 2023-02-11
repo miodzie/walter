@@ -53,7 +53,6 @@ func (mod *RssMod) checkFeeds() {
 		deliveries = rss.ThrottleByChannel(deliveries, 3)
 		total := 0
 		for delivery := range deliveries {
-			log.Debug(delivery)
 			delivery.Deliver(func(address string, content string) error {
 				msg := walter.Message{Target: address, Content: content}
 				if err := mod.actions.Send(msg); err != nil {

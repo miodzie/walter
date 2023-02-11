@@ -70,11 +70,10 @@ func (p *Processor) match(sub *Subscription, items []Item, matches chan Delivera
 				Feed:    *sub.Feed,
 				Item:    item,
 				User:    sub.User,
-				// TODO: I still don't like having this here, could maybe have a Subscription method?
-				DeliveryHook: func() {
+				DeliveryHook: func() error {
 					log.Debugf("item.GUID: %s, item.Link: %s", item.GUID, item.Link)
 					sub.Remember(item)
-					_ = p.storage.UpdateSub(sub)
+					return p.storage.UpdateSub(sub)
 				},
 			}
 		}

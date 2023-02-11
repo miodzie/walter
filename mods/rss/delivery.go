@@ -1,7 +1,5 @@
 package rss
 
-import "fmt"
-
 func ThrottleByChannel(notes chan Deliverable, maxPerChannel int) chan Deliverable {
 	wrapped := make(chan Deliverable)
 	go func() {
@@ -11,7 +9,6 @@ func ThrottleByChannel(notes chan Deliverable, maxPerChannel int) chan Deliverab
 				wrapped <- n
 			}
 			seen[n.Address()]++
-			fmt.Printf("%s: %d\n", n.Address(), seen[n.Address()])
 		}
 		close(wrapped)
 	}()

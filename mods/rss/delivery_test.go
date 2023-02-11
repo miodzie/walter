@@ -6,13 +6,15 @@ import (
 )
 
 func TestThrottleByChannel(t *testing.T) {
-	notes := make(chan Deliverable, 2)
+	notes := make(chan Deliverable, 3)
 	notes <- Notification{User: "jacob", Channel: "#go"}
+	notes <- Notification{User: "issac", Channel: "#go"}
 	notes <- Notification{User: "abraham", Channel: "#go"}
 	close(notes)
 
-	notes = ThrottleByChannel(notes, 1)
+	notes = ThrottleByChannel(notes, 2)
 
+	td.Cmp(t, (<-notes).Address(), "#go")
 	td.Cmp(t, (<-notes).Address(), "#go")
 	td.Cmp(t, <-notes, td.Empty())
 }

@@ -42,7 +42,7 @@ func init() {
 
 type Config struct {
 	Parser    string
-	StripHTML bool
+	Striphtml bool
 	Formatter string
 	Storage   string
 	Database  string
@@ -55,7 +55,7 @@ func (c *Config) CreateMod() (*RssMod, error) {
 	if !ok {
 		return nil, fmt.Errorf("unknown parser: `%s`", c.Parser)
 	}
-	if c.StripHTML {
+	if c.Striphtml {
 		services.Fetcher = fetchers.StripHtml(services.Fetcher)
 	}
 	services.Formatter, ok = formatters[c.Formatter]

@@ -30,7 +30,6 @@ func (s *Subscription) Remember(item Item) {
 	s.makeSeenMap()
 	if _, seen := s.SeenItems[item.GUID]; !seen {
 		s.SeenItems[item.GUID] = true
-		s.Seen = ""
 		var keys []string
 		for k := range s.SeenItems {
 			keys = append(keys, k)

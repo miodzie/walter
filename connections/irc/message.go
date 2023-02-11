@@ -6,7 +6,6 @@ package irc
 
 import (
 	"github.com/miodzie/walter"
-	"github.com/miodzie/walter/log"
 	"strings"
 )
 
@@ -26,7 +25,7 @@ func (con *Connection) Send(msg walter.Message) error {
 		return anyErr
 	}
 	con.irc.Privmsg(msg.Target, msg.Content)
-	log.Debugf("[%s]: %+v\n", con.Name(), msg)
+	//log.Debugf("[%s]: %+v\n", con.Name(), msg)
 	return nil
 }
 

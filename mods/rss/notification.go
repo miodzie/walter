@@ -14,7 +14,7 @@ type Notification struct {
 	Item         Item
 	Channel      string
 	User         string
-	DeliveryHook func()
+	DeliveryHook func() error
 }
 
 func (n Notification) Address() string {
@@ -23,8 +23,11 @@ func (n Notification) Address() string {
 
 func (n Notification) Deliver(deliver func(address string, content string) error) {
 	if deliver(n.Channel, n.String()) == nil {
-		log.Debugf("delivery hook being called for feed.Name: %s", n.Feed.Name)
-		n.DeliveryHook()
+		log.Debugf("delivery hook being called for feed.Name: %s\n", n.Feed.Name)
+		err := n.DeliveryHook()
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
 

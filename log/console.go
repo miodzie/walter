@@ -36,8 +36,7 @@ func init() {
 }
 
 // ConsoleLogger is a basic logger that prints to the console.
-type ConsoleLogger struct {
-}
+type ConsoleLogger struct{}
 
 func (l ConsoleLogger) Trace(args ...interface{}) {
 	fmt.Printf(gray())
@@ -45,7 +44,7 @@ func (l ConsoleLogger) Trace(args ...interface{}) {
 }
 
 func (l ConsoleLogger) Debug(args ...interface{}) {
-	fmt.Printf(white())
+	fmt.Printf(gray())
 	fmt.Println(args...)
 }
 

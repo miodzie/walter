@@ -68,7 +68,7 @@ func (l ConsoleLogger) Tracef(format string, args ...interface{}) {
 }
 
 func (l ConsoleLogger) Debugf(format string, args ...interface{}) {
-	fmt.Printf(white()+format, args...)
+	fmt.Printf(gray()+format, args...)
 }
 
 func (l ConsoleLogger) Infof(format string, args ...interface{}) {

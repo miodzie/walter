@@ -71,7 +71,6 @@ func (p *Processor) match(sub *Subscription, items []Item, matches chan Delivera
 				Item:    item,
 				User:    sub.User,
 				DeliveryHook: func() error {
-					log.Debugf("item.GUID: %s, item.Link: %s", item.GUID, item.Link)
 					sub.Remember(item)
 					return p.storage.UpdateSub(sub)
 				},

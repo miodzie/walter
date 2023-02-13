@@ -11,9 +11,11 @@ import (
 	"github.com/miodzie/dong/usecases"
 	"github.com/miodzie/walter"
 	"github.com/miodzie/walter/log"
+	"math/rand"
 	"os"
 	"os/user"
 	"path"
+	"time"
 )
 
 const WORKDIR = ".dong"
@@ -40,6 +42,9 @@ func (mod *Mod) Start(stream walter.Stream, actions walter.Actions) error {
 	mod.running = true
 	for mod.running {
 		msg := <-stream
+		if msg.IsCommand("8ball") || msg.IsCommand("8") {
+			_ = actions.Reply(msg, get8BallResponse())
+		}
 		if msg.IsCommand("dong") {
 			rando := usecases.NewRandomDongUseCase(mod.repository)
 			var request usecases.RandomDongReq
@@ -91,4 +96,31 @@ type ModFactory struct {
 
 func (m ModFactory) Create(interface{}) (walter.Module, error) {
 	return New(), nil
+}
+
+func get8BallResponse() string {
+	responses := []string{
+		"It is certain.",
+		"It is decidedly so.",
+		"Without a doubt.",
+		"Yes - definitely.",
+		"You may rely on it.",
+		"As I see it, yes.",
+		"Most likely.",
+		"Outlook good.",
+		"Yes.",
+		"Signs point to yes.",
+		"Reply hazy, try again.",
+		"Better not tell you now.",
+		"Cannot predict now.",
+		"Concentrate and ask again.",
+		"Don't count on it.",
+		"My reply is no.",
+		"My sources say no.",
+		"Outlook not so good.",
+		"Very doubtful.",
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	return responses[rand.Intn(len(responses))]
 }

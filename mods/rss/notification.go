@@ -24,8 +24,6 @@ func (n Notification) Address() string {
 func (n Notification) Deliver(deliver func(address string, content string) error) {
 	if deliver(n.Channel, n.String()) == nil {
 		err := n.DeliveryHook()
-		log.Error("PANIC!")
-		log.Error(err)
 		if err != nil {
 			log.Error(err)
 		}

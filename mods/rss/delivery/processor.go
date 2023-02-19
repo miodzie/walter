@@ -1,15 +1,16 @@
-package rss
+package delivery
 
 import (
 	"github.com/miodzie/walter/log"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 type Processor struct {
-	storage Repository
-	fetcher Fetcher
+	storage rss.Repository
+	fetcher rss.Fetcher
 }
 
-func NewProcessor(f Fetcher, r Repository) *Processor {
+func NewProcessor(f rss.Fetcher, r rss.Repository) *Processor {
 	return &Processor{
 		storage: r,
 		fetcher: f,
@@ -42,7 +43,7 @@ func (p *Processor) Process() (chan Deliverable, error) {
 	return deliveries, nil
 }
 
-func (p *Processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
+func (p *Processor) process(feeds []*rss.UserFeed, deliveries chan Deliverable) {
 	// TODO: Concurrent feed processing.
 	for _, uf := range feeds {
 		feed, err := p.fetcher.Fetch(uf.Url)
@@ -50,7 +51,7 @@ func (p *Processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
 			log.Error(err) // TODO: retry?
 			continue
 		}
-		subs, err := p.storage.Subs(SearchParams{FeedId: uf.Id})
+		subs, err := p.storage.Subs(rss.SearchParams{FeedId: uf.Id})
 		if err != nil {
 			log.Error(err)
 			continue
@@ -62,7 +63,7 @@ func (p *Processor) process(feeds []*UserFeed, deliveries chan Deliverable) {
 	close(deliveries)
 }
 
-func (p *Processor) match(sub *Subscription, items []Item, matches chan Deliverable) {
+func (p *Processor) match(sub *rss.Subscription, items []rss.Item, matches chan Deliverable) {
 	for _, item := range items {
 		if sub.ShouldSee(item) {
 			matches <- Notification{

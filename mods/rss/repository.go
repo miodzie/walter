@@ -38,7 +38,7 @@ type InMemRepository struct {
 	feeds            []*UserFeed
 	subs             map[uint64]*Subscription
 	delayForcedErrBy int
-	forcedErr        error
+	ForcedErr        error
 	tmpIgnoreErr     bool
 }
 
@@ -49,7 +49,7 @@ func NewInMemRepo() *InMemRepository {
 // ForceError sets an error to be returned on the next called method.
 // Used for forcing errors in testing.
 func (r *InMemRepository) ForceError(err error, delay int) {
-	r.forcedErr = err
+	r.ForcedErr = err
 	r.delayForcedErrBy = delay
 }
 
@@ -66,8 +66,8 @@ func (r *InMemRepository) popForcedErr() error {
 		r.delayForcedErrBy -= 1
 		return nil
 	}
-	defer func() { r.forcedErr = nil }()
-	return r.forcedErr
+	defer func() { r.ForcedErr = nil }()
+	return r.ForcedErr
 }
 
 func (r *InMemRepository) Feeds() ([]*UserFeed, error) {

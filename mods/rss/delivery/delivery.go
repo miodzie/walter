@@ -1,4 +1,4 @@
-package rss
+package delivery
 
 func ThrottleByChannel(notes chan Deliverable, maxPerChannel int) chan Deliverable {
 	wrapped := make(chan Deliverable)

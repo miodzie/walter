@@ -6,6 +6,7 @@ package plugin
 
 import (
 	"github.com/miodzie/walter/log"
+	"github.com/miodzie/walter/mods/rss/delivery"
 	"time"
 
 	"github.com/miodzie/walter"
@@ -21,7 +22,7 @@ type RssMod struct {
 type Services struct {
 	rss.Repository
 	rss.Fetcher
-	rss.Formatter
+	delivery.Formatter
 }
 
 func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
@@ -42,7 +43,7 @@ func (mod *RssMod) Start(stream walter.Stream, actions walter.Actions) error {
 }
 
 func (mod *RssMod) checkFeeds() {
-	processor := rss.NewProcessor(mod.Fetcher, mod.Repository)
+	processor := delivery.NewProcessor(mod.Fetcher, mod.Repository)
 	for mod.running {
 		log.Info("Processing feed subscriptions...")
 		deliveries, err := processor.Process()
@@ -50,10 +51,10 @@ func (mod *RssMod) checkFeeds() {
 			log.Error(err)
 			return
 		}
-		deliveries = rss.ThrottleByChannel(deliveries, 3)
+		deliveries = delivery.ThrottleByChannel(deliveries, 3)
 		total := 0
-		for delivery := range deliveries {
-			delivery.Deliver(func(address string, content string) error {
+		for mail := range deliveries {
+			mail.Deliver(func(address string, content string) error {
 				msg := walter.Message{Target: address, Content: content}
 				if err := mod.actions.Send(msg); err != nil {
 					log.Error(err)

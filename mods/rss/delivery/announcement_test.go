@@ -1,8 +1,9 @@
-package rss
+package delivery
 
 import (
 	"github.com/maxatome/go-testdeep/helpers/tdsuite"
 	"github.com/maxatome/go-testdeep/td"
+	"github.com/miodzie/walter/mods/rss"
 	"strings"
 	"testing"
 )
@@ -18,7 +19,7 @@ func (s *AnnouncementOrganizerSuite) PreTest(t *td.T, name string) error {
 
 func (s *AnnouncementOrganizerSuite) TestOrganizeGroupsByGUIDAndChannel(assert *td.T) {
 	organizer := AnnouncementOrganizer{}
-	item := Item{Title: "foo", Link: "blog.golang.org"}
+	item := rss.Item{Title: "foo", Link: "blog.golang.org"}
 	bob := Notification{User: "bob", Channel: "#general", Item: item}
 	carl := Notification{User: "carl", Channel: "#general", Item: item}
 
@@ -33,12 +34,12 @@ func (s *AnnouncementOrganizerSuite) TestOrganizeGroupsByGUIDAndChannel(assert *
 func (s *AnnouncementOrganizerSuite) TestOrganizeSameChannelDifferentGUID(assert *td.T) {
 	organizer := AnnouncementOrganizer{}
 	bob := Notification{User: "bob", Channel: "#general",
-		Item: Item{
+		Item: rss.Item{
 			GUID:  "A",
 			Title: "hi bob",
 		}}
 	carl := Notification{User: "carl", Channel: "#general",
-		Item: Item{
+		Item: rss.Item{
 			GUID:  "B",
 			Title: "hi carl",
 		}}

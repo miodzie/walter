@@ -2,16 +2,17 @@
 // This source code is licensed under the Apache 2.0 license found
 // in the LICENSE file in the root directory of this source tree.
 
-package rss
+package delivery
 
 import (
 	"fmt"
 	"github.com/miodzie/walter/log"
+	"github.com/miodzie/walter/mods/rss"
 )
 
 type Notification struct {
-	Feed         UserFeed
-	Item         Item
+	Feed         rss.UserFeed
+	Item         rss.Item
 	Channel      string
 	User         string
 	DeliveryHook func() error

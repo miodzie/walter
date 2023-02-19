@@ -1,13 +1,14 @@
-package rss
+package delivery
 
 import (
 	"fmt"
+	"github.com/miodzie/walter/mods/rss"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestNotification_String(t *testing.T) {
-	item := Item{Title: "New Cool Blog Notification",
+	item := rss.Item{Title: "New Cool Blog Notification",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
 	notification := Notification{Item: item, User: "Abraham"}
@@ -23,7 +24,7 @@ func TestNotification_String(t *testing.T) {
 
 func TestMinimalFormatter_Format(t *testing.T) {
 	formatter := MinimalFormatter{}
-	item := Item{Title: "New Cool Blog Notification",
+	item := rss.Item{Title: "New Cool Blog Notification",
 		Description: "Lorem ispsum but cooler.",
 		Link:        "http://localhost"}
 	notification := Notification{Item: item, User: "Abraham"}

@@ -1,4 +1,4 @@
-package rss
+package delivery
 
 // Digest is a Deliverable that pools given deliveries until a configured threshold,
 // then delivers them all at once.
@@ -19,3 +19,12 @@ func (d Digest) Deliver(deliver func(address string, content string) error) {
 	//TODO implement me
 	panic("implement me")
 }
+
+/*
+
+	- Subscription/Feed Management
+	- (Processing?),
+	- Delivery
+
+
+*/

@@ -1,4 +1,4 @@
-package rss
+package delivery
 
 import (
 	"github.com/maxatome/go-testdeep/td"

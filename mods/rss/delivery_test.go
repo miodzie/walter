@@ -10,7 +10,6 @@ func TestThrottleByChannel(t *testing.T) {
 	notes <- Notification{User: "jacob", Channel: "#go"}
 	notes <- Notification{User: "issac", Channel: "#go"}
 	notes <- Notification{User: "abraham", Channel: "#go"}
-	close(notes)
 
 	notes = ThrottleByChannel(notes, 2)
 

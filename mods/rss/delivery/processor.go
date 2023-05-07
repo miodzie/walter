@@ -20,6 +20,7 @@ func NewProcessor(f rss.Fetcher, r rss.Repository) *Processor {
 type Deliverable interface {
 	// Where the Mail is being delivered.
 	Address() string
+
 	// The contents of the letter. You have to "open it",
 	// e.g. call the func, to see what's inside.
 	//

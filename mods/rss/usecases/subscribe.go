@@ -9,13 +9,9 @@ import (
 	"github.com/miodzie/walter/mods/rss"
 )
 
-type Subscribe struct {
-	repository rss.Repository
-}
+type Subscribe struct{ repository rss.Repository }
 
-func NewSubscribe(repo rss.Repository) *Subscribe {
-	return &Subscribe{repository: repo}
-}
+func NewSubscribe(repo rss.Repository) *Subscribe { return &Subscribe{repository: repo} }
 
 type SubscribeRequest struct {
 	FeedName    string
@@ -25,9 +21,7 @@ type SubscribeRequest struct {
 	IgnoreWords string
 }
 
-type SubscribeResponse struct {
-	Message string
-}
+type SubscribeResponse struct{ Message string }
 
 // Subscribe Subscribes a user to a UserFeed.
 func (s *Subscribe) Subscribe(req SubscribeRequest) (SubscribeResponse, error) {

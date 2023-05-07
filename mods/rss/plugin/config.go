@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/miodzie/walter"
 	"github.com/miodzie/walter/mods/rss"
+	"github.com/miodzie/walter/mods/rss/delivery"
 	"github.com/miodzie/walter/mods/rss/fetchers"
 	"github.com/miodzie/walter/storage"
 	"github.com/miodzie/walter/storage/sqlite"
@@ -16,16 +17,16 @@ import (
 )
 
 var parsers map[string]rss.Fetcher
-var formatters map[string]rss.Formatter
+var formatters map[string]delivery.Formatter
 var storages map[string]func(database string) (rss.Repository, error)
 
 func init() {
 	parsers = make(map[string]rss.Fetcher)
 	parsers["gofeed"] = fetchers.GoFeed()
 
-	formatters = make(map[string]rss.Formatter)
-	formatters["default"] = rss.DefaultFormatter{}
-	formatters["minimal"] = rss.MinimalFormatter{}
+	formatters = make(map[string]delivery.Formatter)
+	formatters["default"] = delivery.DefaultFormatter{}
+	formatters["minimal"] = delivery.MinimalFormatter{}
 
 	storages = make(map[string]func(database string) (rss.Repository, error))
 	storages["memory"] = func(database string) (rss.Repository, error) {
